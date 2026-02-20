@@ -1,0 +1,95 @@
+<nav class="bg-gray-900 border-b border-gray-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <%# Left side: logo + nav links %>
+      <div class="flex items-center gap-8">
+        <%# Logo %>
+        <%= link_to root_path, class: "flex items-center gap-2.5 shrink-0" do %>
+          <div class="w-8 h-8 rounded-md bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M4 12c3-5 7-7 12-6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 16c3-2 7-4 12-3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="text-white font-semibold text-sm tracking-tight">Ai Rails App</span>
+        <% end %>
+
+        <%# Nav links %>
+        <div class="hidden sm:flex items-center gap-1">
+          <%= link_to "Dashboard", dashboard_path,
+                class: "px-3 py-2 rounded-md text-sm font-semibold text-white bg-gray-800" %>
+          <%= link_to "Team", "#",
+                class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
+          <%= link_to "Projects", "#",
+                class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
+          <%= link_to "Calendar", "#",
+                class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
+        </div>
+      </div>
+
+      <%# Right side: notification bell + user avatar dropdown %>
+      <div class="flex items-center gap-4">
+
+        <%# Bell icon %>
+        <button type="button"
+                class="relative p-2 rounded-full text-gray-400 hover:text-white hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                aria-label="View notifications">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+          </svg>
+        </button>
+
+        <%# Avatar dropdown %>
+        <div class="relative" data-controller="dropdown">
+          <%# Avatar trigger button %>
+          <button type="button"
+                  data-action="click->dropdown#toggle"
+                  class="flex items-center focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full"
+                  aria-label="Open user menu"
+                  aria-haspopup="true">
+            <span class="sr-only">Open user menu</span>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold select-none">
+              <%= current_user.name.first.upcase %>
+            </div>
+          </button>
+
+          <%# Dropdown menu %>
+          <div data-dropdown-target="menu"
+               class="hidden absolute right-0 mt-2 w-48 rounded-lg bg-gray-800 border border-gray-700 shadow-lg ring-1 ring-black/20 z-50"
+               role="menu"
+               aria-orientation="vertical">
+
+            <%# User info header %>
+            <div class="px-4 py-3 border-b border-gray-700">
+              <p class="text-xs text-gray-400 truncate">Signed in as</p>
+              <p class="text-sm font-medium text-white truncate"><%= current_user.email %></p>
+            </div>
+
+            <%# Menu items %>
+            <div class="py-1" role="none">
+              <%= link_to "Your profile", "#",
+                    class: "flex items-center gap-2.5 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition-colors",
+                    role: "menuitem" %>
+
+              <%= link_to "Settings", "#",
+                    class: "flex items-center gap-2.5 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition-colors",
+                    role: "menuitem" %>
+            </div>
+
+            <div class="py-1 border-t border-gray-700" role="none">
+              <%= button_to "Sign out",
+                    destroy_user_session_path,
+                    method: :delete,
+                    class: "w-full text-left flex items-center gap-2.5 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition-colors",
+                    role: "menuitem",
+                    form_class: "w-full" %>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</nav>
