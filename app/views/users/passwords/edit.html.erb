@@ -1,25 +1,112 @@
-<h2>Change your password</h2>
+<div class="min-h-screen flex bg-[#080e1e]">
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "users/shared/error_messages", resource: resource %>
-  <%= f.hidden_field :reset_password_token %>
+  <%# ─── Left panel: landscape hero ───────────────────────────────────────── %>
+  <div class="hidden lg:flex lg:w-[45%] m-4 rounded-2xl overflow-hidden relative flex-col">
 
-  <div class="field">
-    <p><%= f.label :password, "New password" %></p>
-    <% if @minimum_password_length %>
-      <p><em>(<%= @minimum_password_length %> characters minimum)</em></p>
-    <% end %>
-    <p><%= f.password_field :password, autofocus: true, autocomplete: "new-password" %></p>
+    <div class="absolute inset-0 bg-gradient-to-b from-[#0c1e3c] via-[#163860] to-[#060c18]"></div>
+    <div class="absolute inset-0" style="background: radial-gradient(ellipse 75% 45% at 38% 68%, rgba(70,130,190,0.28) 0%, transparent 65%)"></div>
+
+    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="90"  cy="55"  r="1"   fill="white" opacity="0.7"/>
+      <circle cx="210" cy="38"  r="1.2" fill="white" opacity="0.5"/>
+      <circle cx="380" cy="65"  r="0.8" fill="white" opacity="0.6"/>
+      <circle cx="520" cy="30"  r="1.4" fill="white" opacity="0.4"/>
+      <circle cx="650" cy="72"  r="1"   fill="white" opacity="0.65"/>
+      <circle cx="730" cy="45"  r="0.9" fill="white" opacity="0.5"/>
+      <circle cx="160" cy="110" r="0.8" fill="white" opacity="0.45"/>
+      <circle cx="440" cy="95"  r="1.1" fill="white" opacity="0.55"/>
+      <circle cx="600" cy="118" r="0.8" fill="white" opacity="0.4"/>
+      <circle cx="760" cy="88"  r="1"   fill="white" opacity="0.6"/>
+      <circle cx="50"  cy="145" r="0.7" fill="white" opacity="0.35"/>
+      <circle cx="290" cy="130" r="1"   fill="white" opacity="0.5"/>
+      <ellipse cx="300" cy="360" rx="320" ry="90" fill="rgba(30,90,150,0.18)"/>
+      <path d="M0,390 C80,345 180,405 320,368 C430,338 530,385 660,362 C730,348 775,368 800,360 L800,600 L0,600 Z"
+            fill="#040c18" opacity="0.85"/>
+      <path d="M0,460 C70,430 170,465 310,448 C460,430 570,462 700,445 C760,436 790,450 800,447 L800,600 L0,600 Z"
+            fill="#020810" opacity="0.95"/>
+    </svg>
+
+    <div class="relative z-10 mt-auto px-10 pb-12 text-center">
+      <h2 class="text-white text-2xl font-semibold leading-snug">AI Generative</h2>
+      <h2 class="text-white text-2xl font-semibold leading-snug">Anything you can Imagine</h2>
+      <p class="text-[#8aaac8] text-sm mt-2">Generate any type of art with Openartistic</p>
+    </div>
   </div>
 
-  <div class="field">
-    <p><%= f.label :password_confirmation, "Confirm new password" %></p>
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
+  <%# ─── Right panel: set new password form ────────────────────────────────── %>
+  <div class="flex-1 flex flex-col justify-center px-8 sm:px-14 lg:px-20">
+    <div class="w-full max-w-md mx-auto">
+
+      <p class="text-[#6b8db3] text-sm mb-1">Almost there</p>
+      <h1 class="text-white text-4xl font-bold mb-2">Set New Password</h1>
+      <p class="text-[#6b8db3] text-sm mb-9">Choose a strong password for your account</p>
+
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+
+        <% if resource.errors.any? %>
+          <div class="mb-6 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30" data-turbo-temporary>
+            <p class="text-red-400 text-sm font-medium mb-1">
+              <%= pluralize(resource.errors.count, "error") %> prevented this update:
+            </p>
+            <ul class="list-disc list-inside space-y-0.5">
+              <% resource.errors.full_messages.each do |message| %>
+                <li class="text-red-300 text-sm"><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <%= f.hidden_field :reset_password_token %>
+
+        <%# New password %>
+        <div class="mb-5">
+          <div class="flex items-baseline justify-between mb-2">
+            <%= f.label :password, "New password", class: "text-[#7a93b4] text-sm" %>
+            <% if @minimum_password_length %>
+              <span class="text-[#4a6a8a] text-xs"><%= @minimum_password_length %> characters minimum</span>
+            <% end %>
+          </div>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+              <svg class="w-4 h-4 text-[#4a6a8a]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+            </span>
+            <%= f.password_field :password,
+                  autofocus: true,
+                  autocomplete: "new-password",
+                  placeholder: "Enter new password",
+                  class: "w-full bg-[#0d1f3e] border border-[#1e3563] text-white placeholder-[#3a5070] rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#3060b0] focus:ring-1 focus:ring-[#3060b0] transition-colors" %>
+          </div>
+        </div>
+
+        <%# Confirm new password %>
+        <div class="mb-8">
+          <%= f.label :password_confirmation, "Confirm new password", class: "block text-[#7a93b4] text-sm mb-2" %>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+              <svg class="w-4 h-4 text-[#4a6a8a]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+            </span>
+            <%= f.password_field :password_confirmation,
+                  autocomplete: "new-password",
+                  placeholder: "Repeat new password",
+                  class: "w-full bg-[#0d1f3e] border border-[#1e3563] text-white placeholder-[#3a5070] rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#3060b0] focus:ring-1 focus:ring-[#3060b0] transition-colors" %>
+          </div>
+        </div>
+
+        <%= f.submit "Change my password",
+              class: "w-full bg-[#0f1525] hover:bg-[#182038] text-white font-medium py-4 rounded-full border border-[#1e3060] transition-colors cursor-pointer text-sm tracking-wide" %>
+
+      <% end %>
+
+      <div class="mt-8 text-center">
+        <%= link_to "Back to login", new_session_path(resource_name),
+              class: "text-[#4a8ae0] text-sm hover:text-[#6aaaf8] transition-colors" %>
+      </div>
+
+    </div>
   </div>
 
-  <div class="actions">
-    <%= f.submit "Change my password" %>
-  </div>
-<% end %>
-
-<%= render "users/shared/links" %>
+</div>
