@@ -88,8 +88,7 @@ production:
   primary: &primary_production
     <<: *default
     database: ai_rails_app_production
-    username: ai_rails_app
-    password: <%= ENV["AI_RAILS_APP_DATABASE_PASSWORD"] %>
+    url: <%= ENV["DB_HOST"] %>
   cache:
     <<: *primary_production
     database: ai_rails_app_production_cache

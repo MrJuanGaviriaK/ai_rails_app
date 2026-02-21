@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Tech Stack
 
-- **Ruby 3.3.3 / Rails 8.1.2** with PostgreSQL
+- **Ruby 3.3.4 / Rails 8.1.2** with PostgreSQL
 - **Frontend:** Hotwire (Turbo + Stimulus), ImportMap, Propshaft asset pipeline
 - **Background jobs:** Solid Queue (via Puma plugin)
 - **Caching:** Solid Cache; **WebSockets:** Solid Cable
