@@ -59,9 +59,9 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address:              "smtp.sendgrid.net",
     port:                 587,
-    domain:               ENV.fetch("ACTION_MAILER_HOST"),
+    domain:               ENV.fetch("ACTION_MAILER_HOST", nil),
     user_name:            "apikey",
-    password:             ENV.fetch("SENDGRID_API_KEY"),
+    password:             ENV.fetch("SENDGRID_API_KEY", nil),
     authentication:       :plain,
     enable_starttls_auto: true,
     open_timeout:         5,
@@ -70,7 +70,7 @@ Rails.application.configure do
 
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = {
-    host:     ENV.fetch("ACTION_MAILER_HOST"),
+    host:     ENV.fetch("ACTION_MAILER_HOST", nil),
     protocol: "https"
   }
 
