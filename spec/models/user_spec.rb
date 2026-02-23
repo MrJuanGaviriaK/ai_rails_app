@@ -3,6 +3,8 @@ require "rails_helper"
 RSpec.describe User, type: :model do
   subject(:user) { build(:user) }
 
+  it_behaves_like "a rolifiable model"
+
   describe "factory" do
     it "produces a valid user" do
       expect(user).to be_valid
@@ -118,6 +120,42 @@ RSpec.describe User, type: :model do
     it "does not persist an invalid user" do
       expect { create(:user, name: nil) }.to raise_error(ActiveRecord::RecordInvalid)
       expect(described_class.count).to eq(0)
+    end
+  end
+
+  describe "#send_welcome_email" do
+    it "enqueues welcome email on first confirmation" do
+      user = create(:user, :unconfirmed)
+      expect { user.confirm }.to have_enqueued_mail(UserMailer, :welcome_email).with(user)
+    end
+
+    it "does not re-enqueue on subsequent updates" do
+      user = create(:user) # already confirmed
+      expect { user.update!(name: "New Name") }.not_to have_enqueued_mail(UserMailer, :welcome_email)
+    end
+  end
+
+  describe "roles" do
+    describe "factory traits" do
+      it "creates an admin user with :admin trait" do
+        admin = create(:user, :admin)
+        expect(admin.has_role?(:admin)).to be true
+      end
+
+      it "creates a client user with :client trait" do
+        client = create(:user, :client)
+        expect(client.has_role?(:client)).to be true
+      end
+
+      it "creates a normal_user with :normal_user trait" do
+        normal = create(:user, :normal_user)
+        expect(normal.has_role?(:normal_user)).to be true
+      end
+
+      it "assigns the normal_user role by default on creation" do
+        user = create(:user)
+        expect(user.has_role?(:normal_user)).to be true
+      end
     end
   end
 end

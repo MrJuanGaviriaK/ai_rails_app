@@ -1,0 +1,39 @@
+<div class="min-h-screen flex items-center justify-center bg-[#080e1e] px-4">
+  <div class="w-full max-w-md bg-[#0d1f3e] border border-[#1e3563] rounded-2xl px-10 py-12 text-center">
+
+    <%# Envelope icon %>
+    <div class="flex justify-center mb-8">
+      <div class="w-20 h-20 rounded-full bg-[#0a1830] border border-[#1e3563] flex items-center justify-center">
+        <svg class="w-10 h-10 text-[#4a8ae0]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+        </svg>
+      </div>
+    </div>
+
+    <h1 class="text-white text-3xl font-bold mb-3">Check your inbox</h1>
+
+    <p class="text-[#8aaac8] text-sm leading-relaxed mb-2">
+      We sent a confirmation link to
+    </p>
+    <% if @email.present? %>
+      <p class="text-white font-medium text-sm mb-6"><%= @email %></p>
+    <% end %>
+    <p class="text-[#8aaac8] text-sm leading-relaxed mb-8">
+      Click the link in the email to activate your account.
+    </p>
+
+    <p class="text-[#6b8db3] text-sm mb-2">Didn't get it? Check your spam folder or</p>
+    <%= link_to "Resend confirmation email",
+          new_user_confirmation_path,
+          class: "inline-block text-[#4a8ae0] hover:text-[#6aaaf8] text-sm transition-colors mb-8" %>
+
+    <div class="border-t border-[#1e3563] pt-6">
+      <p class="text-[#6b8db3] text-sm">
+        Already confirmed?
+        <%= link_to "Sign in", new_user_session_path,
+              class: "text-[#4a8ae0] hover:text-[#6aaaf8] transition-colors" %>
+      </p>
+    </div>
+
+  </div>
+</div>

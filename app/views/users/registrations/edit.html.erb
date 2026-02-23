@@ -7,19 +7,7 @@
       <h1 class="text-white text-3xl font-bold">Account Settings</h1>
     </div>
 
-    <%# Error messages %>
-    <% if resource.errors.any? %>
-      <div class="mb-6 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30" data-turbo-temporary>
-        <p class="text-red-400 text-sm font-medium mb-1">
-          <%= pluralize(resource.errors.count, "error") %> prevented this update:
-        </p>
-        <ul class="list-disc list-inside space-y-0.5">
-          <% resource.errors.full_messages.each do |message| %>
-            <li class="text-red-300 text-sm"><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+    <%= render "users/shared/error_messages", action_label: "prevented this update" %>
 
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
 
