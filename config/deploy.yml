@@ -15,7 +15,7 @@ servers:
 
 proxy:
   ssl: true
-  host: KAMAL_PROXY_HOST
+  host: <%= ENV.fetch("KAMAL_PROXY_HOST") %>
   app_port: 3000
 
 # Where you keep your container images.
