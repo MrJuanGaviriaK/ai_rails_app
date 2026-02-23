@@ -50,7 +50,7 @@ Analyze the problem and recommend the right tool.
 - **Services:** Service Objects vs ActiveInteraction.
 
 ### 4. Output: The Blueprint
-Generate a plan file (e.g., `docs/plans/feature-x.md`) containing:
+Always generate a plan file (e.g., `docs/plans/feature-x.md`) containing:
 1.  **Summary:** What are we building?
 2.  **Schema Changes:** SQL/Migration steps.
 3.  **Components:** Models, Controllers, Jobs needed.

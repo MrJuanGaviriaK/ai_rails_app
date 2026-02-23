@@ -1,37 +1,6 @@
 <div class="min-h-screen flex bg-[#080e1e]">
 
-  <%# ─── Left panel: landscape hero ───────────────────────────────────────── %>
-  <div class="hidden lg:flex lg:w-[45%] m-4 rounded-2xl overflow-hidden relative flex-col">
-
-    <div class="absolute inset-0 bg-gradient-to-b from-[#0c1e3c] via-[#163860] to-[#060c18]"></div>
-    <div class="absolute inset-0" style="background: radial-gradient(ellipse 75% 45% at 38% 68%, rgba(70,130,190,0.28) 0%, transparent 65%)"></div>
-
-    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="90"  cy="55"  r="1"   fill="white" opacity="0.7"/>
-      <circle cx="210" cy="38"  r="1.2" fill="white" opacity="0.5"/>
-      <circle cx="380" cy="65"  r="0.8" fill="white" opacity="0.6"/>
-      <circle cx="520" cy="30"  r="1.4" fill="white" opacity="0.4"/>
-      <circle cx="650" cy="72"  r="1"   fill="white" opacity="0.65"/>
-      <circle cx="730" cy="45"  r="0.9" fill="white" opacity="0.5"/>
-      <circle cx="160" cy="110" r="0.8" fill="white" opacity="0.45"/>
-      <circle cx="440" cy="95"  r="1.1" fill="white" opacity="0.55"/>
-      <circle cx="600" cy="118" r="0.8" fill="white" opacity="0.4"/>
-      <circle cx="760" cy="88"  r="1"   fill="white" opacity="0.6"/>
-      <circle cx="50"  cy="145" r="0.7" fill="white" opacity="0.35"/>
-      <circle cx="290" cy="130" r="1"   fill="white" opacity="0.5"/>
-      <ellipse cx="300" cy="360" rx="320" ry="90" fill="rgba(30,90,150,0.18)"/>
-      <path d="M0,390 C80,345 180,405 320,368 C430,338 530,385 660,362 C730,348 775,368 800,360 L800,600 L0,600 Z"
-            fill="#040c18" opacity="0.85"/>
-      <path d="M0,460 C70,430 170,465 310,448 C460,430 570,462 700,445 C760,436 790,450 800,447 L800,600 L0,600 Z"
-            fill="#020810" opacity="0.95"/>
-    </svg>
-
-    <div class="relative z-10 mt-auto px-10 pb-12 text-center">
-      <h2 class="text-white text-2xl font-semibold leading-snug">AI Generative</h2>
-      <h2 class="text-white text-2xl font-semibold leading-snug">Anything you can Imagine</h2>
-      <p class="text-[#8aaac8] text-sm mt-2">Generate any type of art with Openartistic</p>
-    </div>
-  </div>
+  <%= render "users/shared/hero_panel" %>
 
   <%# ─── Right panel: resend confirmation form ─────────────────────────────── %>
   <div class="flex-1 flex flex-col justify-center px-8 sm:px-14 lg:px-20">
@@ -43,18 +12,7 @@
 
       <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
 
-        <% if resource.errors.any? %>
-          <div class="mb-6 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30" data-turbo-temporary>
-            <p class="text-red-400 text-sm font-medium mb-1">
-              <%= pluralize(resource.errors.count, "error") %> prevented this request:
-            </p>
-            <ul class="list-disc list-inside space-y-0.5">
-              <% resource.errors.full_messages.each do |message| %>
-                <li class="text-red-300 text-sm"><%= message %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
+        <%= render "users/shared/error_messages", action_label: "prevented this request" %>
 
         <%# Email %>
         <div class="mb-8">
