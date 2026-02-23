@@ -60,8 +60,6 @@ Rails.application.configure do
     raise_delivery_errors: true
   }
 
-  config.action_mailer.deliver_later_queue_name = :default
-
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = {
     host:     ENV.fetch("ACTION_MAILER_HOST", nil),
