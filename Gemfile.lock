@@ -378,6 +378,7 @@ GEM
     ruby-vips (2.3.0)
       ffi (~> 1.12)
       logger
+    ruby_http_client (3.6.0)
     rubyzip (3.2.2)
     securerandom (0.4.1)
     selenium-webdriver (4.41.0)
@@ -386,6 +387,8 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
+    sendgrid-ruby (6.7.0)
+      ruby_http_client (~> 3.4)
     solid_cable (3.0.12)
       actioncable (>= 7.2)
       activejob (>= 7.2)
@@ -492,6 +495,7 @@ DEPENDENCIES
   rspec-rails
   rubocop-rails-omakase
   selenium-webdriver
+  sendgrid-ruby
   solid_cable
   solid_cache
   solid_queue
