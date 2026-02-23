@@ -15,6 +15,9 @@ jobs:
       RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
       DB_HOST: ${{ secrets.DB_HOST }}
       KAMAL_PROXY_HOST: ${{ secrets.KAMAL_PROXY_HOST }}
+      SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+      ACTION_MAILER_HOST: ${{ secrets.ACTION_MAILER_HOST }}
+      MAILER_FROM_ADDRESS: ${{ secrets.MAILER_FROM_ADDRESS }}
 
     steps:
       - name: Checkout code
@@ -40,6 +43,9 @@ jobs:
           KAMAL_REGISTRY_PASSWORD=${{ secrets.KAMAL_REGISTRY_PASSWORD }}
           KAMAL_PROXY_HOST=${{ secrets.KAMAL_PROXY_HOST }}
           DB_HOST=${{ secrets.DB_HOST }}
+          SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }}
+          ACTION_MAILER_HOST=${{ secrets.ACTION_MAILER_HOST }}
+          MAILER_FROM_ADDRESS=${{ secrets.MAILER_FROM_ADDRESS }}
           EOF
           echo "${{ secrets.RAILS_MASTER_KEY }}" > config/master.key
 
