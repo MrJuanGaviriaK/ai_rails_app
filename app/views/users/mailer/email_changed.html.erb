@@ -1,7 +1,67 @@
-<p>Hello <%= @email %>!</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Email address changed – MRJG tools</title>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #080e1e; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #080e1e;">
+      <tr>
+        <td align="center" style="padding: 40px 16px;">
 
-<% if @resource.try(:unconfirmed_email?) %>
-  <p>We're contacting you to notify you that your email is being changed to <%= @resource.unconfirmed_email %>.</p>
-<% else %>
-  <p>We're contacting you to notify you that your email has been changed to <%= @resource.email %>.</p>
-<% end %>
+          <!-- Card -->
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 560px; background-color: #0d1f3e; border-radius: 8px; overflow: hidden;">
+
+            <!-- Header -->
+            <tr>
+              <td style="padding: 32px 40px 24px; border-bottom: 1px solid #1a3260;">
+                <p style="margin: 0; font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px;">MRJG tools</p>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding: 32px 40px;">
+                <h1 style="margin: 0 0 16px; font-size: 24px; font-weight: 700; color: #ffffff; line-height: 1.3;">
+                  Email address <%= @resource.try(:unconfirmed_email?) ? "change requested" : "changed" %>
+                </h1>
+                <p style="margin: 0 0 8px; font-size: 16px; color: #8aaac8; line-height: 1.6;">
+                  Hello, <%= @email %>!
+                </p>
+                <% if @resource.try(:unconfirmed_email?) %>
+                  <p style="margin: 0 0 0; font-size: 16px; color: #8aaac8; line-height: 1.6;">
+                    We are contacting you to notify you that your email address is being changed to
+                    <strong style="color: #ffffff;"><%= @resource.unconfirmed_email %></strong>.
+                    No action is required on your part — this is just a heads-up.
+                  </p>
+                <% else %>
+                  <p style="margin: 0 0 0; font-size: 16px; color: #8aaac8; line-height: 1.6;">
+                    We are contacting you to notify you that your email address has been changed to
+                    <strong style="color: #ffffff;"><%= @resource.email %></strong>.
+                    If you did not make this change, please contact us immediately.
+                  </p>
+                <% end %>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="padding: 24px 40px; border-top: 1px solid #1a3260;">
+                <p style="margin: 0; font-size: 13px; color: #5a7a9a; line-height: 1.6;">
+                  You received this email because your MRJG tools account email address was changed.<br>
+                  To unsubscribe from future emails, send a message to
+                  <a href="mailto:unsubscribe@mail.mrjg.dev?subject=unsubscribe" style="color: #60a5fa;">unsubscribe@mail.mrjg.dev</a>.
+                </p>
+              </td>
+            </tr>
+
+          </table>
+          <!-- /Card -->
+
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
