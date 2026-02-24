@@ -69,6 +69,13 @@
         <%= f.submit "Sign in",
               class: "w-full bg-[#0f1525] hover:bg-[#182038] text-white font-medium py-4 rounded-full border border-[#1e3060] transition-colors cursor-pointer text-sm tracking-wide" %>
 
+        <%# Sign up %>
+        <div class="text-center mt-5">
+          <span class="text-[#6b8db3] text-sm">Don't have an account? </span>
+          <%= link_to "Sign up", new_user_registration_path,
+                class: "text-[#4a8ae0] text-sm hover:text-[#6aaaf8] transition-colors" %>
+        </div>
+
       <% end %>
 
     </div>
