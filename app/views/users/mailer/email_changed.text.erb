@@ -1,0 +1,22 @@
+Email address changed – MRJG tools
+====================================
+
+Hello, <%= @email %>!
+
+<% if @resource.try(:unconfirmed_email?) %>
+We are contacting you to notify you that your email address is being changed to:
+<%= @resource.unconfirmed_email %>
+
+No action is required on your part — this is just a heads-up.
+<% else %>
+We are contacting you to notify you that your email address has been changed to:
+<%= @resource.email %>
+
+If you did not make this change, please contact us immediately.
+<% end %>
+
+---
+
+You received this email because your MRJG tools account email address was changed.
+To unsubscribe from future emails, send a message to:
+unsubscribe@mail.mrjg.dev

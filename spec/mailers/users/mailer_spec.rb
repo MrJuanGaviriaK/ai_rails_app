@@ -17,7 +17,7 @@ RSpec.describe Users::Mailer, type: :mailer do
     end
 
     it "includes the confirmation token in the body" do
-      expect(mail.body.decoded).to include(token)
+      expect(mail.text_part.body.decoded).to include(token)
     end
 
     it "sets the List-Unsubscribe header" do
