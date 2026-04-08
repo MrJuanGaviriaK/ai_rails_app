@@ -1,0 +1,58 @@
+<%= form_with model: [:admin, tenant], local: true, class: "space-y-6" do |f| %>
+  <% if tenant.errors.any? %>
+    <div class="rounded-xl border border-red-500/40 bg-red-950/20 p-4">
+      <p class="mb-1 text-sm font-semibold text-red-300">Please fix the following errors:</p>
+      <ul class="list-inside list-disc text-sm text-red-200">
+        <% tenant.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <section class="rounded-xl border border-[#1e3563] bg-[#0a1628] p-5">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300">Basic Information</h2>
+
+    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      <div class="space-y-1.5">
+        <%= f.label :name, class: "block text-sm font-medium text-gray-200" %>
+        <%= f.text_field :name, placeholder: "Acme Inc", class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+      </div>
+
+      <div class="space-y-1.5">
+        <%= f.label :slug, class: "block text-sm font-medium text-gray-200" %>
+        <%= f.text_field :slug, placeholder: "acme-inc", class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 font-mono text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+        <p class="text-xs text-gray-400">Used in URLs and internal references.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="rounded-xl border border-[#1e3563] bg-[#0a1628] p-5">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300">Lifecycle</h2>
+
+    <div class="mt-4 space-y-1.5">
+      <%= f.label :status, class: "block text-sm font-medium text-gray-200" %>
+      <%= f.select :status, options_for_select(Tenant::STATUSES.map { |status| [status.titleize, status] }, tenant.status), {}, class: "ui-select" %>
+      <p class="text-xs text-gray-400">Archived tenants are soft-deleted and excluded from active context.</p>
+    </div>
+  </section>
+
+  <section class="rounded-xl border border-[#1e3563] bg-[#0a1628] p-5">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300">Settings</h2>
+
+    <div class="mt-4 space-y-1.5">
+      <%= label_tag "tenant_settings_json", "Settings (JSON object)", class: "block text-sm font-medium text-gray-200" %>
+      <%= text_area_tag "tenant[settings_json]", (tenant.settings.presence || {}).to_json, rows: 8, class: "w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 py-2.5 font-mono text-sm leading-relaxed text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+      <p class="text-xs text-gray-400">Example: {"timezone":"UTC","feature_flags":{"beta":true}}</p>
+    </div>
+  </section>
+
+  <div class="flex flex-col gap-2 border-t border-[#1e3563] pt-4 sm:flex-row sm:items-center">
+    <%= f.submit class: "inline-flex h-11 items-center justify-center rounded-lg bg-indigo-600 px-5 text-sm font-semibold text-white transition hover:bg-indigo-500" %>
+    <%= link_to "Back", admin_tenants_path, class: "inline-flex h-11 items-center justify-center rounded-lg border border-[#34588f] bg-[#0a1628] px-5 text-sm font-medium text-gray-200 transition hover:bg-[#102447]" %>
+
+    <% if tenant.persisted? %>
+      <%= button_to "Archive tenant", admin_tenant_path(tenant), method: :delete, class: "inline-flex h-11 items-center justify-center rounded-lg border border-red-400/35 bg-red-500/10 px-5 text-sm font-semibold text-red-200 transition hover:bg-red-500/20", form_class: "sm:ml-auto", data: { turbo_confirm: "Archive this tenant?" } %>
+    <% end %>
+  </div>
+<% end %>
