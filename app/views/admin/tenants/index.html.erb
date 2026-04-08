@@ -1,0 +1,100 @@
+<% total_count = @tenants.count %>
+<% active_count = @tenants.count { |tenant| tenant.status == "active" } %>
+<% suspended_count = @tenants.count { |tenant| tenant.status == "suspended" } %>
+<% archived_count = @tenants.count { |tenant| tenant.status == "archived" } %>
+
+<div class="min-h-screen bg-[#080e1e] px-4 py-8 sm:px-8">
+  <div class="mx-auto max-w-7xl space-y-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-white sm:text-3xl">Tenant Management</h1>
+        <p class="mt-1 text-sm text-gray-300">Manage tenants, monitor status, and keep account boundaries safe.</p>
+      </div>
+
+      <%= link_to new_admin_tenant_path, class: "inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-900/30 transition hover:bg-indigo-500" do %>
+        <span class="text-base leading-none">+</span>
+        <span>New tenant</span>
+      <% end %>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="rounded-xl border border-indigo-900/40 bg-[#102447] p-4">
+        <p class="text-xs uppercase tracking-wide text-indigo-300">Total tenants</p>
+        <p class="mt-2 text-3xl font-bold text-white"><%= total_count %></p>
+      </div>
+
+      <div class="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+        <p class="text-xs uppercase tracking-wide text-emerald-300">Active</p>
+        <p class="mt-2 text-3xl font-bold text-emerald-100"><%= active_count %></p>
+      </div>
+
+      <div class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
+        <p class="text-xs uppercase tracking-wide text-amber-300">Suspended</p>
+        <p class="mt-2 text-3xl font-bold text-amber-100"><%= suspended_count %></p>
+      </div>
+
+      <div class="rounded-xl border border-slate-500/30 bg-slate-500/10 p-4">
+        <p class="text-xs uppercase tracking-wide text-slate-200">Archived</p>
+        <p class="mt-2 text-3xl font-bold text-slate-100"><%= archived_count %></p>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-4">
+      <%= form_with url: admin_tenants_path, method: :get, local: true, class: "grid gap-3 lg:grid-cols-[1fr_220px_auto_auto]" do |f| %>
+        <%= f.text_field :query, value: params[:query], placeholder: "Search by tenant name or slug", class: "h-11 rounded-lg border border-[#1e3563] bg-[#0a1628] px-3 text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+        <%= f.select :status, options_for_select([["All statuses", ""], ["Active", "active"], ["Suspended", "suspended"], ["Archived", "archived"]], params[:status]), {}, class: "ui-select" %>
+        <%= f.submit "Apply", class: "h-11 rounded-lg bg-indigo-600 px-4 text-sm font-semibold text-white transition hover:bg-indigo-500" %>
+        <%= link_to "Reset", admin_tenants_path, class: "inline-flex h-11 items-center justify-center rounded-lg border border-[#34588f] bg-[#0a1628] px-4 text-sm font-medium text-gray-200 transition hover:bg-[#102447]" %>
+      <% end %>
+    </div>
+
+    <div class="overflow-hidden rounded-xl border border-[#1e3563] bg-[#0d1f3e]">
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead class="bg-[#0b1a35]">
+            <tr>
+              <th class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Tenant</th>
+              <th class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Slug</th>
+              <th class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">Status</th>
+              <th class="px-5 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#1e3563]">
+            <% @tenants.each do |tenant| %>
+              <tr class="transition hover:bg-[#102447]">
+                <td class="px-5 py-4 text-sm">
+                  <p class="font-semibold text-white"><%= tenant.name %></p>
+                  <p class="text-xs text-gray-400">Created <%= l(tenant.created_at, format: :short) %></p>
+                </td>
+                <td class="px-5 py-4 text-sm font-mono text-gray-200"><%= tenant.slug %></td>
+                <td class="px-5 py-4 text-sm">
+                  <% status_classes = case tenant.status
+                    when "active" then "bg-emerald-500/10 text-emerald-200 border-emerald-400/30"
+                    when "suspended" then "bg-amber-500/10 text-amber-200 border-amber-400/30"
+                    else "bg-slate-500/10 text-slate-200 border-slate-400/30"
+                  end %>
+                  <span class="inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium <%= status_classes %>"><%= tenant.status.titleize %></span>
+                </td>
+                <td class="px-5 py-4 text-right text-sm">
+                  <div class="inline-flex items-center gap-2">
+                    <%= link_to "Edit", edit_admin_tenant_path(tenant), class: "rounded-md border border-[#34588f] bg-[#0a1628] px-3 py-1.5 text-xs font-semibold text-gray-200 transition hover:bg-[#102447]" %>
+                    <%= button_to "Archive", admin_tenant_path(tenant), method: :delete, class: "rounded-md border border-red-400/35 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-200 transition hover:bg-red-500/20", form_class: "inline", data: { turbo_confirm: "Archive this tenant?" } %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+
+            <% if @tenants.empty? %>
+              <tr>
+                <td colspan="4" class="px-6 py-14 text-center">
+                  <p class="text-lg font-semibold text-white">No tenants found</p>
+                  <p class="mt-1 text-sm text-gray-400">Try clearing filters or create your first tenant.</p>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

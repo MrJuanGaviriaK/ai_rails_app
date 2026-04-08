@@ -29,5 +29,9 @@ FactoryBot.define do
     trait :client do
       after(:create) { |user| user.add_role(:client) }
     end
+
+    trait :superadmin do
+      after(:create) { |user| user.add_role(:superadmin) }
+    end
   end
 end

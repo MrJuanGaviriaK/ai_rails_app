@@ -6,6 +6,9 @@
         <p class="text-[#6b8db3] text-sm mb-1">Dashboard</p>
         <h1 class="text-white text-4xl font-bold mb-2">Welcome, <%= current_user.name %>!</h1>
         <p class="text-[#6b8db3] text-sm">You are successfully logged in.</p>
+        <% if current_tenant.present? %>
+          <p class="text-[#9fc0e8] text-sm mt-3">Current tenant: <span class="font-semibold text-white"><%= current_tenant.name %></span></p>
+        <% end %>
       </div>
     </div>
   </main>

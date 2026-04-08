@@ -13,6 +13,11 @@ Rails.application.routes.draw do
 
   get "dashboard", to: "dashboard#index", as: :dashboard
 
+  namespace :admin do
+    resources :tenants, except: :show
+    post "tenant_context/switch", to: "tenant_contexts#switch", as: :switch_tenant_context
+  end
+
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   get "up" => "rails/health#show", as: :rails_health_check
 

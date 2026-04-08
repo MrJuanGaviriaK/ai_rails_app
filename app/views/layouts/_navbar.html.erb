@@ -19,6 +19,10 @@
         <div class="hidden sm:flex items-center gap-1">
           <%= link_to "Dashboard", dashboard_path,
                 class: "px-3 py-2 rounded-md text-sm font-semibold text-white bg-gray-800" %>
+          <% if current_user.superadmin? %>
+            <%= link_to "Tenants", admin_tenants_path,
+                  class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
+          <% end %>
           <%= link_to "Team", "#",
                 class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
           <%= link_to "Projects", "#",
@@ -30,6 +34,33 @@
 
       <%# Right side: notification bell + user avatar dropdown %>
       <div class="flex items-center gap-4">
+
+        <% if current_user.superadmin? && switchable_tenants.any? %>
+          <div class="hidden md:flex items-center gap-2 rounded-lg border border-[#2a3f63] bg-[#0f1f3f] px-2 py-1.5">
+            <span class="inline-flex items-center gap-1 rounded-md bg-[#152a52] px-2 py-1 text-xs font-medium text-[#b6cae2]">
+              <svg class="size-3.5 text-[#8aaac8]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path d="M10 2a1 1 0 0 1 .894.553l1.382 2.77 3.062.445a1 1 0 0 1 .554 1.706l-2.216 2.16.523 3.049a1 1 0 0 1-1.45 1.054L10 12.26l-2.739 1.44a1 1 0 0 1-1.45-1.054l.523-3.05-2.216-2.159a1 1 0 0 1 .554-1.706l3.062-.445 1.382-2.77A1 1 0 0 1 10 2Z" />
+              </svg>
+              Tenant
+            </span>
+
+            <%= form_with url: admin_switch_tenant_context_path, method: :post, local: true, class: "relative" do %>
+              <label for="tenant_switch" class="sr-only">Switch tenant</label>
+              <%= select_tag :tenant_id,
+                    options_from_collection_for_select(switchable_tenants, :id, :name, current_tenant&.id),
+                    id: "tenant_switch",
+                    class: "ui-select ui-select-sm appearance-none rounded-md font-medium",
+                    onchange: "this.form.requestSubmit()" %>
+              <svg class="pointer-events-none absolute right-2 top-1/2 size-4 -translate-y-1/2 text-[#8aaac8]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.514a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
+              </svg>
+            <% end %>
+          </div>
+        <% elsif current_tenant.present? %>
+          <div class="hidden md:flex items-center rounded-lg border border-[#2a3f63] bg-[#0f1f3f] px-2.5 py-1.5 text-xs text-[#b6cae2]">
+            Tenant: <span class="ml-1 font-semibold text-white"><%= current_tenant.name %></span>
+          </div>
+        <% end %>
 
         <%# Bell icon %>
         <button type="button"
