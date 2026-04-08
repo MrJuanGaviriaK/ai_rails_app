@@ -10,27 +10,27 @@
       </div>
     </div>
 
-    <h1 class="text-white text-3xl font-bold mb-3">Check your inbox</h1>
+    <h1 class="text-white text-3xl font-bold mb-3"><%= t("users.registrations.check_email.title") %></h1>
 
     <p class="text-[#8aaac8] text-sm leading-relaxed mb-2">
-      We sent a confirmation link to
+      <%= t("users.registrations.check_email.sent_to") %>
     </p>
     <% if @email.present? %>
       <p class="text-white font-medium text-sm mb-6"><%= @email %></p>
     <% end %>
     <p class="text-[#8aaac8] text-sm leading-relaxed mb-8">
-      Click the link in the email to activate your account.
+      <%= t("users.registrations.check_email.instruction") %>
     </p>
 
-    <p class="text-[#6b8db3] text-sm mb-2">Didn't get it? Check your spam folder or</p>
-    <%= link_to "Resend confirmation email",
+    <p class="text-[#6b8db3] text-sm mb-2"><%= t("users.registrations.check_email.did_not_get_it") %></p>
+    <%= link_to t("users.registrations.check_email.resend"),
           new_user_confirmation_path,
           class: "inline-block text-[#4a8ae0] hover:text-[#6aaaf8] text-sm transition-colors mb-8" %>
 
     <div class="border-t border-[#1e3563] pt-6">
       <p class="text-[#6b8db3] text-sm">
-        Already confirmed?
-        <%= link_to "Sign in", new_user_session_path,
+        <%= t("users.registrations.check_email.already_confirmed") %>
+        <%= link_to t("users.shared.links.log_in"), new_user_session_path,
               class: "text-[#4a8ae0] hover:text-[#6aaaf8] transition-colors" %>
       </p>
     </div>

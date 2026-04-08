@@ -1,0 +1,57 @@
+<div class="min-h-screen bg-[#080e1e] px-4 py-8 sm:px-8">
+  <div class="mx-auto max-w-5xl space-y-5">
+    <div class="rounded-xl border border-[#1e3563] bg-gradient-to-r from-[#0c1e3c] via-[#163860] to-[#060c18] p-6">
+      <p class="text-xs uppercase tracking-wide text-[#8aaac8]"><%= t("admin.purchasing_locations.show.kicker") %></p>
+      <h1 class="mt-2 text-3xl font-bold text-white"><%= @purchasing_location.name %></h1>
+      <p class="mt-2 text-sm text-[#b6cae2]"><%= @purchasing_location.department %> · <%= @purchasing_location.city %></p>
+    </div>
+
+    <div class="grid gap-5 lg:grid-cols-3">
+      <section class="rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-5 lg:col-span-2">
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300"><%= t("admin.purchasing_locations.show.details") %></h2>
+
+        <dl class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div>
+            <dt class="text-xs uppercase tracking-wide text-gray-400"><%= t("admin.purchasing_locations.show.tenant") %></dt>
+            <dd class="mt-1 text-sm font-medium text-white"><%= @purchasing_location.tenant.name %></dd>
+          </div>
+          <div>
+            <dt class="text-xs uppercase tracking-wide text-gray-400"><%= t("admin.purchasing_locations.show.status") %></dt>
+            <dd class="mt-1 text-sm font-medium text-white"><%= @purchasing_location.active? ? t("admin.purchasing_locations.index.active") : t("admin.purchasing_locations.index.inactive") %></dd>
+          </div>
+          <div>
+            <dt class="text-xs uppercase tracking-wide text-gray-400"><%= t("admin.purchasing_locations.show.department") %></dt>
+            <dd class="mt-1 text-sm font-medium text-white"><%= @purchasing_location.department %></dd>
+          </div>
+          <div>
+            <dt class="text-xs uppercase tracking-wide text-gray-400"><%= t("admin.purchasing_locations.show.city") %></dt>
+            <dd class="mt-1 text-sm font-medium text-white"><%= @purchasing_location.city %></dd>
+          </div>
+          <div class="sm:col-span-2">
+            <dt class="text-xs uppercase tracking-wide text-gray-400"><%= t("admin.purchasing_locations.show.address") %></dt>
+            <dd class="mt-1 text-sm font-medium text-white"><%= @purchasing_location.address %></dd>
+          </div>
+          <div class="sm:col-span-2">
+            <dt class="text-xs uppercase tracking-wide text-gray-400"><%= t("admin.purchasing_locations.show.notes") %></dt>
+            <dd class="mt-1 text-sm font-medium text-white"><%= @purchasing_location.notes.presence || t("admin.purchasing_locations.show.no_notes") %></dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-5">
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300"><%= t("admin.purchasing_locations.show.actions") %></h2>
+
+        <div class="mt-4 flex flex-col gap-2">
+          <%= link_to t("admin.purchasing_locations.show.edit"), edit_admin_purchasing_location_path(@purchasing_location), class: "inline-flex h-10 items-center justify-center rounded-lg border border-[#34588f] bg-[#0a1628] px-4 text-sm font-semibold text-gray-200 transition hover:bg-[#102447]" %>
+          <%= link_to t("admin.purchasing_locations.show.back"), admin_purchasing_locations_path, class: "inline-flex h-10 items-center justify-center rounded-lg border border-[#34588f] bg-[#0a1628] px-4 text-sm font-semibold text-gray-200 transition hover:bg-[#102447]" %>
+          <%= button_to t("admin.purchasing_locations.show.archive"), admin_purchasing_location_path(@purchasing_location), method: :delete, class: "inline-flex h-10 items-center justify-center rounded-lg border border-red-400/35 bg-red-500/10 px-4 text-sm font-semibold text-red-200 transition hover:bg-red-500/20", data: { turbo_confirm: t("admin.purchasing_locations.show.archive_confirm") } %>
+        </div>
+      </section>
+    </div>
+
+    <section class="rounded-xl border border-dashed border-[#34588f] bg-[#0d1f3e]/70 p-5">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300"><%= t("admin.purchasing_locations.show.future_section_title") %></h2>
+      <p class="mt-2 text-sm text-gray-300"><%= t("admin.purchasing_locations.show.future_section_description") %></p>
+    </section>
+  </div>
+</div>

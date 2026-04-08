@@ -1,0 +1,378 @@
+es:
+  date:
+    month_names:
+      - ~
+      - enero
+      - febrero
+      - marzo
+      - abril
+      - mayo
+      - junio
+      - julio
+      - agosto
+      - septiembre
+      - octubre
+      - noviembre
+      - diciembre
+    abbr_month_names:
+      - ~
+      - ene
+      - feb
+      - mar
+      - abr
+      - may
+      - jun
+      - jul
+      - ago
+      - sep
+      - oct
+      - nov
+      - dic
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d %b"
+      long: "%d de %B de %Y"
+
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      short: "%d %b %H:%M"
+      long: "%d de %B de %Y %H:%M"
+
+  errors:
+    messages:
+      blank: "no puede estar en blanco"
+      taken: "ya está en uso"
+
+  layouts:
+    devise:
+      language: "Idioma"
+    navbar:
+      dashboard: "Panel"
+      tenants: "Tenants"
+      purchasing_locations: "Puntos de compra"
+      team: "Equipo"
+      projects: "Proyectos"
+      calendar: "Calendario"
+      tenant: "Tenant"
+      switch_tenant: "Cambiar tenant"
+      current_tenant: "Tenant actual"
+      language: "Idioma"
+      view_notifications: "Ver notificaciones"
+      open_user_menu: "Abrir menú de usuario"
+      signed_in_as: "Sesión iniciada como"
+      your_profile: "Tu perfil"
+      settings: "Configuración"
+      sign_out: "Cerrar sesión"
+
+  dashboard:
+    index:
+      title: "Panel"
+      welcome: "¡Bienvenido, %{name}!"
+      logged_in: "Iniciaste sesión correctamente."
+      current_tenant: "Tenant actual"
+
+  admin:
+    authorization:
+      not_allowed: "No tienes permisos para acceder a esta sección."
+    tenant_contexts:
+      unavailable: "El tenant seleccionado no está disponible."
+      switched: "Cambiaste a %{tenant}."
+    purchasing_locations:
+      authorization:
+        not_allowed: "No tienes permisos para gestionar puntos de compra."
+      flash:
+        created: "Punto de compra creado correctamente."
+        updated: "Punto de compra actualizado correctamente."
+        archived: "Punto de compra archivado correctamente."
+      index:
+        title: "Puntos de compra"
+        subtitle: "Administra lugares físicos donde cada tenant compra mineral."
+        new: "Nuevo punto"
+        total: "Total de puntos"
+        active: "Activo"
+        inactive: "Inactivo"
+        search_placeholder: "Buscar por nombre, ciudad o dirección"
+        all_departments: "Todos los departamentos"
+        apply: "Aplicar"
+        reset: "Limpiar"
+        columns:
+          name: "Punto"
+          department: "Departamento"
+          city: "Ciudad"
+          tenant: "Tenant"
+          status: "Estado"
+          actions: "Acciones"
+        show: "Ver"
+        edit: "Editar"
+        archive: "Archivar"
+        archive_confirm: "¿Archivar este punto de compra?"
+        empty_title: "No se encontraron puntos de compra"
+        empty_description: "Intenta limpiar los filtros o crear tu primer punto de compra."
+      form:
+        fix_errors: "Por favor corrige los siguientes errores:"
+        basic_information: "Información básica"
+        name: "Nombre del punto"
+        name_placeholder: "Punto Principal de Compra"
+        tenant: "Tenant"
+        select_tenant: "Selecciona un tenant"
+        location: "Ubicación"
+        department: "Departamento"
+        select_department: "Selecciona un departamento"
+        city: "Ciudad"
+        city_placeholder: "Medellín"
+        address: "Dirección"
+        address_placeholder: "Calle 10 # 25-40"
+        operational: "Configuración operativa"
+        active: "Punto activo"
+        notes: "Notas"
+        notes_placeholder: "Notas operativas, horario, referencias, etc."
+        create: "Crear punto"
+        update: "Actualizar punto"
+        back: "Volver"
+        archive: "Archivar punto"
+        archive_confirm: "¿Archivar este punto de compra?"
+      new:
+        kicker: "Puntos de compra"
+        title: "Crear punto de compra"
+        description: "Registra un nuevo lugar físico de compra de mineral para un tenant."
+      edit:
+        kicker: "Puntos de compra"
+        title: "Editar punto de compra"
+        description_prefix: "Actualiza la información de"
+      show:
+        kicker: "Punto de compra"
+        details: "Detalle del punto"
+        tenant: "Tenant"
+        status: "Estado"
+        department: "Departamento"
+        city: "Ciudad"
+        address: "Dirección"
+        notes: "Notas"
+        no_notes: "Sin notas registradas."
+        actions: "Acciones"
+        edit: "Editar"
+        back: "Volver al listado"
+        archive: "Archivar punto"
+        archive_confirm: "¿Archivar este punto de compra?"
+        future_section_title: "Información relacionada"
+        future_section_description: "Esta sección queda reservada para futuros datos vinculados a este punto de compra."
+    tenants:
+      flash:
+        created: "Tenant creado correctamente."
+        updated: "Tenant actualizado correctamente."
+        archived: "Tenant archivado correctamente."
+      errors:
+        settings_must_be_object: "debe ser un objeto JSON"
+        settings_must_be_valid_json: "debe ser un JSON válido"
+      statuses:
+        active: "Activo"
+        suspended: "Suspendido"
+        archived: "Archivado"
+      index:
+        title: "Gestión de tenants"
+        subtitle: "Administra tenants, monitorea estados y mantiene límites seguros entre cuentas."
+        new_tenant: "Nuevo tenant"
+        total_tenants: "Total de tenants"
+        search_placeholder: "Buscar por nombre o slug del tenant"
+        all_statuses: "Todos los estados"
+        apply: "Aplicar"
+        reset: "Limpiar"
+        columns:
+          tenant: "Tenant"
+          slug: "Slug"
+          status: "Estado"
+          actions: "Acciones"
+        created_at: "Creado %{date}"
+        edit: "Editar"
+        archive: "Archivar"
+        archive_confirm: "¿Archivar este tenant?"
+        empty_title: "No se encontraron tenants"
+        empty_description: "Intenta limpiar los filtros o crear tu primer tenant."
+      form:
+        fix_errors: "Por favor corrige los siguientes errores:"
+        basic_information: "Información básica"
+        name: "Nombre"
+        name_placeholder: "Acme Inc"
+        slug: "Slug"
+        slug_placeholder: "acme-inc"
+        slug_help: "Se usa en URLs y referencias internas."
+        lifecycle: "Ciclo de vida"
+        status: "Estado"
+        status_help: "Los tenants archivados se eliminan de forma lógica y se excluyen del contexto activo."
+        settings: "Configuración"
+        settings_json: "Configuración (objeto JSON)"
+        settings_example: "Ejemplo: {\"timezone\":\"UTC\",\"feature_flags\":{\"beta\":true}}"
+        create_tenant: "Crear tenant"
+        update_tenant: "Actualizar tenant"
+        back: "Volver"
+        archive_tenant: "Archivar tenant"
+        archive_confirm: "¿Archivar este tenant?"
+      new:
+        kicker: "Administración de tenants"
+        title: "Crear tenant"
+        description: "Configura un nuevo espacio de tenant y define ajustes por defecto."
+      edit:
+        kicker: "Administración de tenants"
+        title: "Editar tenant"
+        description_prefix: "Actualiza estado y configuración para"
+
+  users:
+    shared:
+      hero_panel:
+        title_line_1: "IA Generativa"
+        title_line_2: "Todo lo que puedas imaginar"
+        subtitle: "Genera cualquier tipo de arte con MRJG"
+      error_messages:
+        summary:
+          one: "%{count} error %{action_label}"
+          other: "%{count} errores %{action_label}"
+        default_action_label: "impidieron esta acción"
+      links:
+        log_in: "Iniciar sesión"
+        sign_up: "Registrarse"
+        forgot_password: "¿Olvidaste tu contraseña?"
+        confirmation_instructions: "¿No recibiste las instrucciones de confirmación?"
+        unlock_instructions: "¿No recibiste las instrucciones de desbloqueo?"
+        sign_in_with: "Iniciar sesión con %{provider}"
+      fields:
+        full_name: "Nombre completo"
+        full_name_placeholder: "Tu nombre completo"
+        email: "Correo electrónico"
+        email_placeholder: "tu@ejemplo.com"
+        password: "Contraseña"
+        new_password: "Nueva contraseña"
+        current_password: "Contraseña actual"
+        confirm_password: "Confirmar contraseña"
+        confirm_new_password: "Confirmar nueva contraseña"
+        minimum_characters: "mínimo %{count} caracteres"
+    sessions:
+      new:
+        kicker: "Inicia sesión en tu cuenta"
+        title: "¡Bienvenido de nuevo!"
+        subtitle: "Ingresa tu correo y contraseña"
+        password_placeholder: "Ingresa tu contraseña"
+        forgot_password: "¿Olvidaste tu contraseña?"
+        submit: "Iniciar sesión"
+        no_account: "¿No tienes una cuenta?"
+    registrations:
+      new:
+        kicker: "Comienza gratis"
+        title: "Crear cuenta"
+        subtitle: "Completa los datos para crear tu cuenta"
+        error_action: "impidieron el registro"
+        password_placeholder: "Crea una contraseña"
+        password_confirmation_placeholder: "Repite tu contraseña"
+        submit: "Crear cuenta"
+        have_account: "¿Ya tienes una cuenta?"
+      edit:
+        kicker: "Administra tu perfil"
+        title: "Configuración de la cuenta"
+        error_action: "impidieron esta actualización"
+        email_section: "Correo electrónico"
+        pending_confirmation: "Confirmación pendiente para: %{email}"
+        change_password: "Cambiar contraseña"
+        change_password_hint: "Déjalo en blanco para conservar tu contraseña actual"
+        new_password_placeholder: "Nueva contraseña"
+        confirm_new_password_placeholder: "Confirma la nueva contraseña"
+        current_password_hint: "Requerida para confirmar los cambios de arriba"
+        current_password_placeholder: "Tu contraseña actual"
+        save_changes: "Guardar cambios"
+        danger_zone: "Zona de peligro"
+        danger_zone_hint: "Una vez elimines tu cuenta, no hay vuelta atrás."
+        cancel_account: "Cancelar mi cuenta"
+        cancel_account_confirm: "¿Seguro que quieres eliminar tu cuenta? Esta acción no se puede deshacer."
+        back: "← Volver"
+      check_email:
+        title: "Revisa tu bandeja de entrada"
+        sent_to: "Enviamos un enlace de confirmación a"
+        instruction: "Haz clic en el enlace del correo para activar tu cuenta."
+        did_not_get_it: "¿No te llegó? Revisa spam o"
+        resend: "Reenviar correo de confirmación"
+        already_confirmed: "¿Ya confirmaste?"
+    passwords:
+      new:
+        kicker: "Recuperación de cuenta"
+        title: "¿Olvidaste tu contraseña?"
+        subtitle: "Ingresa tu correo y te enviaremos instrucciones para restablecerla"
+        error_action: "impidieron esta solicitud"
+        submit: "Enviar instrucciones de restablecimiento"
+        back_to_login: "Volver al inicio de sesión"
+        no_account: "¿No tienes una cuenta?"
+      edit:
+        kicker: "Casi listo"
+        title: "Define una nueva contraseña"
+        subtitle: "Elige una contraseña segura para tu cuenta"
+        error_action: "impidieron esta actualización"
+        new_password_placeholder: "Ingresa una nueva contraseña"
+        confirm_new_password_placeholder: "Repite la nueva contraseña"
+        submit: "Cambiar mi contraseña"
+        back_to_login: "Volver al inicio de sesión"
+    confirmations:
+      new:
+        kicker: "Verificación de cuenta"
+        title: "Reenviar confirmación"
+        subtitle: "Ingresa tu correo y reenviamos el enlace de confirmación"
+        error_action: "impidieron esta solicitud"
+        submit: "Reenviar instrucciones de confirmación"
+        back_to_login: "Volver al inicio de sesión"
+        no_account: "¿No tienes una cuenta?"
+    unlocks:
+      new:
+        kicker: "Cuenta bloqueada"
+        title: "Desbloquear cuenta"
+        subtitle: "Ingresa tu correo y te enviaremos instrucciones de desbloqueo"
+        error_action: "impidieron esta solicitud"
+        submit: "Reenviar instrucciones de desbloqueo"
+        back_to_login: "Volver al inicio de sesión"
+        no_account: "¿No tienes una cuenta?"
+    mailer:
+      shared:
+        hello: "Hola, %{email}!"
+        fallback: "Si el botón no funciona, copia y pega la siguiente URL en tu navegador:"
+      confirmation_instructions:
+        document_title: "Confirma tu cuenta – MRJG tools"
+        heading: "Confirma tu cuenta"
+        body: "Puedes confirmar el correo de tu cuenta con el siguiente enlace."
+        cta: "Confirmar mi cuenta"
+      reset_password_instructions:
+        document_title: "Restablece tu contraseña – MRJG tools"
+        heading: "Restablece tu contraseña"
+        body: "Alguien solicitó un enlace para cambiar tu contraseña. Haz clic en el botón de abajo para definir una nueva."
+        cta: "Cambiar mi contraseña"
+        ignore_notice: "Si no hiciste esta solicitud, puedes ignorar este correo de forma segura. Tu contraseña no cambiará hasta que hagas clic en el enlace y crees una nueva."
+      unlock_instructions:
+        document_title: "Tu cuenta fue bloqueada – MRJG tools"
+        heading: "Tu cuenta fue bloqueada"
+        body: "Tu cuenta fue bloqueada por demasiados intentos fallidos de inicio de sesión. Haz clic en el botón de abajo para desbloquearla."
+        cta: "Desbloquear mi cuenta"
+      email_changed:
+        document_title: "Correo electrónico cambiado – MRJG tools"
+        heading_requested: "Solicitud de cambio de correo"
+        heading_changed: "Correo electrónico cambiado"
+        requested_change_prefix: "Te contactamos para informarte que tu correo se está cambiando a"
+        requested_change_suffix: "No necesitas hacer nada, este mensaje es solo informativo."
+        changed_prefix: "Te contactamos para informarte que tu correo se cambió a"
+        changed_suffix: "Si no hiciste este cambio, contáctanos de inmediato."
+      password_change:
+        document_title: "Tu contraseña fue cambiada – MRJG tools"
+        heading: "Tu contraseña fue cambiada"
+        body: "Te contactamos para informarte que tu contraseña se cambió correctamente. Si no hiciste este cambio, contáctanos de inmediato."
+
+  mailers:
+    shared:
+      footer:
+        account_registration: "Recibiste este correo porque registraste una cuenta en MRJG tools."
+        password_reset_requested: "Recibiste este correo porque se solicitó un restablecimiento de contraseña para tu cuenta de MRJG tools."
+        account_locked: "Recibiste este correo porque tu cuenta de MRJG tools fue bloqueada."
+        email_changed: "Recibiste este correo porque el correo de tu cuenta de MRJG tools fue modificado."
+        password_changed: "Recibiste este correo porque la contraseña de tu cuenta de MRJG tools fue modificada."
+        unsubscribe: "Para darte de baja de futuros correos, envía un mensaje a"
+    user_mailer:
+      welcome_email:
+        subject: "Bienvenido a MRJG tools, %{name}!"
+        document_title: "Bienvenido a MRJG tools"
+        heading: "¡Bienvenido, %{name}!"
+        body: "Tu cuenta ha sido confirmada. Ahora tienes acceso completo a MRJG tools. Haz clic en el botón de abajo para comenzar."
+        cta: "Ir al panel"
+        fallback: "Si el botón no funciona, copia y pega la siguiente URL en tu navegador:"

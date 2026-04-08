@@ -6,15 +6,15 @@
   <div class="flex-1 flex flex-col justify-center px-8 sm:px-14 lg:px-20">
     <div class="w-full max-w-md mx-auto">
 
-      <p class="text-[#6b8db3] text-sm mb-1">Login your account</p>
-      <h1 class="text-white text-4xl font-bold mb-2">Welcome Back!</h1>
-      <p class="text-[#6b8db3] text-sm mb-9">Enter your email and password</p>
+      <p class="text-[#6b8db3] text-sm mb-1"><%= t("users.sessions.new.kicker") %></p>
+      <h1 class="text-white text-4xl font-bold mb-2"><%= t("users.sessions.new.title") %></h1>
+      <p class="text-[#6b8db3] text-sm mb-9"><%= t("users.sessions.new.subtitle") %></p>
 
       <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
 
         <%# Email %>
         <div class="mb-5">
-          <%= f.label :email, "Email address", class: "block text-[#7a93b4] text-sm mb-2" %>
+          <%= f.label :email, t("users.shared.fields.email"), class: "block text-[#7a93b4] text-sm mb-2" %>
           <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <svg class="w-4 h-4 text-[#4a6a8a]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
@@ -24,14 +24,14 @@
             <%= f.email_field :email,
                   autofocus: true,
                   autocomplete: "email",
-                  placeholder: "you@example.com",
+                  placeholder: t("users.shared.fields.email_placeholder"),
                   class: "w-full bg-[#0d1f3e] border border-[#1e3563] text-white placeholder-[#3a5070] rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#3060b0] focus:ring-1 focus:ring-[#3060b0] transition-colors" %>
           </div>
         </div>
 
         <%# Password %>
         <div class="mb-3" data-controller="password-visibility">
-          <%= f.label :password, "Password", class: "block text-[#7a93b4] text-sm mb-2" %>
+          <%= f.label :password, t("users.shared.fields.password"), class: "block text-[#7a93b4] text-sm mb-2" %>
           <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <svg class="w-4 h-4 text-[#4a6a8a]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@
             </span>
             <%= f.password_field :password,
                   autocomplete: "current-password",
-                  placeholder: "Enter your password",
+                  placeholder: t("users.sessions.new.password_placeholder"),
                   data: { "password-visibility-target": "input" },
                   class: "w-full bg-[#0d1f3e] border border-[#1e3563] text-white placeholder-[#3a5070] rounded-xl pl-11 pr-11 py-3.5 text-sm focus:outline-none focus:border-[#3060b0] focus:ring-1 focus:ring-[#3060b0] transition-colors" %>
             <button type="button"
@@ -61,18 +61,18 @@
 
         <%# Forgot password %>
         <div class="text-right mb-8">
-          <%= link_to "Forgot Password?", new_user_password_path,
+          <%= link_to t("users.sessions.new.forgot_password"), new_user_password_path,
                 class: "text-[#4a8ae0] text-sm hover:text-[#6aaaf8] transition-colors" %>
         </div>
 
         <%# Submit %>
-        <%= f.submit "Sign in",
+        <%= f.submit t("users.sessions.new.submit"),
               class: "w-full bg-[#0f1525] hover:bg-[#182038] text-white font-medium py-4 rounded-full border border-[#1e3060] transition-colors cursor-pointer text-sm tracking-wide" %>
 
         <%# Sign up %>
         <div class="text-center mt-5">
-          <span class="text-[#6b8db3] text-sm">Don't have an account? </span>
-          <%= link_to "Sign up", new_user_registration_path,
+          <span class="text-[#6b8db3] text-sm"><%= t("users.sessions.new.no_account") %> </span>
+          <%= link_to t("users.shared.links.sign_up"), new_user_registration_path,
                 class: "text-[#4a8ae0] text-sm hover:text-[#6aaaf8] transition-colors" %>
         </div>
 

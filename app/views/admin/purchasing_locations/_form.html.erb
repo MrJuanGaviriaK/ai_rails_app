@@ -1,0 +1,87 @@
+<%= form_with model: [:admin, purchasing_location], local: true, class: "space-y-6" do |f| %>
+  <% if purchasing_location.errors.any? %>
+    <div class="rounded-xl border border-red-500/40 bg-red-950/20 p-4">
+      <p class="mb-1 text-sm font-semibold text-red-300"><%= t("admin.purchasing_locations.form.fix_errors") %></p>
+      <ul class="list-inside list-disc text-sm text-red-200">
+        <% purchasing_location.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <section class="rounded-xl border border-[#1e3563] bg-[#0a1628] p-5">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300"><%= t("admin.purchasing_locations.form.basic_information") %></h2>
+
+    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      <div class="space-y-1.5">
+        <%= f.label :name, t("admin.purchasing_locations.form.name"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.text_field :name, placeholder: t("admin.purchasing_locations.form.name_placeholder"), class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+      </div>
+
+      <div class="space-y-1.5">
+        <%= f.label :tenant_id, t("admin.purchasing_locations.form.tenant"), class: "block text-sm font-medium text-gray-200" %>
+        <% if current_user.superadmin? %>
+          <%= f.select :tenant_id,
+                options_from_collection_for_select(switchable_tenants, :id, :name, purchasing_location.tenant_id),
+                { include_blank: t("admin.purchasing_locations.form.select_tenant") },
+                class: "ui-select" %>
+        <% else %>
+          <%= hidden_field_tag "purchasing_location[tenant_id]", current_tenant&.id %>
+          <div class="flex h-11 items-center rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white">
+            <%= current_tenant&.name %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <section class="rounded-xl border border-[#1e3563] bg-[#0a1628] p-5">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300"><%= t("admin.purchasing_locations.form.location") %></h2>
+
+    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      <div class="space-y-1.5">
+        <%= f.label :department, t("admin.purchasing_locations.form.department"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.select :department,
+              options_for_select(PurchasingLocation::COLOMBIAN_DEPARTMENTS, purchasing_location.department),
+              { include_blank: t("admin.purchasing_locations.form.select_department") },
+              class: "ui-select" %>
+      </div>
+
+      <div class="space-y-1.5">
+        <%= f.label :city, t("admin.purchasing_locations.form.city"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.text_field :city, placeholder: t("admin.purchasing_locations.form.city_placeholder"), class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+      </div>
+    </div>
+
+    <div class="mt-4 space-y-1.5">
+      <%= f.label :address, t("admin.purchasing_locations.form.address"), class: "block text-sm font-medium text-gray-200" %>
+      <%= f.text_field :address, placeholder: t("admin.purchasing_locations.form.address_placeholder"), class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+    </div>
+  </section>
+
+  <section class="rounded-xl border border-[#1e3563] bg-[#0a1628] p-5">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300"><%= t("admin.purchasing_locations.form.operational") %></h2>
+
+    <div class="mt-4 space-y-4">
+      <label class="inline-flex items-center gap-3">
+        <%= f.check_box :active, class: "size-4 rounded border-[#34588f] bg-[#0f1525] text-indigo-500 focus:ring-indigo-400" %>
+        <span class="text-sm text-gray-200"><%= t("admin.purchasing_locations.form.active") %></span>
+      </label>
+
+      <div class="space-y-1.5">
+        <%= f.label :notes, t("admin.purchasing_locations.form.notes"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.text_area :notes, rows: 4, placeholder: t("admin.purchasing_locations.form.notes_placeholder"), class: "w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 py-2.5 text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+      </div>
+    </div>
+  </section>
+
+  <div class="flex flex-col gap-2 border-t border-[#1e3563] pt-4 sm:flex-row sm:items-center">
+    <%= f.submit(purchasing_location.persisted? ? t("admin.purchasing_locations.form.update") : t("admin.purchasing_locations.form.create"), class: "inline-flex h-11 items-center justify-center rounded-lg bg-indigo-600 px-5 text-sm font-semibold text-white transition hover:bg-indigo-500") %>
+    <%= link_to t("admin.purchasing_locations.form.back"), admin_purchasing_locations_path, class: "inline-flex h-11 items-center justify-center rounded-lg border border-[#34588f] bg-[#0a1628] px-5 text-sm font-medium text-gray-200 transition hover:bg-[#102447]" %>
+
+    <% if purchasing_location.persisted? %>
+      <%= button_to t("admin.purchasing_locations.form.archive"), admin_purchasing_location_path(purchasing_location), method: :delete, class: "inline-flex h-11 items-center justify-center rounded-lg border border-red-400/35 bg-red-500/10 px-5 text-sm font-semibold text-red-200 transition hover:bg-red-500/20", form_class: "sm:ml-auto", data: { turbo_confirm: t("admin.purchasing_locations.form.archive_confirm") } %>
+    <% end %>
+  </div>
+<% end %>

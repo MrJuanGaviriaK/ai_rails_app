@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= I18n.locale %>">
   <head>
     <title><%= content_for(:title) || "Ai Rails App" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -10,6 +10,13 @@
   </head>
 
   <body class="bg-[#080e1e] antialiased min-h-screen">
+    <div class="fixed right-4 top-4 z-50 flex items-center gap-2 rounded-full border border-[#1e3563] bg-[#0a1628]/90 px-3 py-1.5 text-xs backdrop-blur-sm">
+      <span class="text-[#8aaac8]"><%= t("layouts.devise.language") %>:</span>
+      <%= link_to "ES", url_for(locale: :es), class: I18n.locale == :es ? "text-white font-semibold" : "text-[#8aaac8] hover:text-white" %>
+      <span class="text-[#34588f]">|</span>
+      <%= link_to "EN", url_for(locale: :en), class: I18n.locale == :en ? "text-white font-semibold" : "text-[#8aaac8] hover:text-white" %>
+    </div>
+
     <% if notice.present? %>
       <div class="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-sm backdrop-blur-sm">
         <%= notice %>

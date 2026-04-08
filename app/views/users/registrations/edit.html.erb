@@ -3,28 +3,28 @@
 
     <%# Header %>
     <div class="mb-8">
-      <p class="text-[#6b8db3] text-sm mb-1">Manage your profile</p>
-      <h1 class="text-white text-3xl font-bold">Account Settings</h1>
+      <p class="text-[#6b8db3] text-sm mb-1"><%= t("users.registrations.edit.kicker") %></p>
+      <h1 class="text-white text-3xl font-bold"><%= t("users.registrations.edit.title") %></h1>
     </div>
 
-    <%= render "users/shared/error_messages", action_label: "prevented this update" %>
+    <%= render "users/shared/error_messages", action_label: t("users.registrations.edit.error_action") %>
 
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
 
       <%# ── Email section ── %>
       <div class="bg-[#0a1628] border border-[#1a2f50] rounded-2xl p-6 mb-4">
-        <h2 class="text-white text-base font-semibold mb-4">Email Address</h2>
+        <h2 class="text-white text-base font-semibold mb-4"><%= t("users.registrations.edit.email_section") %></h2>
 
         <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
           <div class="mb-4 px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30">
             <p class="text-amber-300 text-xs">
-              Pending confirmation for: <span class="font-medium"><%= resource.unconfirmed_email %></span>
+              <%= t("users.registrations.edit.pending_confirmation", email: resource.unconfirmed_email) %>
             </p>
           </div>
         <% end %>
 
         <div>
-          <%= f.label :email, "Email address", class: "block text-[#7a93b4] text-sm mb-2" %>
+          <%= f.label :email, t("users.shared.fields.email"), class: "block text-[#7a93b4] text-sm mb-2" %>
           <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <svg class="w-4 h-4 text-[#4a6a8a]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
@@ -41,14 +41,14 @@
 
       <%# ── Change password section ── %>
       <div class="bg-[#0a1628] border border-[#1a2f50] rounded-2xl p-6 mb-4">
-        <h2 class="text-white text-base font-semibold mb-1">Change Password</h2>
-        <p class="text-[#4a6a8a] text-xs mb-4">Leave blank to keep your current password</p>
+        <h2 class="text-white text-base font-semibold mb-1"><%= t("users.registrations.edit.change_password") %></h2>
+        <p class="text-[#4a6a8a] text-xs mb-4"><%= t("users.registrations.edit.change_password_hint") %></p>
 
         <div class="mb-4">
           <div class="flex items-baseline justify-between mb-2">
-            <%= f.label :password, "New password", class: "text-[#7a93b4] text-sm" %>
+            <%= f.label :password, t("users.shared.fields.new_password"), class: "text-[#7a93b4] text-sm" %>
             <% if @minimum_password_length %>
-              <span class="text-[#4a6a8a] text-xs"><%= @minimum_password_length %> characters minimum</span>
+              <span class="text-[#4a6a8a] text-xs"><%= t("users.shared.fields.minimum_characters", count: @minimum_password_length) %></span>
             <% end %>
           </div>
           <div class="relative">
@@ -59,13 +59,13 @@
             </span>
             <%= f.password_field :password,
                   autocomplete: "new-password",
-                  placeholder: "New password",
+                  placeholder: t("users.registrations.edit.new_password_placeholder"),
                   class: "w-full bg-[#0d1f3e] border border-[#1e3563] text-white placeholder-[#3a5070] rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#3060b0] focus:ring-1 focus:ring-[#3060b0] transition-colors" %>
           </div>
         </div>
 
         <div class="mb-4">
-          <%= f.label :password_confirmation, "Confirm new password", class: "block text-[#7a93b4] text-sm mb-2" %>
+          <%= f.label :password_confirmation, t("users.shared.fields.confirm_new_password"), class: "block text-[#7a93b4] text-sm mb-2" %>
           <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <svg class="w-4 h-4 text-[#4a6a8a]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
@@ -74,14 +74,14 @@
             </span>
             <%= f.password_field :password_confirmation,
                   autocomplete: "new-password",
-                  placeholder: "Confirm new password",
+                  placeholder: t("users.registrations.edit.confirm_new_password_placeholder"),
                   class: "w-full bg-[#0d1f3e] border border-[#1e3563] text-white placeholder-[#3a5070] rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#3060b0] focus:ring-1 focus:ring-[#3060b0] transition-colors" %>
           </div>
         </div>
 
         <div>
-          <%= f.label :current_password, "Current password", class: "block text-[#7a93b4] text-sm mb-2" %>
-          <p class="text-[#4a6a8a] text-xs mb-2">Required to confirm any changes above</p>
+          <%= f.label :current_password, t("users.shared.fields.current_password"), class: "block text-[#7a93b4] text-sm mb-2" %>
+          <p class="text-[#4a6a8a] text-xs mb-2"><%= t("users.registrations.edit.current_password_hint") %></p>
           <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <svg class="w-4 h-4 text-[#4a6a8a]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
@@ -90,32 +90,32 @@
             </span>
             <%= f.password_field :current_password,
                   autocomplete: "current-password",
-                  placeholder: "Your current password",
+                  placeholder: t("users.registrations.edit.current_password_placeholder"),
                   class: "w-full bg-[#0d1f3e] border border-[#1e3563] text-white placeholder-[#3a5070] rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#3060b0] focus:ring-1 focus:ring-[#3060b0] transition-colors" %>
           </div>
         </div>
       </div>
 
       <%# Save button %>
-      <%= f.submit "Save changes",
+      <%= f.submit t("users.registrations.edit.save_changes"),
             class: "w-full bg-[#0f1525] hover:bg-[#182038] text-white font-medium py-4 rounded-full border border-[#1e3060] transition-colors cursor-pointer text-sm tracking-wide mb-6" %>
 
     <% end %>
 
     <%# ── Danger zone ── %>
     <div class="bg-red-950/20 border border-red-900/40 rounded-2xl p-6">
-      <h2 class="text-red-400 text-base font-semibold mb-1">Danger Zone</h2>
-      <p class="text-[#6b8db3] text-sm mb-4">Once you delete your account, there is no going back.</p>
-      <%= button_to "Cancel my account",
+      <h2 class="text-red-400 text-base font-semibold mb-1"><%= t("users.registrations.edit.danger_zone") %></h2>
+      <p class="text-[#6b8db3] text-sm mb-4"><%= t("users.registrations.edit.danger_zone_hint") %></p>
+      <%= button_to t("users.registrations.edit.cancel_account"),
             registration_path(resource_name),
-            data: { turbo_confirm: "Are you sure you want to delete your account? This cannot be undone." },
+            data: { turbo_confirm: t("users.registrations.edit.cancel_account_confirm") },
             method: :delete,
             class: "px-5 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/40 text-red-400 hover:text-red-300 text-sm font-medium transition-colors cursor-pointer" %>
     </div>
 
     <%# Back link %>
     <div class="mt-6 text-center">
-      <%= link_to "← Back", :back, class: "text-[#4a8ae0] text-sm hover:text-[#6aaaf8] transition-colors" %>
+      <%= link_to t("users.registrations.edit.back"), :back, class: "text-[#4a8ae0] text-sm hover:text-[#6aaaf8] transition-colors" %>
     </div>
 
   </div>

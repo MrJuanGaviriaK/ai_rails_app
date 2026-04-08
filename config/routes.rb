@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :tenants, except: :show
+    resources :purchasing_locations
     post "tenant_context/switch", to: "tenant_contexts#switch", as: :switch_tenant_context
   end
 

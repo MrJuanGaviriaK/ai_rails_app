@@ -6,7 +6,7 @@ RSpec.describe Tenant, type: :model do
       tenant = build(:tenant, name: nil)
 
       expect(tenant).not_to be_valid
-      expect(tenant.errors[:name]).to include("can't be blank")
+      expect(tenant.errors[:name]).to include(I18n.t("errors.messages.blank"))
     end
 
     it "normalizes the slug from the name when missing" do

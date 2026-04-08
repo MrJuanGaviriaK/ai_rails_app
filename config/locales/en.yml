@@ -1,31 +1,333 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  layouts:
+    devise:
+      language: "Language"
+    navbar:
+      dashboard: "Dashboard"
+      tenants: "Tenants"
+      purchasing_locations: "Purchasing locations"
+      team: "Team"
+      projects: "Projects"
+      calendar: "Calendar"
+      tenant: "Tenant"
+      switch_tenant: "Switch tenant"
+      current_tenant: "Tenant"
+      language: "Language"
+      view_notifications: "View notifications"
+      open_user_menu: "Open user menu"
+      signed_in_as: "Signed in as"
+      your_profile: "Your profile"
+      settings: "Settings"
+      sign_out: "Sign out"
+
+  dashboard:
+    index:
+      title: "Dashboard"
+      welcome: "Welcome, %{name}!"
+      logged_in: "You are successfully logged in."
+      current_tenant: "Current tenant"
+
+  admin:
+    authorization:
+      not_allowed: "You are not authorized to access this section."
+    tenant_contexts:
+      unavailable: "Selected tenant is unavailable."
+      switched: "Switched to %{tenant}."
+    purchasing_locations:
+      authorization:
+        not_allowed: "You are not authorized to manage purchasing locations."
+      flash:
+        created: "Purchasing location created successfully."
+        updated: "Purchasing location updated successfully."
+        archived: "Purchasing location archived successfully."
+      index:
+        title: "Purchasing Locations"
+        subtitle: "Manage physical locations where minerals are purchased by tenant."
+        new: "New location"
+        total: "Total locations"
+        active: "Active"
+        inactive: "Inactive"
+        search_placeholder: "Search by name, city, or address"
+        all_departments: "All departments"
+        apply: "Apply"
+        reset: "Reset"
+        columns:
+          name: "Location"
+          department: "Department"
+          city: "City"
+          tenant: "Tenant"
+          status: "Status"
+          actions: "Actions"
+        show: "View"
+        edit: "Edit"
+        archive: "Archive"
+        archive_confirm: "Archive this purchasing location?"
+        empty_title: "No purchasing locations found"
+        empty_description: "Try clearing filters or create your first purchasing location."
+      form:
+        fix_errors: "Please fix the following errors:"
+        basic_information: "Basic information"
+        name: "Location name"
+        name_placeholder: "Main Buying Point"
+        tenant: "Tenant"
+        select_tenant: "Select a tenant"
+        location: "Location details"
+        department: "Department"
+        select_department: "Select a department"
+        city: "City"
+        city_placeholder: "Medellín"
+        address: "Address"
+        address_placeholder: "Calle 10 # 25-40"
+        operational: "Operational settings"
+        active: "Location is active"
+        notes: "Notes"
+        notes_placeholder: "Operational notes, schedule, references, etc."
+        create: "Create location"
+        update: "Update location"
+        back: "Back"
+        archive: "Archive location"
+        archive_confirm: "Archive this purchasing location?"
+      new:
+        kicker: "Purchasing locations"
+        title: "Create purchasing location"
+        description: "Register a new physical mineral purchasing location for a tenant."
+      edit:
+        kicker: "Purchasing locations"
+        title: "Edit purchasing location"
+        description_prefix: "Update the details for"
+      show:
+        kicker: "Purchasing location"
+        details: "Location details"
+        tenant: "Tenant"
+        status: "Status"
+        department: "Department"
+        city: "City"
+        address: "Address"
+        notes: "Notes"
+        no_notes: "No notes available."
+        actions: "Actions"
+        edit: "Edit"
+        back: "Back to list"
+        archive: "Archive location"
+        archive_confirm: "Archive this purchasing location?"
+        future_section_title: "Related information"
+        future_section_description: "This section is reserved for future data linked to this purchasing location."
+    tenants:
+      flash:
+        created: "Tenant created successfully."
+        updated: "Tenant updated successfully."
+        archived: "Tenant archived successfully."
+      errors:
+        settings_must_be_object: "must be a JSON object"
+        settings_must_be_valid_json: "must be valid JSON"
+      statuses:
+        active: "Active"
+        suspended: "Suspended"
+        archived: "Archived"
+      index:
+        title: "Tenant Management"
+        subtitle: "Manage tenants, monitor status, and keep account boundaries safe."
+        new_tenant: "New tenant"
+        total_tenants: "Total tenants"
+        search_placeholder: "Search by tenant name or slug"
+        all_statuses: "All statuses"
+        apply: "Apply"
+        reset: "Reset"
+        columns:
+          tenant: "Tenant"
+          slug: "Slug"
+          status: "Status"
+          actions: "Actions"
+        created_at: "Created %{date}"
+        edit: "Edit"
+        archive: "Archive"
+        archive_confirm: "Archive this tenant?"
+        empty_title: "No tenants found"
+        empty_description: "Try clearing filters or create your first tenant."
+      form:
+        fix_errors: "Please fix the following errors:"
+        basic_information: "Basic Information"
+        name: "Name"
+        name_placeholder: "Acme Inc"
+        slug: "Slug"
+        slug_placeholder: "acme-inc"
+        slug_help: "Used in URLs and internal references."
+        lifecycle: "Lifecycle"
+        status: "Status"
+        status_help: "Archived tenants are soft-deleted and excluded from active context."
+        settings: "Settings"
+        settings_json: "Settings (JSON object)"
+        settings_example: "Example: {\"timezone\":\"UTC\",\"feature_flags\":{\"beta\":true}}"
+        create_tenant: "Create tenant"
+        update_tenant: "Update tenant"
+        back: "Back"
+        archive_tenant: "Archive tenant"
+        archive_confirm: "Archive this tenant?"
+      new:
+        kicker: "Tenant Administration"
+        title: "Create tenant"
+        description: "Set up a new tenant workspace and define default settings."
+      edit:
+        kicker: "Tenant Administration"
+        title: "Edit tenant"
+        description_prefix: "Update status and settings for"
+
+  users:
+    shared:
+      hero_panel:
+        title_line_1: "AI Generative"
+        title_line_2: "Anything you can imagine"
+        subtitle: "Generate any type of art with MRJG"
+      error_messages:
+        summary:
+          one: "%{count} error %{action_label}"
+          other: "%{count} errors %{action_label}"
+        default_action_label: "prevented this action"
+      links:
+        log_in: "Log in"
+        sign_up: "Sign up"
+        forgot_password: "Forgot your password?"
+        confirmation_instructions: "Didn't receive confirmation instructions?"
+        unlock_instructions: "Didn't receive unlock instructions?"
+        sign_in_with: "Sign in with %{provider}"
+      fields:
+        full_name: "Full name"
+        full_name_placeholder: "Your full name"
+        email: "Email address"
+        email_placeholder: "you@example.com"
+        password: "Password"
+        new_password: "New password"
+        current_password: "Current password"
+        confirm_password: "Confirm password"
+        confirm_new_password: "Confirm new password"
+        minimum_characters: "%{count} characters minimum"
+    sessions:
+      new:
+        kicker: "Login your account"
+        title: "Welcome back!"
+        subtitle: "Enter your email and password"
+        password_placeholder: "Enter your password"
+        forgot_password: "Forgot password?"
+        submit: "Sign in"
+        no_account: "Don't have an account?"
+    registrations:
+      new:
+        kicker: "Get started for free"
+        title: "Create account"
+        subtitle: "Fill in the details below to create your account"
+        error_action: "prevented sign up"
+        password_placeholder: "Create a password"
+        password_confirmation_placeholder: "Repeat your password"
+        submit: "Create account"
+        have_account: "Already have an account?"
+      edit:
+        kicker: "Manage your profile"
+        title: "Account settings"
+        error_action: "prevented this update"
+        email_section: "Email address"
+        pending_confirmation: "Pending confirmation for: %{email}"
+        change_password: "Change password"
+        change_password_hint: "Leave blank to keep your current password"
+        new_password_placeholder: "New password"
+        confirm_new_password_placeholder: "Confirm new password"
+        current_password_hint: "Required to confirm any changes above"
+        current_password_placeholder: "Your current password"
+        save_changes: "Save changes"
+        danger_zone: "Danger zone"
+        danger_zone_hint: "Once you delete your account, there is no going back."
+        cancel_account: "Cancel my account"
+        cancel_account_confirm: "Are you sure you want to delete your account? This cannot be undone."
+        back: "← Back"
+      check_email:
+        title: "Check your inbox"
+        sent_to: "We sent a confirmation link to"
+        instruction: "Click the link in the email to activate your account."
+        did_not_get_it: "Didn't get it? Check your spam folder or"
+        resend: "Resend confirmation email"
+        already_confirmed: "Already confirmed?"
+    passwords:
+      new:
+        kicker: "Account recovery"
+        title: "Forgot password?"
+        subtitle: "Enter your email and we'll send you reset instructions"
+        error_action: "prevented this request"
+        submit: "Send me reset instructions"
+        back_to_login: "Back to login"
+        no_account: "Don't have an account?"
+      edit:
+        kicker: "Almost there"
+        title: "Set new password"
+        subtitle: "Choose a strong password for your account"
+        error_action: "prevented this update"
+        new_password_placeholder: "Enter new password"
+        confirm_new_password_placeholder: "Repeat new password"
+        submit: "Change my password"
+        back_to_login: "Back to login"
+    confirmations:
+      new:
+        kicker: "Account verification"
+        title: "Resend confirmation"
+        subtitle: "Enter your email and we'll resend the confirmation link"
+        error_action: "prevented this request"
+        submit: "Resend confirmation instructions"
+        back_to_login: "Back to login"
+        no_account: "Don't have an account?"
+    unlocks:
+      new:
+        kicker: "Account locked"
+        title: "Unlock account"
+        subtitle: "Enter your email and we'll send you unlock instructions"
+        error_action: "prevented this request"
+        submit: "Resend unlock instructions"
+        back_to_login: "Back to login"
+        no_account: "Don't have an account?"
+    mailer:
+      shared:
+        hello: "Hello, %{email}!"
+        fallback: "If the button does not work, copy and paste the following URL into your browser:"
+      confirmation_instructions:
+        document_title: "Confirm your account – MRJG tools"
+        heading: "Confirm your account"
+        body: "You can confirm your account email through the link below."
+        cta: "Confirm my account"
+      reset_password_instructions:
+        document_title: "Reset your password – MRJG tools"
+        heading: "Reset your password"
+        body: "Someone has requested a link to change your password. Click the button below to set a new one."
+        cta: "Change my password"
+        ignore_notice: "If you did not request this, you can safely ignore this email. Your password will not change until you click the link above and create a new one."
+      unlock_instructions:
+        document_title: "Your account has been locked – MRJG tools"
+        heading: "Your account has been locked"
+        body: "Your account has been locked due to an excessive number of unsuccessful sign-in attempts. Click the button below to unlock it."
+        cta: "Unlock my account"
+      email_changed:
+        document_title: "Email address changed – MRJG tools"
+        heading_requested: "Email address change requested"
+        heading_changed: "Email address changed"
+        requested_change_prefix: "We are contacting you to notify you that your email address is being changed to"
+        requested_change_suffix: "No action is required on your part — this is just a heads-up."
+        changed_prefix: "We are contacting you to notify you that your email address has been changed to"
+        changed_suffix: "If you did not make this change, please contact us immediately."
+      password_change:
+        document_title: "Your password has been changed – MRJG tools"
+        heading: "Your password has been changed"
+        body: "We are contacting you to notify you that your password has been changed successfully. If you did not make this change, please contact us immediately."
+
+  mailers:
+    shared:
+      footer:
+        account_registration: "You received this email because you registered an account on MRJG tools."
+        password_reset_requested: "You received this email because a password reset was requested for your MRJG tools account."
+        account_locked: "You received this email because your MRJG tools account was locked."
+        email_changed: "You received this email because your MRJG tools account email address was changed."
+        password_changed: "You received this email because your MRJG tools account password was changed."
+        unsubscribe: "To unsubscribe from future emails, send a message to"
+    user_mailer:
+      welcome_email:
+        subject: "Welcome to MRJG tools, %{name}!"
+        document_title: "Welcome to MRJG tools"
+        heading: "Welcome, %{name}!"
+        body: "Your account has been confirmed. You now have full access to MRJG tools. Click the button below to get started."
+        cta: "Go to dashboard"
+        fallback: "If the button does not work, copy and paste the following URL into your browser:"
