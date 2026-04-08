@@ -6,17 +6,17 @@
   <div class="flex-1 flex flex-col justify-center px-8 sm:px-14 lg:px-20">
     <div class="w-full max-w-md mx-auto">
 
-      <p class="text-[#6b8db3] text-sm mb-1">Account locked</p>
-      <h1 class="text-white text-4xl font-bold mb-2">Unlock Account</h1>
-      <p class="text-[#6b8db3] text-sm mb-9">Enter your email and we'll send you unlock instructions</p>
+      <p class="text-[#6b8db3] text-sm mb-1"><%= t("users.unlocks.new.kicker") %></p>
+      <h1 class="text-white text-4xl font-bold mb-2"><%= t("users.unlocks.new.title") %></h1>
+      <p class="text-[#6b8db3] text-sm mb-9"><%= t("users.unlocks.new.subtitle") %></p>
 
       <%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>
 
-        <%= render "users/shared/error_messages", action_label: "prevented this request" %>
+        <%= render "users/shared/error_messages", action_label: t("users.unlocks.new.error_action") %>
 
         <%# Email %>
         <div class="mb-8">
-          <%= f.label :email, "Email address", class: "block text-[#7a93b4] text-sm mb-2" %>
+          <%= f.label :email, t("users.shared.fields.email"), class: "block text-[#7a93b4] text-sm mb-2" %>
           <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <svg class="w-4 h-4 text-[#4a6a8a]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
@@ -26,23 +26,23 @@
             <%= f.email_field :email,
                   autofocus: true,
                   autocomplete: "email",
-                  placeholder: "you@example.com",
+                  placeholder: t("users.shared.fields.email_placeholder"),
                   class: "w-full bg-[#0d1f3e] border border-[#1e3563] text-white placeholder-[#3a5070] rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#3060b0] focus:ring-1 focus:ring-[#3060b0] transition-colors" %>
           </div>
         </div>
 
-        <%= f.submit "Resend unlock instructions",
+        <%= f.submit t("users.unlocks.new.submit"),
               class: "w-full bg-[#0f1525] hover:bg-[#182038] text-white font-medium py-4 rounded-full border border-[#1e3060] transition-colors cursor-pointer text-sm tracking-wide" %>
 
       <% end %>
 
       <div class="mt-8 flex flex-col items-center gap-3">
-        <%= link_to "Back to login", new_session_path(resource_name),
+        <%= link_to t("users.unlocks.new.back_to_login"), new_session_path(resource_name),
               class: "text-[#4a8ae0] text-sm hover:text-[#6aaaf8] transition-colors" %>
         <% if devise_mapping.registerable? %>
           <p class="text-[#6b8db3] text-sm">
-            Don't have an account?
-            <%= link_to "Sign up", new_registration_path(resource_name),
+            <%= t("users.unlocks.new.no_account") %>
+            <%= link_to t("users.shared.links.sign_up"), new_registration_path(resource_name),
                   class: "text-[#4a8ae0] hover:text-[#6aaaf8] transition-colors" %>
           </p>
         <% end %>

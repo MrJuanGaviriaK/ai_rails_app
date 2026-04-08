@@ -6,22 +6,22 @@
   <div class="flex-1 flex flex-col justify-center px-8 sm:px-14 lg:px-20">
     <div class="w-full max-w-md mx-auto">
 
-      <p class="text-[#6b8db3] text-sm mb-1">Almost there</p>
-      <h1 class="text-white text-4xl font-bold mb-2">Set New Password</h1>
-      <p class="text-[#6b8db3] text-sm mb-9">Choose a strong password for your account</p>
+      <p class="text-[#6b8db3] text-sm mb-1"><%= t("users.passwords.edit.kicker") %></p>
+      <h1 class="text-white text-4xl font-bold mb-2"><%= t("users.passwords.edit.title") %></h1>
+      <p class="text-[#6b8db3] text-sm mb-9"><%= t("users.passwords.edit.subtitle") %></p>
 
       <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
 
-        <%= render "users/shared/error_messages", action_label: "prevented this update" %>
+        <%= render "users/shared/error_messages", action_label: t("users.passwords.edit.error_action") %>
 
         <%= f.hidden_field :reset_password_token %>
 
         <%# New password %>
         <div class="mb-5">
           <div class="flex items-baseline justify-between mb-2">
-            <%= f.label :password, "New password", class: "text-[#7a93b4] text-sm" %>
+            <%= f.label :password, t("users.shared.fields.new_password"), class: "text-[#7a93b4] text-sm" %>
             <% if @minimum_password_length %>
-              <span class="text-[#4a6a8a] text-xs"><%= @minimum_password_length %> characters minimum</span>
+              <span class="text-[#4a6a8a] text-xs"><%= t("users.shared.fields.minimum_characters", count: @minimum_password_length) %></span>
             <% end %>
           </div>
           <div class="relative">
@@ -33,14 +33,14 @@
             <%= f.password_field :password,
                   autofocus: true,
                   autocomplete: "new-password",
-                  placeholder: "Enter new password",
+                  placeholder: t("users.passwords.edit.new_password_placeholder"),
                   class: "w-full bg-[#0d1f3e] border border-[#1e3563] text-white placeholder-[#3a5070] rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#3060b0] focus:ring-1 focus:ring-[#3060b0] transition-colors" %>
           </div>
         </div>
 
         <%# Confirm new password %>
         <div class="mb-8">
-          <%= f.label :password_confirmation, "Confirm new password", class: "block text-[#7a93b4] text-sm mb-2" %>
+          <%= f.label :password_confirmation, t("users.shared.fields.confirm_new_password"), class: "block text-[#7a93b4] text-sm mb-2" %>
           <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <svg class="w-4 h-4 text-[#4a6a8a]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
@@ -49,18 +49,18 @@
             </span>
             <%= f.password_field :password_confirmation,
                   autocomplete: "new-password",
-                  placeholder: "Repeat new password",
+                  placeholder: t("users.passwords.edit.confirm_new_password_placeholder"),
                   class: "w-full bg-[#0d1f3e] border border-[#1e3563] text-white placeholder-[#3a5070] rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:border-[#3060b0] focus:ring-1 focus:ring-[#3060b0] transition-colors" %>
           </div>
         </div>
 
-        <%= f.submit "Change my password",
+        <%= f.submit t("users.passwords.edit.submit"),
               class: "w-full bg-[#0f1525] hover:bg-[#182038] text-white font-medium py-4 rounded-full border border-[#1e3060] transition-colors cursor-pointer text-sm tracking-wide" %>
 
       <% end %>
 
       <div class="mt-8 text-center">
-        <%= link_to "Back to login", new_session_path(resource_name),
+        <%= link_to t("users.passwords.edit.back_to_login"), new_session_path(resource_name),
               class: "text-[#4a8ae0] text-sm hover:text-[#6aaaf8] transition-colors" %>
       </div>
 

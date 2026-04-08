@@ -17,17 +17,21 @@
 
         <%# Nav links %>
         <div class="hidden sm:flex items-center gap-1">
-          <%= link_to "Dashboard", dashboard_path,
+          <%= link_to t("layouts.navbar.dashboard"), dashboard_path,
                 class: "px-3 py-2 rounded-md text-sm font-semibold text-white bg-gray-800" %>
           <% if current_user.superadmin? %>
-            <%= link_to "Tenants", admin_tenants_path,
+            <%= link_to t("layouts.navbar.tenants"), admin_tenants_path,
                   class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
           <% end %>
-          <%= link_to "Team", "#",
+          <% if current_user.superadmin? || current_user.admin_for_tenant?(current_tenant) %>
+            <%= link_to t("layouts.navbar.purchasing_locations"), admin_purchasing_locations_path,
+                  class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
+          <% end %>
+          <%= link_to t("layouts.navbar.team"), "#",
                 class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
-          <%= link_to "Projects", "#",
+          <%= link_to t("layouts.navbar.projects"), "#",
                 class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
-          <%= link_to "Calendar", "#",
+          <%= link_to t("layouts.navbar.calendar"), "#",
                 class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
         </div>
       </div>
@@ -41,11 +45,11 @@
               <svg class="size-3.5 text-[#8aaac8]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path d="M10 2a1 1 0 0 1 .894.553l1.382 2.77 3.062.445a1 1 0 0 1 .554 1.706l-2.216 2.16.523 3.049a1 1 0 0 1-1.45 1.054L10 12.26l-2.739 1.44a1 1 0 0 1-1.45-1.054l.523-3.05-2.216-2.159a1 1 0 0 1 .554-1.706l3.062-.445 1.382-2.77A1 1 0 0 1 10 2Z" />
               </svg>
-              Tenant
+              <%= t("layouts.navbar.tenant") %>
             </span>
 
             <%= form_with url: admin_switch_tenant_context_path, method: :post, local: true, class: "relative" do %>
-              <label for="tenant_switch" class="sr-only">Switch tenant</label>
+              <label for="tenant_switch" class="sr-only"><%= t("layouts.navbar.switch_tenant") %></label>
               <%= select_tag :tenant_id,
                     options_from_collection_for_select(switchable_tenants, :id, :name, current_tenant&.id),
                     id: "tenant_switch",
@@ -58,14 +62,21 @@
           </div>
         <% elsif current_tenant.present? %>
           <div class="hidden md:flex items-center rounded-lg border border-[#2a3f63] bg-[#0f1f3f] px-2.5 py-1.5 text-xs text-[#b6cae2]">
-            Tenant: <span class="ml-1 font-semibold text-white"><%= current_tenant.name %></span>
+            <%= t("layouts.navbar.current_tenant") %>: <span class="ml-1 font-semibold text-white"><%= current_tenant.name %></span>
           </div>
         <% end %>
+
+        <div class="hidden md:flex items-center gap-2 text-xs">
+          <span class="text-gray-400"><%= t("layouts.navbar.language") %>:</span>
+          <%= link_to "ES", url_for(locale: :es), class: "#{I18n.locale == :es ? "text-white font-semibold" : "text-gray-400 hover:text-white"}" %>
+          <span class="text-gray-600">|</span>
+          <%= link_to "EN", url_for(locale: :en), class: "#{I18n.locale == :en ? "text-white font-semibold" : "text-gray-400 hover:text-white"}" %>
+        </div>
 
         <%# Bell icon %>
         <button type="button"
                 class="relative p-2 rounded-full text-gray-400 hover:text-white hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                aria-label="View notifications">
+                aria-label="<%= t("layouts.navbar.view_notifications") %>">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round"
                   d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
@@ -78,9 +89,9 @@
           <button type="button"
                   data-action="click->dropdown#toggle"
                   class="flex items-center focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full"
-                  aria-label="Open user menu"
+                  aria-label="<%= t("layouts.navbar.open_user_menu") %>"
                   aria-haspopup="true">
-            <span class="sr-only">Open user menu</span>
+            <span class="sr-only"><%= t("layouts.navbar.open_user_menu") %></span>
             <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold select-none">
               <%= current_user.name.first.upcase %>
             </div>
@@ -94,23 +105,23 @@
 
             <%# User info header %>
             <div class="px-4 py-3 border-b border-gray-700">
-              <p class="text-xs text-gray-400 truncate">Signed in as</p>
+              <p class="text-xs text-gray-400 truncate"><%= t("layouts.navbar.signed_in_as") %></p>
               <p class="text-sm font-medium text-white truncate"><%= current_user.email %></p>
             </div>
 
             <%# Menu items %>
             <div class="py-1" role="none">
-              <%= link_to "Your profile", "#",
+              <%= link_to t("layouts.navbar.your_profile"), "#",
                     class: "flex items-center gap-2.5 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition-colors",
                     role: "menuitem" %>
 
-              <%= link_to "Settings", "#",
+              <%= link_to t("layouts.navbar.settings"), "#",
                     class: "flex items-center gap-2.5 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition-colors",
                     role: "menuitem" %>
             </div>
 
             <div class="py-1 border-t border-gray-700" role="none">
-              <%= button_to "Sign out",
+              <%= button_to t("layouts.navbar.sign_out"),
                     destroy_user_session_path,
                     method: :delete,
                     class: "w-full text-left flex items-center gap-2.5 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition-colors",

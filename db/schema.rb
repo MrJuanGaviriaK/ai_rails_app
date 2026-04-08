@@ -10,9 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_07_190000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_08_174500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "purchasing_locations", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.string "address", null: false
+    t.string "city", null: false
+    t.datetime "created_at", null: false
+    t.datetime "deleted_at"
+    t.string "department", null: false
+    t.string "name", null: false
+    t.text "notes"
+    t.bigint "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["deleted_at"], name: "index_purchasing_locations_on_deleted_at"
+    t.index ["tenant_id", "deleted_at"], name: "index_purchasing_locations_on_tenant_id_and_deleted_at"
+    t.index ["tenant_id", "department"], name: "index_purchasing_locations_on_tenant_id_and_department"
+    t.index ["tenant_id"], name: "index_purchasing_locations_on_tenant_id"
+  end
 
   create_table "roles", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -186,6 +203,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_07_190000) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  add_foreign_key "purchasing_locations", "tenants"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

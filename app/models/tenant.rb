@@ -1,7 +1,10 @@
 class Tenant < ApplicationRecord
+  resourcify
+
   STATUSES = %w[active suspended archived].freeze
 
   belongs_to :reviewed_by, class_name: "User", optional: true
+  has_many :purchasing_locations, dependent: :restrict_with_error
 
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: { case_sensitive: false }

@@ -1,22 +1,22 @@
-Email address changed – MRJG tools
+<%= t("users.mailer.email_changed.document_title") %>
 ====================================
 
-Hello, <%= @email %>!
+<%= t("users.mailer.shared.hello", email: @email) %>
 
 <% if @resource.try(:unconfirmed_email?) %>
-We are contacting you to notify you that your email address is being changed to:
+<%= t("users.mailer.email_changed.requested_change_prefix") %>:
 <%= @resource.unconfirmed_email %>
 
-No action is required on your part — this is just a heads-up.
+<%= t("users.mailer.email_changed.requested_change_suffix") %>
 <% else %>
-We are contacting you to notify you that your email address has been changed to:
+<%= t("users.mailer.email_changed.changed_prefix") %>:
 <%= @resource.email %>
 
-If you did not make this change, please contact us immediately.
+<%= t("users.mailer.email_changed.changed_suffix") %>
 <% end %>
 
 ---
 
-You received this email because your MRJG tools account email address was changed.
-To unsubscribe from future emails, send a message to:
+<%= t("mailers.shared.footer.email_changed") %>
+<%= t("mailers.shared.footer.unsubscribe") %>:
 unsubscribe@mail.mrjg.dev

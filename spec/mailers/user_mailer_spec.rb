@@ -14,7 +14,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     it "sets the correct subject" do
-      expect(mail.subject).to eq("Welcome to MRJG tools, Alice!")
+      expect(mail.subject).to eq(I18n.t("mailers.user_mailer.welcome_email.subject", name: "Alice"))
     end
 
     it "includes the user's name in the HTML body" do

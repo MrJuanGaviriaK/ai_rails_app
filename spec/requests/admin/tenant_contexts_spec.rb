@@ -13,7 +13,7 @@ RSpec.describe "Admin::TenantContexts", type: :request do
       post admin_switch_tenant_context_path, params: { tenant_id: second_tenant.id }
       follow_redirect!
 
-      expect(response.body).to include("Current tenant:")
+      expect(response.body).to include(I18n.t("dashboard.index.current_tenant"))
       expect(response.body).to include("Beta")
     end
 

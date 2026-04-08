@@ -1,14 +1,14 @@
-Confirm your account – MRJG tools
+<%= t("users.mailer.confirmation_instructions.document_title") %>
 ==================================
 
-Welcome, <%= @email %>!
+<%= t("users.mailer.shared.hello", email: @email) %>
 
-You can confirm your account email through the link below:
+<%= t("users.mailer.confirmation_instructions.body") %>
 
 <%= confirmation_url(@resource, confirmation_token: @token) %>
 
 ---
 
-You received this email because you registered an account on MRJG tools.
-To unsubscribe from future emails, send a message to:
+<%= t("mailers.shared.footer.account_registration") %>
+<%= t("mailers.shared.footer.unsubscribe") %>:
 unsubscribe@mail.mrjg.dev

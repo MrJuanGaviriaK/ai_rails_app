@@ -22,6 +22,12 @@ class User < ApplicationRecord
     has_role?(:superadmin)
   end
 
+  def admin_for_tenant?(tenant)
+    return false unless tenant
+
+    superadmin? || has_role?(:admin, tenant)
+  end
+
   def accessible_tenants
     return Tenant.active_context if superadmin?
 

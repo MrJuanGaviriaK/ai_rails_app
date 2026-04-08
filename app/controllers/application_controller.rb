@@ -6,9 +6,10 @@ class ApplicationController < ActionController::Base
   stale_when_importmap_changes
 
   before_action :authenticate_user!
+  before_action :set_locale
   before_action :set_current_context
 
-  helper_method :current_tenant, :switchable_tenants
+  helper_method :current_tenant, :switchable_tenants, :available_locales
 
   def after_sign_in_path_for(resource)
     dashboard_path
@@ -61,5 +62,20 @@ class ApplicationController < ActionController::Base
     return Tenant.active_context.order(:name).first if current_user.superadmin?
 
     current_user.accessible_tenants.order(:name).first || Tenant.active_context.order(:name).first
+  end
+
+  def set_locale
+    requested_locale = params[:locale]&.to_sym
+
+    if requested_locale.present? && available_locales.include?(requested_locale)
+      session[:locale] = requested_locale
+    end
+
+    session_locale = session[:locale]&.to_sym
+    I18n.locale = available_locales.include?(session_locale) ? session_locale : I18n.default_locale
+  end
+
+  def available_locales
+    I18n.available_locales
   end
 end

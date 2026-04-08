@@ -19,7 +19,7 @@ RSpec.describe User, type: :model do
       it "is invalid" do
         user.name = nil
         expect(user).not_to be_valid
-        expect(user.errors[:name]).to include("can't be blank")
+        expect(user.errors[:name]).to include(I18n.t("errors.messages.blank"))
       end
     end
 
@@ -27,7 +27,7 @@ RSpec.describe User, type: :model do
       it "is invalid" do
         user.name = "   "
         expect(user).not_to be_valid
-        expect(user.errors[:name]).to include("can't be blank")
+        expect(user.errors[:name]).to include(I18n.t("errors.messages.blank"))
       end
     end
 
@@ -62,7 +62,7 @@ RSpec.describe User, type: :model do
         create(:user, email: "taken@example.com")
         duplicate = build(:user, email: "taken@example.com")
         expect(duplicate).not_to be_valid
-        expect(duplicate.errors[:email]).to include("has already been taken")
+        expect(duplicate.errors[:email]).to include(I18n.t("errors.messages.taken"))
       end
     end
 

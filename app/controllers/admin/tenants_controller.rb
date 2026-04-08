@@ -20,7 +20,7 @@ class Admin::TenantsController < Admin::BaseController
     apply_settings_json(@tenant)
 
     if @tenant.errors.none? && @tenant.save
-      redirect_to admin_tenants_path, notice: "Tenant created successfully."
+      redirect_to admin_tenants_path, notice: t("admin.tenants.flash.created")
     else
       render :new, status: :unprocessable_entity
     end
@@ -34,7 +34,7 @@ class Admin::TenantsController < Admin::BaseController
     apply_settings_json(@tenant)
 
     if @tenant.errors.none? && @tenant.save
-      redirect_to admin_tenants_path, notice: "Tenant updated successfully."
+      redirect_to admin_tenants_path, notice: t("admin.tenants.flash.updated")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -42,7 +42,7 @@ class Admin::TenantsController < Admin::BaseController
 
   def destroy
     @tenant.soft_delete!
-    redirect_to admin_tenants_path, notice: "Tenant archived successfully."
+    redirect_to admin_tenants_path, notice: t("admin.tenants.flash.archived")
   end
 
   private
@@ -61,12 +61,12 @@ class Admin::TenantsController < Admin::BaseController
 
     parsed_settings = JSON.parse(raw_settings)
     unless parsed_settings.is_a?(Hash)
-      tenant.errors.add(:settings, "must be a JSON object")
+      tenant.errors.add(:settings, t("admin.tenants.errors.settings_must_be_object"))
       return
     end
 
     tenant.settings = parsed_settings
   rescue JSON::ParserError
-    tenant.errors.add(:settings, "must be valid JSON")
+    tenant.errors.add(:settings, t("admin.tenants.errors.settings_must_be_valid_json"))
   end
 end

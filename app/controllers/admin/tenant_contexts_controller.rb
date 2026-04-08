@@ -3,7 +3,7 @@ class Admin::TenantContextsController < Admin::BaseController
     tenant = Tenant.active_context.find_by(id: params[:tenant_id])
 
     unless tenant
-      redirect_back fallback_location: dashboard_path, alert: "Selected tenant is unavailable."
+      redirect_back fallback_location: dashboard_path, alert: t("admin.tenant_contexts.unavailable")
       return
     end
 
@@ -14,6 +14,6 @@ class Admin::TenantContextsController < Admin::BaseController
       "tenant_context_switched user_id=#{current_user.id} from_tenant_id=#{previous_tenant_id} to_tenant_id=#{tenant.id}"
     )
 
-    redirect_back fallback_location: dashboard_path, notice: "Switched to #{tenant.name}."
+    redirect_back fallback_location: dashboard_path, notice: t("admin.tenant_contexts.switched", tenant: tenant.name)
   end
 end
