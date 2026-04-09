@@ -147,14 +147,11 @@ RSpec.describe User, type: :model do
         expect(client.has_role?(:client)).to be true
       end
 
-      it "creates a normal_user with :normal_user trait" do
-        normal = create(:user, :normal_user)
-        expect(normal.has_role?(:normal_user)).to be true
-      end
+      it "creates a buyer user with :buyer trait" do
+        buyer = create(:user, :buyer)
 
-      it "assigns the normal_user role by default on creation" do
-        user = create(:user)
-        expect(user.has_role?(:normal_user)).to be true
+        expect(buyer.buyer_profile).to be_present
+        expect(buyer.has_role?(:buyer, buyer.buyer_profile.purchasing_location.tenant)).to be(true)
       end
     end
   end

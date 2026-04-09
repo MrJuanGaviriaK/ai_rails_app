@@ -22,16 +22,21 @@ FactoryBot.define do
       after(:create) { |user| user.add_role(:admin) }
     end
 
-    trait :normal_user do
-      after(:create) { |user| user.add_role(:normal_user) }
-    end
-
     trait :client do
       after(:create) { |user| user.add_role(:client) }
     end
 
     trait :superadmin do
       after(:create) { |user| user.add_role(:superadmin) }
+    end
+
+    trait :buyer do
+      after(:create) do |user|
+        tenant = create(:tenant)
+        location = create(:purchasing_location, tenant: tenant)
+        user.add_role(:buyer, tenant)
+        create(:buyer_profile, user: user, purchasing_location: location)
+      end
     end
   end
 end

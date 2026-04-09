@@ -1,0 +1,32 @@
+<div class="min-h-screen bg-[#080e1e] px-4 py-8 sm:px-8">
+  <div class="mx-auto max-w-7xl space-y-6">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-white sm:text-3xl"><%= t("admin.e_signature_templates.builder.title") %></h1>
+        <p class="mt-1 text-sm text-gray-300"><%= t("admin.e_signature_templates.builder.subtitle", template: @template.title) %></p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <%= link_to t("admin.e_signature_templates.builder.back_to_edit"), edit_admin_e_signature_template_path(@template), class: "rounded-md border border-[#34588f] bg-[#0a1628] px-4 py-2 text-sm font-semibold text-gray-200 transition hover:bg-[#102447]" %>
+        <%= link_to t("admin.e_signature_templates.builder.back_to_list"), admin_e_signature_templates_path(integration_id: @template.integration_id), class: "rounded-md border border-[#34588f] bg-[#0a1628] px-4 py-2 text-sm font-semibold text-gray-200 transition hover:bg-[#102447]" %>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-4 sm:p-6" data-controller="e-signature-builder" data-action="resize@window->e-signature-builder#ensureContainerHeight" data-e-signature-builder-edit-url-value="<%= @embedded_session.fetch(:edit_url) %>" data-e-signature-builder-client-id-value="<%= @embedded_session.fetch(:client_id) %>" data-e-signature-builder-skip-domain-verification-value="<%= @embedded_session.fetch(:skip_domain_verification) %>" data-e-signature-builder-complete-url-value="<%= builder_saved_admin_e_signature_template_path(@template) %>" data-e-signature-builder-i18n-value="<%= {
+      opening: t("admin.e_signature_templates.builder.messages.opening"),
+      opened: t("admin.e_signature_templates.builder.messages.opened"),
+      finished: t("admin.e_signature_templates.builder.messages.finished"),
+      closed: t("admin.e_signature_templates.builder.messages.closed"),
+      failed: t("admin.e_signature_templates.builder.messages.failed")
+    }.to_json %>">
+      <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <p class="text-sm text-gray-300" data-e-signature-builder-target="status"><%= t("admin.e_signature_templates.builder.loading") %></p>
+        <button type="button" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500" data-action="click->e-signature-builder#open">
+          <%= t("admin.e_signature_templates.builder.reopen") %>
+        </button>
+      </div>
+
+      <div class="h-[calc(100vh-14rem)] min-h-[620px] overflow-hidden rounded-lg border border-[#1e3563] bg-[#081327]" data-e-signature-builder-target="container"></div>
+    </div>
+  </div>
+</div>

@@ -190,7 +190,7 @@ Uses **Propshaft** (not Sprockets) with **ImportMap** (no webpack, esbuild, or N
 ### Authentication and Authorization
 
 - **Devise** handles authentication with the `database_authenticatable`, `registerable`, `recoverable`, `rememberable`, `validatable`, and `confirmable` modules. Email confirmation is required before a user can sign in.
-- **Rolify** manages roles. New users are automatically assigned the `normal_user` role on creation.
+- **Rolify** manages roles (`superadmin`, `admin`, `buyer`, `client`) with tenant scoping when needed.
 
 ---
 

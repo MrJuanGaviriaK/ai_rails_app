@@ -20,7 +20,7 @@
 ## Auth and app behavior conventions
 - `ApplicationController` enforces `authenticate_user!` globally; unauthenticated requests are redirected to Devise flows.
 - `User` is Devise `:confirmable`; a welcome email is queued only on first confirmation (`after_commit` on `confirmed_at` change).
-- New users get Rolify role `normal_user` automatically (`after_create`).
+- User management roles are `superadmin`, `admin`, `buyer`, and `client`.
 
 ## Deployment facts to preserve
 - Deploys use Kamal (`config/deploy.yml`); image builds are forced to `amd64`.

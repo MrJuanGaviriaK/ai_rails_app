@@ -49,9 +49,31 @@
       </section>
     </div>
 
-    <section class="rounded-xl border border-dashed border-[#34588f] bg-[#0d1f3e]/70 p-5">
-      <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300"><%= t("admin.purchasing_locations.show.future_section_title") %></h2>
-      <p class="mt-2 text-sm text-gray-300"><%= t("admin.purchasing_locations.show.future_section_description") %></p>
+    <section class="rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-5">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300"><%= t("admin.purchasing_locations.show.buyers") %></h2>
+
+      <% if @purchasing_location.buyers.any? %>
+        <div class="mt-4 overflow-hidden rounded-lg border border-[#1e3563]">
+          <table class="min-w-full">
+            <thead class="bg-[#0b1a35]">
+              <tr>
+                <th class="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400"><%= t("admin.purchasing_locations.show.columns.name") %></th>
+                <th class="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400"><%= t("admin.purchasing_locations.show.columns.email") %></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#1e3563]">
+              <% @purchasing_location.buyers.order(:name).each do |buyer| %>
+                <tr class="hover:bg-[#102447]">
+                  <td class="px-4 py-3 text-sm font-medium text-white"><%= buyer.name %></td>
+                  <td class="px-4 py-3 text-sm text-gray-300"><%= buyer.email %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="mt-2 text-sm text-gray-300"><%= t("admin.purchasing_locations.show.no_buyers") %></p>
+      <% end %>
     </section>
   </div>
 </div>

@@ -1,17 +1,17 @@
 FactoryBot.define do
   factory :role do
-    name { "normal_user" }
+    name { "client" }
 
     trait :admin do
       name { "admin" }
     end
 
-    trait :normal_user do
-      name { "normal_user" }
-    end
-
     trait :client do
       name { "client" }
+    end
+
+    trait :buyer do
+      name { "buyer" }
     end
   end
 end

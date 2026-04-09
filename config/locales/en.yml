@@ -6,12 +6,16 @@ en:
       dashboard: "Dashboard"
       tenants: "Tenants"
       purchasing_locations: "Purchasing locations"
+      users: "Users"
+      integrations: "Integrations"
+      e_signature_templates: "E-Signature Templates"
       team: "Team"
       projects: "Projects"
       calendar: "Calendar"
       tenant: "Tenant"
       switch_tenant: "Switch tenant"
       current_tenant: "Tenant"
+      open_settings_menu: "Open settings menu"
       language: "Language"
       view_notifications: "View notifications"
       open_user_menu: "Open user menu"
@@ -30,6 +34,73 @@ en:
   admin:
     authorization:
       not_allowed: "You are not authorized to access this section."
+    users:
+      authorization:
+        not_allowed: "You are not authorized to manage users."
+      flash:
+        created: "User created successfully."
+        archived: "User archived successfully."
+        restored: "User restored successfully."
+      errors:
+        role_required: "Role is required."
+        invalid_role: "Selected role is invalid."
+        role_not_allowed: "You are not allowed to assign that role."
+        tenant_required: "Tenant is required for this role."
+        purchasing_location_required: "Purchasing location is required for buyer users."
+        purchasing_location_out_of_scope: "Purchasing location must belong to the selected tenant."
+      index:
+        title: "Users"
+        subtitle: "List, archive, and restore users by access scope."
+        new_user: "New user"
+        total_users: "Total users"
+        active: "Active"
+        archived: "Archived"
+        apply: "Apply"
+        no_tenant: "No tenant"
+        archive: "Archive"
+        restore: "Restore"
+        archive_confirm: "Archive this user?"
+        restore_confirm: "Restore this user?"
+        empty_title: "No users found"
+        empty_description: "Try another filter or create a new user."
+        filters:
+          active: "Active"
+          archived: "Archived"
+          all: "All"
+        columns:
+          user: "User"
+          roles: "Roles"
+          tenant: "Tenant"
+          status: "Status"
+          actions: "Actions"
+      roles:
+        superadmin: "Superadmin"
+        admin: "Admin"
+        buyer: "Buyer"
+        client: "Client"
+      new:
+        kicker: "User provisioning"
+        title: "Create user"
+        description: "Create users by role and capture required information for each role."
+      form:
+        fix_errors: "Please fix the following errors:"
+        base_information: "Base information"
+        access_and_role: "Access and role"
+        buyer_section: "Buyer information"
+        name: "Full name"
+        name_placeholder: "Jane Doe"
+        email: "Email"
+        email_placeholder: "jane@example.com"
+        password: "Temporary password"
+        password_confirmation: "Confirm temporary password"
+        role: "Role"
+        select_role: "Select a role"
+        tenant: "Tenant"
+        select_tenant: "Select a tenant"
+        purchasing_location: "Purchasing location"
+        select_purchasing_location: "Select a purchasing location"
+        purchasing_location_hint: "Only active and non-archived purchasing locations are shown."
+        create: "Create user"
     tenant_contexts:
       unavailable: "Selected tenant is unavailable."
       switched: "Switched to %{tenant}."
@@ -98,6 +169,11 @@ en:
       show:
         kicker: "Purchasing location"
         details: "Location details"
+        buyers: "Related buyers"
+        no_buyers: "No buyers are linked to this purchasing location."
+        columns:
+          name: "Name"
+          email: "Email"
         tenant: "Tenant"
         status: "Status"
         department: "Department"
@@ -112,6 +188,154 @@ en:
         archive_confirm: "Archive this purchasing location?"
         future_section_title: "Related information"
         future_section_description: "This section is reserved for future data linked to this purchasing location."
+    integrations:
+      authorization:
+        not_allowed: "You are not authorized to manage integrations."
+      index:
+        title: "Integrations"
+        subtitle: "Connect Dropbox Sign and manage e-signature templates for this tenant."
+        workspace: "Workspace"
+        provider_title: "Available Providers"
+        provider_description: "Send documents for e-signature with Dropbox Sign."
+        add_button: "+ Add Integration"
+        list_title: "Configured Integrations"
+        refresh: "Refresh"
+        empty_title: "No integrations configured yet."
+        empty_description: "Create your first Dropbox Sign integration to begin."
+        templates_title: "E-Signature Templates"
+        templates_description: "Templates now have an independent section where you can upload a PDF for each template."
+        go_to_templates: "Go to Templates"
+      form:
+        name: "Integration name"
+        name_placeholder: "Production"
+        api_key: "API key"
+        api_key_placeholder: "Dropbox Sign API key"
+        client_id: "Client ID"
+        client_id_placeholder: "Client ID for embedded signing"
+        priority: "Priority"
+        test_mode: "Use Dropbox test mode"
+        save: "Save"
+        test_connection: "Test connection"
+      js:
+        actions:
+          templates: "Templates"
+          edit: "Edit"
+          delete: "Delete"
+          activate: "Activate"
+          deactivate: "Deactivate"
+        labels:
+          provider_priority: "Priority"
+          status: "Status"
+        states:
+          active: "active"
+          inactive: "inactive"
+        modal:
+          add_title: "Add Dropbox Sign Integration"
+          edit_prefix: "Edit"
+        common:
+          unknown_error: "Unknown error"
+          ok: "OK"
+        messages:
+          load_failed: "Failed to load integrations"
+          update_success: "Integration updated"
+          update_failed: "Failed to update status"
+          network_error: "Network error"
+          confirm_delete: "Delete this integration and all associated templates?"
+          delete_success: "Integration deleted"
+          delete_failed: "Failed to delete integration"
+          credentials_saved: "Credentials are stored. Leave blank to keep."
+          save_integration_first: "Save integration first before testing"
+          testing_connection: "Testing connection..."
+          connection_failed: "Connection test failed"
+          connected_prefix: "Connected"
+          failed_prefix: "Failed"
+          saving: "Saving..."
+          save_failed: "Save failed"
+          integration_updated: "Integration updated"
+          integration_created: "Integration created"
+    e_signature_templates:
+      flash:
+        created: "Template created successfully."
+        updated: "Template updated successfully."
+        saved: "Template saved successfully."
+        deleted: "Template deleted successfully."
+        fix_errors: "Please review the errors below."
+        builder_error: "Could not open Dropbox Sign builder: %{error}"
+      errors:
+        invalid_json: "must be valid JSON"
+        signer_roles_required: "at least one signer role is required"
+      statuses:
+        active: "Active"
+        inactive: "Inactive"
+      actions:
+        builder: "Builder"
+        edit: "Edit"
+        delete: "Delete"
+        delete_confirm: "Delete this template?"
+      index:
+        subtitle: "Manage Dropbox Sign templates and upload a PDF file for each one."
+        new_template: "New Template"
+        all_integrations: "All integrations"
+        filter: "Filter"
+        columns:
+          template: "Template"
+          integration: "Integration"
+          pdf: "PDF"
+          status: "Status"
+          actions: "Actions"
+        pdf_attached: "Attached"
+        pdf_missing: "Missing"
+        empty_title: "No templates found"
+        empty_description: "Create your first e-signature template."
+      new:
+        title: "New E-Signature Template"
+        subtitle: "Create a template and upload a PDF document."
+      edit:
+        title: "Edit E-Signature Template"
+        subtitle: "Update template details and PDF document."
+      builder:
+        title: "Template Builder"
+        subtitle: "Editing Dropbox Sign template for %{template}."
+        loading: "Preparing Dropbox Sign editor..."
+        reopen: "Reopen editor"
+        back_to_edit: "Back to edit"
+        back_to_list: "Back to templates"
+        messages:
+          opening: "Opening Dropbox Sign editor..."
+          opened: "Dropbox Sign editor opened."
+          finished: "Template updates were saved in Dropbox Sign."
+          closed: "Editor closed. You can reopen it anytime."
+          failed: "Dropbox Sign editor failed to load. Please try reopening it."
+      form:
+        fix_errors: "Please fix the following errors:"
+        integration: "Integration"
+        title: "Title"
+        title_placeholder: "NDA v1"
+        message: "Email message (optional)"
+        message_placeholder: "Please sign this document."
+        document: "Template PDF"
+        document_hint: "A PDF file is required to use this template."
+        document_attached: "Current file attached."
+        signer_roles: "Signer roles"
+        signer_roles_hint: "Define who needs to sign this document. At least one role is required."
+        signer_role_placeholder: "e.g. Clinician"
+        add_role: "Add role"
+        merge_fields: "Merge fields (optional)"
+        merge_fields_hint: "Use merge fields to prefill signer information in the template."
+        add_merge_field: "Add merge field"
+        merge_field_name_placeholder: "Field name"
+        merge_field_value_placeholder: "Prefilled value"
+        merge_field_role_placeholder: "Signer role (optional)"
+        remove: "Remove"
+        advanced_settings: "Advanced settings"
+        signer_roles_json: "Signer roles JSON"
+        custom_fields_json: "Custom fields JSON"
+        metadata_json: "Metadata JSON"
+        provider_template_id: "Provider Template ID (optional)"
+        provider_template_id_placeholder: "auto-generated if blank"
+        active: "Active template"
+        save: "Save"
+        back: "Back"
     tenants:
       flash:
         created: "Tenant created successfully."
@@ -307,6 +531,21 @@ en:
         heading_changed: "Email address changed"
         requested_change_prefix: "We are contacting you to notify you that your email address is being changed to"
         requested_change_suffix: "No action is required on your part — this is just a heads-up."
+
+  api:
+    v1:
+      base:
+        tenant_required: "Tenant context is required"
+        tenant_mismatch: "Tenant mismatch"
+        not_authorized: "Not authorized"
+
+  activerecord:
+    errors:
+      models:
+        e_signature_template:
+          attributes:
+            document:
+              invalid_content_type: "must be a PDF file"
         changed_prefix: "We are contacting you to notify you that your email address has been changed to"
         changed_suffix: "If you did not make this change, please contact us immediately."
       password_change:

@@ -10,9 +10,87 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_08_174500) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_09_202246) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "buyer_profiles", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "created_by_id"
+    t.bigint "purchasing_location_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["created_by_id"], name: "index_buyer_profiles_on_created_by_id"
+    t.index ["purchasing_location_id"], name: "index_buyer_profiles_on_purchasing_location_id"
+    t.index ["user_id"], name: "index_buyer_profiles_on_user_id", unique: true
+  end
+
+  create_table "e_signature_templates", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.jsonb "custom_fields", default: [], null: false
+    t.bigint "integration_id", null: false
+    t.datetime "last_synced_at"
+    t.text "message"
+    t.jsonb "metadata", default: {}, null: false
+    t.string "provider_template_id", null: false
+    t.jsonb "signer_roles", default: [], null: false
+    t.bigint "tenant_id", null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["integration_id", "provider_template_id"], name: "idx_esig_templates_integration_provider", unique: true
+    t.index ["integration_id"], name: "index_e_signature_templates_on_integration_id"
+    t.index ["tenant_id", "active"], name: "index_e_signature_templates_on_tenant_id_and_active"
+    t.index ["tenant_id"], name: "index_e_signature_templates_on_tenant_id"
+  end
+
+  create_table "integrations", force: :cascade do |t|
+    t.string "capabilities", default: [], null: false, array: true
+    t.datetime "created_at", null: false
+    t.jsonb "credentials", default: {}, null: false
+    t.datetime "last_connected_at"
+    t.string "last_error_message"
+    t.string "name", null: false
+    t.integer "priority", default: 0, null: false
+    t.string "provider", null: false
+    t.jsonb "provider_config", default: {}, null: false
+    t.jsonb "settings", default: {}, null: false
+    t.string "status", default: "inactive", null: false
+    t.bigint "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["capabilities"], name: "index_integrations_on_capabilities", using: :gin
+    t.index ["status"], name: "index_integrations_on_status"
+    t.index ["tenant_id", "provider"], name: "index_integrations_on_tenant_id_and_provider"
+    t.index ["tenant_id"], name: "index_integrations_on_tenant_id"
+  end
 
   create_table "purchasing_locations", force: :cascade do |t|
     t.boolean "active", default: true, null: false
@@ -182,6 +260,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_174500) do
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "created_at", null: false
+    t.datetime "deleted_at"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "name", default: "", null: false
@@ -191,6 +270,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_174500) do
     t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -203,6 +283,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_174500) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "buyer_profiles", "purchasing_locations", on_delete: :restrict
+  add_foreign_key "buyer_profiles", "users", column: "created_by_id", on_delete: :nullify
+  add_foreign_key "buyer_profiles", "users", on_delete: :cascade
+  add_foreign_key "e_signature_templates", "integrations"
+  add_foreign_key "e_signature_templates", "tenants"
+  add_foreign_key "integrations", "tenants"
   add_foreign_key "purchasing_locations", "tenants"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

@@ -1,0 +1,150 @@
+<%
+  signer_roles_for_form = Array(template.signer_roles).filter_map do |role|
+    role.is_a?(Hash) ? role["name"].presence : role.to_s.presence
+  end
+  signer_roles_for_form = [""] if signer_roles_for_form.empty?
+
+  custom_fields_for_form = Array(template.custom_fields).filter_map do |field|
+    next unless field.is_a?(Hash)
+
+    name = (field["name"] || field["api_id"]).to_s.strip
+    next if name.blank?
+
+    {
+      name: name,
+      default_value: (field["default_value"] || field["value"]).to_s,
+      signer_role: (field["signer_role"] || field["role"]).to_s
+    }
+  end
+%>
+
+<%= form_with model: [:admin, template], local: true, html: { multipart: true }, class: "space-y-6", data: { controller: "e-signature-template-form" } do |f| %>
+  <% if template.errors.any? %>
+    <div class="rounded-lg border border-red-400/35 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+      <p class="font-semibold"><%= t("admin.e_signature_templates.form.fix_errors") %></p>
+      <ul class="mt-2 list-disc pl-6">
+        <% template.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div>
+      <%= f.label :integration_id, t("admin.e_signature_templates.form.integration"), class: "mb-1 block text-xs text-gray-400" %>
+      <%= f.select :integration_id, options_from_collection_for_select(integrations, :id, :name, template.integration_id || params[:integration_id]), {}, class: "ui-select" %>
+    </div>
+
+    <div>
+      <%= f.label :title, t("admin.e_signature_templates.form.title"), class: "mb-1 block text-xs text-gray-400" %>
+      <%= f.text_field :title, class: "w-full rounded-lg border border-[#1e3563] bg-[#0a1628] px-3 py-2 text-sm text-white", placeholder: t("admin.e_signature_templates.form.title_placeholder") %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :message, t("admin.e_signature_templates.form.message"), class: "mb-1 block text-xs text-gray-400" %>
+    <%= f.text_area :message, rows: 4, class: "w-full rounded-lg border border-[#1e3563] bg-[#0a1628] px-3 py-2 text-sm text-white", placeholder: t("admin.e_signature_templates.form.message_placeholder") %>
+  </div>
+
+  <div>
+    <%= f.label :document, t("admin.e_signature_templates.form.document"), class: "mb-1 block text-xs text-gray-400" %>
+    <%= f.file_field :document, accept: "application/pdf", class: "w-full rounded-lg border border-[#1e3563] bg-[#0a1628] px-3 py-2 text-sm text-white" %>
+    <p class="mt-1 text-xs text-gray-400"><%= t("admin.e_signature_templates.form.document_hint") %></p>
+    <% if template.document.attached? %>
+      <p class="mt-1 text-xs text-emerald-300"><%= t("admin.e_signature_templates.form.document_attached") %></p>
+    <% end %>
+  </div>
+
+  <div class="space-y-3 rounded-xl border border-[#1e3563] bg-[#0a1628] p-4">
+    <div class="flex items-center justify-between gap-3">
+      <div>
+        <p class="text-sm font-semibold text-white"><%= t("admin.e_signature_templates.form.signer_roles") %></p>
+        <p class="mt-1 text-xs text-gray-400"><%= t("admin.e_signature_templates.form.signer_roles_hint") %></p>
+      </div>
+      <button type="button" class="rounded-md border border-indigo-400/40 bg-indigo-500/20 px-3 py-1.5 text-xs font-semibold text-indigo-200 transition hover:bg-indigo-500/30" data-action="click->e-signature-template-form#addRole">
+        + <%= t("admin.e_signature_templates.form.add_role") %>
+      </button>
+    </div>
+
+    <div class="space-y-2" data-e-signature-template-form-target="rolesContainer" data-next-index="<%= signer_roles_for_form.length %>">
+      <% signer_roles_for_form.each_with_index do |role_name, index| %>
+        <div class="grid grid-cols-[auto,1fr,auto] items-center gap-2" data-role-row>
+          <span class="w-6 text-center text-xs text-gray-400" data-e-signature-template-form-target="roleNumber"><%= index + 1 %></span>
+          <input type="text" name="e_signature_template[signer_roles_list][<%= index %>][name]" value="<%= role_name %>" placeholder="<%= t("admin.e_signature_templates.form.signer_role_placeholder") %>" class="w-full rounded-lg border border-[#1e3563] bg-[#0f223f] px-3 py-2 text-sm text-white" />
+          <button type="button" class="rounded-md border border-[#34588f] bg-[#102447] px-2.5 py-2 text-xs font-semibold text-gray-200 transition hover:bg-[#17335e]" data-action="click->e-signature-template-form#removeRole"><%= t("admin.e_signature_templates.form.remove") %></button>
+        </div>
+      <% end %>
+    </div>
+
+    <% if template.errors[:signer_roles_json].present? %>
+      <p class="text-xs text-red-300"><%= template.errors[:signer_roles_json].to_sentence %></p>
+    <% end %>
+  </div>
+
+  <div class="space-y-3 rounded-xl border border-[#1e3563] bg-[#0a1628] p-4">
+    <div class="flex items-center justify-between gap-3">
+      <div>
+        <p class="text-sm font-semibold text-white"><%= t("admin.e_signature_templates.form.merge_fields") %></p>
+        <p class="mt-1 text-xs text-gray-400"><%= t("admin.e_signature_templates.form.merge_fields_hint") %></p>
+      </div>
+      <button type="button" class="rounded-md border border-[#34588f] bg-[#102447] px-3 py-1.5 text-xs font-semibold text-gray-200 transition hover:bg-[#17335e]" data-action="click->e-signature-template-form#addMergeField">
+        + <%= t("admin.e_signature_templates.form.add_merge_field") %>
+      </button>
+    </div>
+
+    <div class="space-y-2" data-e-signature-template-form-target="mergeFieldsContainer" data-next-index="<%= custom_fields_for_form.length %>">
+      <% custom_fields_for_form.each_with_index do |field, index| %>
+        <div class="grid gap-2 rounded-lg border border-[#1e3563] bg-[#0f223f] p-3 sm:grid-cols-[1fr,1fr,1fr,auto]" data-merge-field-row>
+          <input type="text" name="e_signature_template[custom_fields_list][<%= index %>][name]" value="<%= field[:name] %>" placeholder="<%= t("admin.e_signature_templates.form.merge_field_name_placeholder") %>" class="w-full rounded-lg border border-[#28497a] bg-[#0a1628] px-3 py-2 text-sm text-white" />
+          <input type="text" name="e_signature_template[custom_fields_list][<%= index %>][default_value]" value="<%= field[:default_value] %>" placeholder="<%= t("admin.e_signature_templates.form.merge_field_value_placeholder") %>" class="w-full rounded-lg border border-[#28497a] bg-[#0a1628] px-3 py-2 text-sm text-white" />
+          <input type="text" name="e_signature_template[custom_fields_list][<%= index %>][signer_role]" value="<%= field[:signer_role] %>" placeholder="<%= t("admin.e_signature_templates.form.merge_field_role_placeholder") %>" class="w-full rounded-lg border border-[#28497a] bg-[#0a1628] px-3 py-2 text-sm text-white" />
+          <button type="button" class="rounded-md border border-[#34588f] bg-[#102447] px-2.5 py-2 text-xs font-semibold text-gray-200 transition hover:bg-[#17335e]" data-action="click->e-signature-template-form#removeMergeField"><%= t("admin.e_signature_templates.form.remove") %></button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <details class="rounded-xl border border-[#1e3563] bg-[#0a1628] p-4">
+    <summary class="cursor-pointer text-sm font-semibold text-white"><%= t("admin.e_signature_templates.form.advanced_settings") %></summary>
+
+    <div class="mt-4 space-y-4">
+      <div>
+        <%= f.label :provider_template_id, t("admin.e_signature_templates.form.provider_template_id"), class: "mb-1 block text-xs text-gray-400" %>
+        <%= f.text_field :provider_template_id, class: "w-full rounded-lg border border-[#1e3563] bg-[#0f223f] px-3 py-2 text-sm text-white", placeholder: t("admin.e_signature_templates.form.provider_template_id_placeholder") %>
+      </div>
+
+      <div>
+        <%= f.label :metadata_json, t("admin.e_signature_templates.form.metadata_json"), class: "mb-1 block text-xs text-gray-400" %>
+        <%= f.text_area :metadata_json, value: JSON.pretty_generate(template.metadata || {}), rows: 3, class: "w-full rounded-lg border border-[#1e3563] bg-[#0f223f] px-3 py-2 text-sm font-mono text-white" %>
+      </div>
+
+      <label class="flex items-center gap-2 text-sm text-gray-300">
+        <%= f.check_box :active, class: "h-4 w-4 rounded border-[#34588f] bg-[#0a1628]" %>
+        <%= t("admin.e_signature_templates.form.active") %>
+      </label>
+    </div>
+  </details>
+
+  <template data-e-signature-template-form-target="roleTemplate">
+    <div class="grid grid-cols-[auto,1fr,auto] items-center gap-2" data-role-row>
+      <span class="w-6 text-center text-xs text-gray-400" data-e-signature-template-form-target="roleNumber"></span>
+      <input type="text" name="e_signature_template[signer_roles_list][__INDEX__][name]" placeholder="<%= t("admin.e_signature_templates.form.signer_role_placeholder") %>" class="w-full rounded-lg border border-[#1e3563] bg-[#0f223f] px-3 py-2 text-sm text-white" />
+      <button type="button" class="rounded-md border border-[#34588f] bg-[#102447] px-2.5 py-2 text-xs font-semibold text-gray-200 transition hover:bg-[#17335e]" data-action="click->e-signature-template-form#removeRole"><%= t("admin.e_signature_templates.form.remove") %></button>
+    </div>
+  </template>
+
+  <template data-e-signature-template-form-target="mergeFieldTemplate">
+    <div class="grid gap-2 rounded-lg border border-[#1e3563] bg-[#0f223f] p-3 sm:grid-cols-[1fr,1fr,1fr,auto]" data-merge-field-row>
+      <input type="text" name="e_signature_template[custom_fields_list][__INDEX__][name]" placeholder="<%= t("admin.e_signature_templates.form.merge_field_name_placeholder") %>" class="w-full rounded-lg border border-[#28497a] bg-[#0a1628] px-3 py-2 text-sm text-white" />
+      <input type="text" name="e_signature_template[custom_fields_list][__INDEX__][default_value]" placeholder="<%= t("admin.e_signature_templates.form.merge_field_value_placeholder") %>" class="w-full rounded-lg border border-[#28497a] bg-[#0a1628] px-3 py-2 text-sm text-white" />
+      <input type="text" name="e_signature_template[custom_fields_list][__INDEX__][signer_role]" placeholder="<%= t("admin.e_signature_templates.form.merge_field_role_placeholder") %>" class="w-full rounded-lg border border-[#28497a] bg-[#0a1628] px-3 py-2 text-sm text-white" />
+      <button type="button" class="rounded-md border border-[#34588f] bg-[#102447] px-2.5 py-2 text-xs font-semibold text-gray-200 transition hover:bg-[#17335e]" data-action="click->e-signature-template-form#removeMergeField"><%= t("admin.e_signature_templates.form.remove") %></button>
+    </div>
+  </template>
+
+  <div class="flex items-center gap-3">
+    <%= f.submit t("admin.e_signature_templates.form.save"), class: "rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500" %>
+    <%= link_to t("admin.e_signature_templates.form.back"), admin_e_signature_templates_path(integration_id: template.integration_id || params[:integration_id]), class: "rounded-md border border-[#34588f] bg-[#0a1628] px-4 py-2 text-sm font-semibold text-gray-200 transition hover:bg-[#102447]" %>
+  </div>
+<% end %>

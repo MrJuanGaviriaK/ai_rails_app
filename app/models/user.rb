@@ -1,8 +1,9 @@
 class User < ApplicationRecord
   rolify
-  after_create :assign_default_role
 
   has_many :reviewed_tenants, class_name: "Tenant", foreign_key: :reviewed_by_id, inverse_of: :reviewed_by, dependent: :nullify
+  has_one :buyer_profile, dependent: :destroy
+  has_one :purchasing_location, through: :buyer_profile
 
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable, :trackable and :omniauthable
@@ -14,8 +15,13 @@ class User < ApplicationRecord
 
   after_commit :send_welcome_email, on: :update
 
-  def assign_default_role
-    add_role(:normal_user) if roles.blank?
+  scope :kept, -> { where(deleted_at: nil) }
+  scope :archived, -> { where.not(deleted_at: nil) }
+
+  def self.with_role_for_tenant(tenant)
+    return none unless tenant
+
+    joins(:roles).where(roles: { resource_type: "Tenant", resource_id: tenant.id }).distinct
   end
 
   def superadmin?
@@ -32,6 +38,28 @@ class User < ApplicationRecord
     return Tenant.active_context if superadmin?
 
     Tenant.with_role_for_user(self).active_context
+  end
+
+  def archived?
+    deleted_at.present?
+  end
+
+  def soft_delete!
+    update!(deleted_at: Time.current)
+  end
+
+  def restore!
+    update!(deleted_at: nil)
+  end
+
+  def active_for_authentication?
+    super && !archived?
+  end
+
+  def inactive_message
+    return :archived if archived?
+
+    super
   end
 
   private

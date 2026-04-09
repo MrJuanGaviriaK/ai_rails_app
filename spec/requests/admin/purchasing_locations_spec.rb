@@ -11,7 +11,7 @@ RSpec.describe "Admin::PurchasingLocations", type: :request do
     it "blocks users without admin permissions in current tenant" do
       user = create(:user)
       tenant = create(:tenant)
-      user.add_role(:normal_user, tenant)
+      user.add_role(:client, tenant)
 
       sign_in_as(user)
       get admin_purchasing_locations_path
@@ -52,6 +52,35 @@ RSpec.describe "Admin::PurchasingLocations", type: :request do
       get admin_purchasing_location_path(other_location)
 
       expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "GET /admin/purchasing_locations/:id" do
+    it "lists buyers related to the purchasing location" do
+      superadmin = create(:user, :superadmin)
+      tenant = create(:tenant)
+      location = create(:purchasing_location, tenant: tenant)
+      buyer = create(:user, name: "Buyer One", email: "buyer-one@example.com")
+      buyer.add_role(:buyer, tenant)
+      create(:buyer_profile, user: buyer, purchasing_location: location, created_by: superadmin)
+
+      sign_in_as(superadmin)
+      get admin_purchasing_location_path(location)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Buyer One")
+      expect(response.body).to include("buyer-one@example.com")
+    end
+
+    it "shows empty message when no buyers are linked" do
+      superadmin = create(:user, :superadmin)
+      location = create(:purchasing_location)
+
+      sign_in_as(superadmin)
+      get admin_purchasing_location_path(location)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("admin.purchasing_locations.show.no_buyers"))
     end
   end
 

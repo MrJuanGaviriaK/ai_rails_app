@@ -57,7 +57,7 @@ class Admin::PurchasingLocationsController < ApplicationController
   private
 
   def set_purchasing_location
-    @purchasing_location = scoped_purchasing_locations.find(params[:id])
+    @purchasing_location = scoped_purchasing_locations.includes(buyer_profiles: :user).find(params[:id])
   end
 
   def scoped_purchasing_locations
