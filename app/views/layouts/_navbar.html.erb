@@ -19,50 +19,72 @@
         <div class="hidden sm:flex items-center gap-1">
           <%= link_to t("layouts.navbar.dashboard"), dashboard_path,
                 class: "px-3 py-2 rounded-md text-sm font-semibold text-white bg-gray-800" %>
-          <% if current_user.superadmin? %>
-            <%= link_to t("layouts.navbar.tenants"), admin_tenants_path,
-                  class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
-          <% end %>
-          <% if current_user.superadmin? || current_user.admin_for_tenant?(current_tenant) %>
-            <%= link_to t("layouts.navbar.purchasing_locations"), admin_purchasing_locations_path,
-                  class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
-          <% end %>
-          <%= link_to t("layouts.navbar.team"), "#",
-                class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
-          <%= link_to t("layouts.navbar.projects"), "#",
-                class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
-          <%= link_to t("layouts.navbar.calendar"), "#",
-                class: "px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" %>
         </div>
       </div>
 
       <%# Right side: notification bell + user avatar dropdown %>
       <div class="flex items-center gap-4">
 
-        <% if current_user.superadmin? && switchable_tenants.any? %>
-          <div class="hidden md:flex items-center gap-2 rounded-lg border border-[#2a3f63] bg-[#0f1f3f] px-2 py-1.5">
-            <span class="inline-flex items-center gap-1 rounded-md bg-[#152a52] px-2 py-1 text-xs font-medium text-[#b6cae2]">
-              <svg class="size-3.5 text-[#8aaac8]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path d="M10 2a1 1 0 0 1 .894.553l1.382 2.77 3.062.445a1 1 0 0 1 .554 1.706l-2.216 2.16.523 3.049a1 1 0 0 1-1.45 1.054L10 12.26l-2.739 1.44a1 1 0 0 1-1.45-1.054l.523-3.05-2.216-2.159a1 1 0 0 1 .554-1.706l3.062-.445 1.382-2.77A1 1 0 0 1 10 2Z" />
+        <% if current_user.superadmin? || current_user.admin_for_tenant?(current_tenant) %>
+          <div class="relative" data-controller="dropdown">
+            <button type="button"
+                    data-action="click->dropdown#toggle"
+                    class="inline-flex items-center justify-center rounded-lg border border-[#2a3f63] bg-[#0f1f3f] p-2 text-[#b6cae2] transition hover:bg-[#152a52] hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    aria-label="<%= t("layouts.navbar.open_settings_menu") %>"
+                    aria-haspopup="true">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
               </svg>
-              <%= t("layouts.navbar.tenant") %>
-            </span>
+            </button>
 
-            <%= form_with url: admin_switch_tenant_context_path, method: :post, local: true, class: "relative" do %>
-              <label for="tenant_switch" class="sr-only"><%= t("layouts.navbar.switch_tenant") %></label>
-              <%= select_tag :tenant_id,
-                    options_from_collection_for_select(switchable_tenants, :id, :name, current_tenant&.id),
-                    id: "tenant_switch",
-                    class: "ui-select ui-select-sm appearance-none rounded-md font-medium",
-                    onchange: "this.form.requestSubmit()" %>
-              <svg class="pointer-events-none absolute right-2 top-1/2 size-4 -translate-y-1/2 text-[#8aaac8]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.514a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
-              </svg>
-            <% end %>
-          </div>
-        <% elsif current_tenant.present? %>
-          <div class="hidden md:flex items-center rounded-lg border border-[#2a3f63] bg-[#0f1f3f] px-2.5 py-1.5 text-xs text-[#b6cae2]">
-            <%= t("layouts.navbar.current_tenant") %>: <span class="ml-1 font-semibold text-white"><%= current_tenant.name %></span>
+            <div data-dropdown-target="menu"
+                 class="hidden absolute right-0 mt-2 w-72 rounded-lg bg-gray-800 border border-gray-700 shadow-lg ring-1 ring-black/20 z-50 p-2"
+                 role="menu"
+                 aria-orientation="vertical">
+              <div class="px-2 py-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                <%= t("layouts.navbar.settings") %>
+              </div>
+
+              <% if current_user.superadmin? %>
+                <%= link_to t("layouts.navbar.tenants"), admin_tenants_path,
+                      class: "flex items-center rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors",
+                      role: "menuitem" %>
+              <% end %>
+
+              <%= link_to t("layouts.navbar.purchasing_locations"), admin_purchasing_locations_path,
+                    class: "flex items-center rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors",
+                    role: "menuitem" %>
+
+              <%= link_to t("layouts.navbar.users"), admin_users_path,
+                    class: "flex items-center rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors",
+                    role: "menuitem" %>
+
+              <%= link_to t("layouts.navbar.integrations"), admin_integrations_path,
+                    class: "flex items-center rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors",
+                    role: "menuitem" %>
+
+              <%= link_to t("layouts.navbar.e_signature_templates"), admin_e_signature_templates_path,
+                    class: "flex items-center rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors",
+                    role: "menuitem" %>
+
+              <% if current_user.superadmin? && switchable_tenants.any? %>
+                <div class="my-2 border-t border-gray-700"></div>
+                <%= form_with url: admin_switch_tenant_context_path, method: :post, local: true, class: "px-2 pb-1" do %>
+                  <label for="tenant_switch" class="mb-1 block text-xs text-gray-400"><%= t("layouts.navbar.switch_tenant") %></label>
+                  <%= select_tag :tenant_id,
+                        options_from_collection_for_select(switchable_tenants, :id, :name, current_tenant&.id),
+                        id: "tenant_switch",
+                        class: "ui-select ui-select-sm w-full",
+                        onchange: "this.form.requestSubmit()" %>
+                <% end %>
+              <% elsif current_tenant.present? %>
+                <div class="my-2 border-t border-gray-700"></div>
+                <p class="px-3 py-2 text-xs text-gray-400">
+                  <%= t("layouts.navbar.current_tenant") %>: <span class="font-semibold text-white"><%= current_tenant.name %></span>
+                </p>
+              <% end %>
+            </div>
           </div>
         <% end %>
 

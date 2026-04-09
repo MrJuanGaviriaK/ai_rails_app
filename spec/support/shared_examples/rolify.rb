@@ -20,8 +20,8 @@ RSpec.shared_examples "a rolifiable model" do
     end
 
     it "responds to has_any_role?" do
-      rolifiable.add_role(:normal_user)
-      expect(rolifiable.has_any_role?(:admin, :normal_user)).to be true
+      rolifiable.add_role(:client)
+      expect(rolifiable.has_any_role?(:admin, :client)).to be true
     end
   end
 end

@@ -1,0 +1,92 @@
+<%= form_with model: [:admin, user], local: true, class: "space-y-6", data: { controller: "user-role" } do |f| %>
+  <% if user.errors.any? %>
+    <div class="rounded-xl border border-red-500/40 bg-red-950/20 p-4">
+      <p class="mb-1 text-sm font-semibold text-red-300"><%= t("admin.users.form.fix_errors") %></p>
+      <ul class="list-inside list-disc text-sm text-red-200">
+        <% user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <section class="rounded-xl border border-[#1e3563] bg-[#0a1628] p-5">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300"><%= t("admin.users.form.base_information") %></h2>
+
+    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      <div class="space-y-1.5 sm:col-span-2">
+        <%= f.label :name, t("admin.users.form.name"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.text_field :name, placeholder: t("admin.users.form.name_placeholder"), class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+      </div>
+
+      <div class="space-y-1.5 sm:col-span-2">
+        <%= f.label :email, t("admin.users.form.email"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.email_field :email, placeholder: t("admin.users.form.email_placeholder"), class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+      </div>
+
+      <div class="space-y-1.5">
+        <%= f.label :password, t("admin.users.form.password"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.password_field :password, autocomplete: "new-password", class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+      </div>
+
+      <div class="space-y-1.5">
+        <%= f.label :password_confirmation, t("admin.users.form.password_confirmation"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+      </div>
+    </div>
+  </section>
+
+  <section class="rounded-xl border border-[#1e3563] bg-[#0a1628] p-5">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300"><%= t("admin.users.form.access_and_role") %></h2>
+
+    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      <div class="space-y-1.5">
+        <%= label_tag :"user_role", t("admin.users.form.role"), class: "block text-sm font-medium text-gray-200" %>
+        <%= select_tag "user[role]",
+              options_for_select(@role_options.map { |role| [t("admin.users.roles.#{role}"), role] }, @selected_role.presence || params.dig(:user, :role).presence || @role_options.first),
+              include_blank: t("admin.users.form.select_role"),
+              id: "user_role",
+              class: "ui-select",
+              data: { action: "change->user-role#toggle", user_role_target: "role" } %>
+      </div>
+
+      <div class="space-y-1.5">
+        <%= label_tag :"user_tenant_id", t("admin.users.form.tenant"), class: "block text-sm font-medium text-gray-200" %>
+        <% if current_user.superadmin? %>
+          <%= select_tag "user[tenant_id]",
+                options_from_collection_for_select(@available_tenants, :id, :name, @selected_tenant_id.presence || params.dig(:user, :tenant_id).presence || current_tenant&.id),
+                include_blank: t("admin.users.form.select_tenant"),
+                id: "user_tenant_id",
+                class: "ui-select" %>
+        <% else %>
+          <%= hidden_field_tag "user[tenant_id]", current_tenant&.id %>
+          <div class="flex h-11 items-center rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white">
+            <%= current_tenant&.name %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <section class="rounded-xl border border-[#1e3563] bg-[#0a1628] p-5 hidden" data-user-role-target="buyerSection">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300"><%= t("admin.users.form.buyer_section") %></h2>
+
+    <div class="mt-4 space-y-1.5">
+      <%= label_tag :"user_purchasing_location_id", t("admin.users.form.purchasing_location"), class: "block text-sm font-medium text-gray-200" %>
+      <%= select_tag "user[purchasing_location_id]",
+            options_for_select(
+              @available_purchasing_locations.map { |location| ["#{location.name} · #{location.tenant.name}", location.id] },
+              @selected_purchasing_location_id.presence || params.dig(:user, :purchasing_location_id).presence
+            ),
+            include_blank: t("admin.users.form.select_purchasing_location"),
+            id: "user_purchasing_location_id",
+            class: "ui-select",
+            data: { user_role_target: "location" } %>
+      <p class="text-xs text-gray-400"><%= t("admin.users.form.purchasing_location_hint") %></p>
+    </div>
+  </section>
+
+  <div class="flex flex-col gap-2 border-t border-[#1e3563] pt-4 sm:flex-row sm:items-center">
+    <%= f.submit t("admin.users.form.create"), class: "inline-flex h-11 items-center justify-center rounded-lg bg-indigo-600 px-5 text-sm font-semibold text-white transition hover:bg-indigo-500" %>
+  </div>
+<% end %>

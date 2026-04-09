@@ -51,12 +51,16 @@ es:
       dashboard: "Panel"
       tenants: "Tenants"
       purchasing_locations: "Puntos de compra"
+      users: "Usuarios"
+      integrations: "Integraciones"
+      e_signature_templates: "Plantillas de firma electrónica"
       team: "Equipo"
       projects: "Proyectos"
       calendar: "Calendario"
       tenant: "Tenant"
       switch_tenant: "Cambiar tenant"
       current_tenant: "Tenant actual"
+      open_settings_menu: "Abrir menú de configuración"
       language: "Idioma"
       view_notifications: "Ver notificaciones"
       open_user_menu: "Abrir menú de usuario"
@@ -75,6 +79,73 @@ es:
   admin:
     authorization:
       not_allowed: "No tienes permisos para acceder a esta sección."
+    users:
+      authorization:
+        not_allowed: "No tienes permisos para gestionar usuarios."
+      flash:
+        created: "Usuario creado correctamente."
+        archived: "Usuario archivado correctamente."
+        restored: "Usuario reactivado correctamente."
+      errors:
+        role_required: "Debes seleccionar un rol."
+        invalid_role: "El rol seleccionado no es válido."
+        role_not_allowed: "No tienes permisos para asignar ese rol."
+        tenant_required: "Debes seleccionar un tenant para este rol."
+        purchasing_location_required: "Debes seleccionar un punto de compra para usuarios buyer."
+        purchasing_location_out_of_scope: "El punto de compra debe pertenecer al tenant seleccionado."
+      index:
+        title: "Usuarios"
+        subtitle: "Lista, archiva y reactiva usuarios según tu alcance de acceso."
+        new_user: "Nuevo usuario"
+        total_users: "Total usuarios"
+        active: "Activo"
+        archived: "Archivado"
+        apply: "Aplicar"
+        no_tenant: "Sin tenant"
+        archive: "Archivar"
+        restore: "Reactivar"
+        archive_confirm: "¿Archivar este usuario?"
+        restore_confirm: "¿Reactivar este usuario?"
+        empty_title: "No se encontraron usuarios"
+        empty_description: "Prueba otro filtro o crea un nuevo usuario."
+        filters:
+          active: "Activos"
+          archived: "Archivados"
+          all: "Todos"
+        columns:
+          user: "Usuario"
+          roles: "Roles"
+          tenant: "Tenant"
+          status: "Estado"
+          actions: "Acciones"
+      roles:
+        superadmin: "Superadmin"
+        admin: "Admin"
+        buyer: "Comprador"
+        client: "Cliente"
+      new:
+        kicker: "Provisionamiento de usuarios"
+        title: "Crear usuario"
+        description: "Crea usuarios por rol y captura la información requerida para cada tipo."
+      form:
+        fix_errors: "Por favor corrige los siguientes errores:"
+        base_information: "Información base"
+        access_and_role: "Acceso y rol"
+        buyer_section: "Información de buyer"
+        name: "Nombre completo"
+        name_placeholder: "Jane Doe"
+        email: "Correo"
+        email_placeholder: "jane@example.com"
+        password: "Contraseña temporal"
+        password_confirmation: "Confirmar contraseña temporal"
+        role: "Rol"
+        select_role: "Selecciona un rol"
+        tenant: "Tenant"
+        select_tenant: "Selecciona un tenant"
+        purchasing_location: "Punto de compra"
+        select_purchasing_location: "Selecciona un punto de compra"
+        purchasing_location_hint: "Solo se muestran puntos de compra activos y no archivados."
+        create: "Crear usuario"
     tenant_contexts:
       unavailable: "El tenant seleccionado no está disponible."
       switched: "Cambiaste a %{tenant}."
@@ -143,6 +214,11 @@ es:
       show:
         kicker: "Punto de compra"
         details: "Detalle del punto"
+        buyers: "Compradores relacionados"
+        no_buyers: "No hay compradores relacionados para este punto de compra."
+        columns:
+          name: "Nombre"
+          email: "Correo"
         tenant: "Tenant"
         status: "Estado"
         department: "Departamento"
@@ -157,6 +233,154 @@ es:
         archive_confirm: "¿Archivar este punto de compra?"
         future_section_title: "Información relacionada"
         future_section_description: "Esta sección queda reservada para futuros datos vinculados a este punto de compra."
+    integrations:
+      authorization:
+        not_allowed: "No tienes permisos para gestionar integraciones."
+      index:
+        title: "Integraciones"
+        subtitle: "Conecta Dropbox Sign y administra plantillas de firma electrónica para este tenant."
+        workspace: "Workspace"
+        provider_title: "Proveedores disponibles"
+        provider_description: "Envía documentos para firma electrónica con Dropbox Sign."
+        add_button: "+ Agregar integración"
+        list_title: "Integraciones configuradas"
+        refresh: "Actualizar"
+        empty_title: "Aún no hay integraciones configuradas."
+        empty_description: "Crea tu primera integración de Dropbox Sign para comenzar."
+        templates_title: "Plantillas de firma electrónica"
+        templates_description: "Las plantillas ahora tienen una sección independiente donde puedes subir un PDF para cada una."
+        go_to_templates: "Ir a Plantillas"
+      form:
+        name: "Nombre de la integración"
+        name_placeholder: "Producción"
+        api_key: "API key"
+        api_key_placeholder: "API key de Dropbox Sign"
+        client_id: "Client ID"
+        client_id_placeholder: "Client ID para firma embebida"
+        priority: "Prioridad"
+        test_mode: "Usar modo de pruebas de Dropbox"
+        save: "Guardar"
+        test_connection: "Probar conexión"
+      js:
+        actions:
+          templates: "Plantillas"
+          edit: "Editar"
+          delete: "Eliminar"
+          activate: "Activar"
+          deactivate: "Desactivar"
+        labels:
+          provider_priority: "Prioridad"
+          status: "Estado"
+        states:
+          active: "activo"
+          inactive: "inactivo"
+        modal:
+          add_title: "Agregar integración de Dropbox Sign"
+          edit_prefix: "Editar"
+        common:
+          unknown_error: "Error desconocido"
+          ok: "OK"
+        messages:
+          load_failed: "No se pudieron cargar las integraciones"
+          update_success: "Integración actualizada"
+          update_failed: "No se pudo actualizar el estado"
+          network_error: "Error de red"
+          confirm_delete: "¿Eliminar esta integración y todas sus plantillas asociadas?"
+          delete_success: "Integración eliminada"
+          delete_failed: "No se pudo eliminar la integración"
+          credentials_saved: "Las credenciales ya están guardadas. Déjalas en blanco para conservarlas."
+          save_integration_first: "Guarda la integración primero antes de probar"
+          testing_connection: "Probando conexión..."
+          connection_failed: "Falló la prueba de conexión"
+          connected_prefix: "Conectado"
+          failed_prefix: "Falló"
+          saving: "Guardando..."
+          save_failed: "No se pudo guardar"
+          integration_updated: "Integración actualizada"
+          integration_created: "Integración creada"
+    e_signature_templates:
+      flash:
+        created: "Plantilla creada correctamente."
+        updated: "Plantilla actualizada correctamente."
+        saved: "Plantilla guardada con éxito."
+        deleted: "Plantilla eliminada correctamente."
+        fix_errors: "Por favor revisa los errores mostrados."
+        builder_error: "No se pudo abrir el builder de Dropbox Sign: %{error}"
+      errors:
+        invalid_json: "debe ser un JSON válido"
+        signer_roles_required: "debe incluir al menos un rol firmante"
+      statuses:
+        active: "Activa"
+        inactive: "Inactiva"
+      actions:
+        builder: "Builder"
+        edit: "Editar"
+        delete: "Eliminar"
+        delete_confirm: "¿Eliminar esta plantilla?"
+      index:
+        subtitle: "Administra plantillas de Dropbox Sign y sube un archivo PDF para cada una."
+        new_template: "Nueva plantilla"
+        all_integrations: "Todas las integraciones"
+        filter: "Filtrar"
+        columns:
+          template: "Plantilla"
+          integration: "Integración"
+          pdf: "PDF"
+          status: "Estado"
+          actions: "Acciones"
+        pdf_attached: "Adjunto"
+        pdf_missing: "Falta"
+        empty_title: "No se encontraron plantillas"
+        empty_description: "Crea tu primera plantilla de firma electrónica."
+      new:
+        title: "Nueva plantilla de firma electrónica"
+        subtitle: "Crea una plantilla y sube un documento PDF."
+      edit:
+        title: "Editar plantilla de firma electrónica"
+        subtitle: "Actualiza los datos de la plantilla y su documento PDF."
+      builder:
+        title: "Builder de plantilla"
+        subtitle: "Editando la plantilla de Dropbox Sign para %{template}."
+        loading: "Preparando editor de Dropbox Sign..."
+        reopen: "Reabrir editor"
+        back_to_edit: "Volver a editar"
+        back_to_list: "Volver a plantillas"
+        messages:
+          opening: "Abriendo editor de Dropbox Sign..."
+          opened: "Editor de Dropbox Sign abierto."
+          finished: "Los cambios de la plantilla se guardaron en Dropbox Sign."
+          closed: "Editor cerrado. Puedes reabrirlo cuando quieras."
+          failed: "No se pudo cargar el editor de Dropbox Sign. Intenta reabrirlo."
+      form:
+        fix_errors: "Por favor corrige los siguientes errores:"
+        integration: "Integración"
+        title: "Título"
+        title_placeholder: "NDA v1"
+        message: "Mensaje del correo (opcional)"
+        message_placeholder: "Por favor firma este documento."
+        document: "PDF de la plantilla"
+        document_hint: "Se requiere un archivo PDF para usar esta plantilla."
+        document_attached: "Archivo actual adjunto."
+        signer_roles: "Roles firmantes"
+        signer_roles_hint: "Define quién debe firmar este documento. Se requiere al menos un rol."
+        signer_role_placeholder: "ej. Clinician"
+        add_role: "Agregar rol"
+        merge_fields: "Merge Fields (opcional)"
+        merge_fields_hint: "Los merge fields permiten prellenar información para el firmante."
+        add_merge_field: "Agregar merge field"
+        merge_field_name_placeholder: "Nombre del campo"
+        merge_field_value_placeholder: "Valor prellenado"
+        merge_field_role_placeholder: "Rol firmante (opcional)"
+        remove: "Quitar"
+        advanced_settings: "Configuración avanzada"
+        signer_roles_json: "JSON de roles firmantes"
+        custom_fields_json: "JSON de campos personalizados"
+        metadata_json: "JSON de metadata"
+        provider_template_id: "Provider Template ID (opcional)"
+        provider_template_id_placeholder: "se genera automáticamente si se deja vacío"
+        active: "Plantilla activa"
+        save: "Guardar"
+        back: "Volver"
     tenants:
       flash:
         created: "Tenant creado correctamente."
@@ -376,3 +600,18 @@ es:
         body: "Tu cuenta ha sido confirmada. Ahora tienes acceso completo a MRJG tools. Haz clic en el botón de abajo para comenzar."
         cta: "Ir al panel"
         fallback: "Si el botón no funciona, copia y pega la siguiente URL en tu navegador:"
+
+  api:
+    v1:
+      base:
+        tenant_required: "Se requiere el contexto de tenant"
+        tenant_mismatch: "El tenant no coincide"
+        not_authorized: "No autorizado"
+
+  activerecord:
+    errors:
+      models:
+        e_signature_template:
+          attributes:
+            document:
+              invalid_content_type: "debe ser un archivo PDF"

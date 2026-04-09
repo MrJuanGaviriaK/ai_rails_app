@@ -29,4 +29,16 @@ RSpec.describe PurchasingLocation, type: :model do
       expect(purchasing_location.deleted_at).to be_present
     end
   end
+
+  describe "buyers association" do
+    it "returns buyers linked through buyer profiles" do
+      tenant = create(:tenant)
+      purchasing_location = create(:purchasing_location, tenant: tenant)
+      buyer = create(:user)
+      buyer.add_role(:buyer, tenant)
+      create(:buyer_profile, user: buyer, purchasing_location: purchasing_location)
+
+      expect(purchasing_location.buyers).to include(buyer)
+    end
+  end
 end

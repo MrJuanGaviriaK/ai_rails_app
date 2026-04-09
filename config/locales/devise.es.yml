@@ -6,6 +6,7 @@ es:
       send_paranoid_instructions: "Si tu correo existe en nuestra base de datos, en unos minutos recibirás un correo con instrucciones para confirmarlo."
     failure:
       already_authenticated: "Ya has iniciado sesión."
+      archived: "Tu cuenta está archivada. Por favor contacta al soporte."
       inactive: "Tu cuenta aún no está activada."
       invalid: "%{authentication_keys} o contraseña inválidos."
       locked: "Tu cuenta está bloqueada."
