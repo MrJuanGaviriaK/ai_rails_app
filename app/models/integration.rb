@@ -9,6 +9,7 @@ class Integration < ApplicationRecord
 
   belongs_to :tenant
   has_many :e_signature_templates, dependent: :destroy
+  has_many :e_signature_requests, dependent: :restrict_with_error
 
   validates :name, presence: true
   validates :provider, inclusion: { in: PROVIDERS }

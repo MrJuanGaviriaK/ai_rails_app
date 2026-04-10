@@ -54,6 +54,7 @@ es:
       users: "Usuarios"
       integrations: "Integraciones"
       e_signature_templates: "Plantillas de firma electrónica"
+      sellers: "Vendedores"
       team: "Equipo"
       projects: "Proyectos"
       calendar: "Calendario"
@@ -123,6 +124,7 @@ es:
         admin: "Admin"
         buyer: "Comprador"
         client: "Cliente"
+        compliance_officer: "Oficial de cumplimiento"
       new:
         kicker: "Provisionamiento de usuarios"
         title: "Crear usuario"
@@ -381,6 +383,139 @@ es:
         active: "Plantilla activa"
         save: "Guardar"
         back: "Volver"
+    sellers:
+      authorization:
+        not_allowed: "No tienes permisos para gestionar vendedores."
+        buyer_required: "Solo los usuarios buyer pueden crear o firmar consentimiento de vendedor."
+      flash:
+        created: "Vendedor creado correctamente."
+        fix_errors: "Por favor revisa los errores del formulario."
+      errors:
+        identification_required: "El documento de identificación es obligatorio."
+        template_missing: "El tenant no tiene configurada la plantilla de habeas data para vendedores."
+        template_slug_mismatch: "La plantilla configurada no coincide con el slug requerido."
+      statuses:
+        pending: "Pendiente"
+        in_review: "En revisión"
+        approved: "Aprobado"
+        rejected: "Rechazado"
+      seller_types:
+        subsistence_miner: "Minero de subsistencia"
+        mining_title_holder: "Titular minero"
+      identification_types:
+        cc: "Cédula de ciudadanía"
+        ce: "Cédula de extranjería"
+        nit: "NIT"
+        passport: "Pasaporte"
+      index:
+        title: "Vendedores"
+        subtitle: "Gestiona el onboarding y el flujo de cumplimiento para vendedores."
+        new: "Nuevo vendedor"
+        search_placeholder: "Buscar por nombre o identificación"
+        all_statuses: "Todos los estados"
+        all_seller_types: "Todos los tipos"
+        apply: "Aplicar"
+        show: "Ver"
+        empty: "No se encontraron vendedores"
+        columns:
+          seller: "Vendedor"
+          identification: "Identificación"
+          type: "Tipo"
+          status: "Estado"
+          actions: "Acciones"
+      new:
+        title: "Nuevo vendedor"
+        subtitle: "Crea un vendedor y sube su identificación para iniciar la firma de consentimiento."
+      form:
+        fix_errors: "Por favor corrige los siguientes errores:"
+        first_name: "Nombres"
+        last_name: "Apellidos"
+        identification_type: "Tipo de identificación"
+        identification_number: "Número de identificación"
+        seller_type: "Tipo de vendedor"
+        phone: "Teléfono"
+        email: "Correo"
+        department: "Departamento"
+        city: "Ciudad"
+        address: "Dirección"
+        identification_file: "Documento de identificación"
+        create: "Crear vendedor"
+        back: "Volver"
+      show:
+        status: "Estado"
+        back: "Volver a vendedores"
+        documents_title: "Documentos asociados"
+        consents_title: "Solicitudes de firma"
+        documents:
+          view: "Ver"
+          empty: "Aún no hay documentos cargados."
+          columns:
+            kind: "Tipo de documento"
+            file: "Archivo"
+            status: "Estado"
+            uploaded_at: "Fecha de carga"
+            actions: "Acciones"
+        consents:
+          empty: "Aún no hay solicitudes de firma asociadas."
+          columns:
+            id: "ID"
+            template: "Plantilla"
+            status: "Estado"
+            created_at: "Creado"
+            sent_at: "Enviado"
+      documents:
+        kinds:
+          identification: "Identificación"
+          habeas_data_consent_signed: "Consentimiento de habeas data firmado"
+          other: "Otro"
+        statuses:
+          uploaded: "Cargado"
+          verified: "Verificado"
+          rejected: "Rechazado"
+    seller_consents:
+      statuses:
+        draft: "Borrador"
+        awaiting_signature: "Pendiente de firma"
+        signed: "Firmado"
+        failed: "Fallido"
+      flash:
+        completed: "Consentimiento completado y evidencia almacenada."
+        already_signed: "El consentimiento ya fue firmado."
+      errors:
+        missing_request: "La solicitud de consentimiento no tiene referencia del proveedor."
+        missing_client_id: "Falta el Client ID de Dropbox Sign en las credenciales de la integración."
+      start:
+        title: "Firma embebida"
+        subtitle: "Firmando consentimiento para %{seller}."
+        loading: "Preparando firma embebida..."
+        reopen: "Reabrir firmador"
+        back_to_seller: "Volver al vendedor"
+        complete_manual: "Completar manualmente"
+        messages:
+          opening: "Abriendo firma embebida..."
+          opened: "Firma embebida abierta."
+          finished: "Firma completada. Procesando evidencia..."
+          closed: "Firmador cerrado."
+          failed: "No se pudo cargar la firma embebida. Intenta reabrir."
+      show:
+        title: "Consentimiento"
+        current_status: "Estado actual"
+        start: "Iniciar firma embebida"
+        mark_completed: "Marcar como completado"
+    seller_compliance:
+      authorization:
+        not_allowed: "No tienes permisos para tomar decisiones de cumplimiento."
+      flash:
+        approved: "Vendedor aprobado correctamente."
+        rejected: "Vendedor rechazado correctamente."
+      errors:
+        invalid_status: "El vendedor debe estar en revisión para decidir cumplimiento."
+        rejection_reason_required: "El motivo de rechazo es obligatorio."
+      show:
+        title: "Decisión de cumplimiento"
+        approve: "Aprobar"
+        reject: "Rechazar"
+        rejection_reason: "Motivo de rechazo"
     tenants:
       flash:
         created: "Tenant creado correctamente."

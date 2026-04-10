@@ -91,6 +91,27 @@ RSpec.describe Admin::Users::Provision do
         expect(result.success?).to be(false)
         expect(result.user).not_to be_persisted
       end
+
+      it "allows compliance_officer role inside current tenant" do
+        actor = create(:user)
+        actor.add_role(:admin, tenant)
+
+        result = described_class.call(
+          actor: actor,
+          current_tenant: tenant,
+          attributes: {
+            name: "Compliance User",
+            email: "compliance1@example.com",
+            password: "password123",
+            password_confirmation: "password123",
+            role: "compliance_officer",
+            tenant_id: tenant.id
+          }
+        )
+
+        expect(result.success?).to be(true)
+        expect(result.user.has_role?(:compliance_officer, tenant)).to be(true)
+      end
     end
 
     it "fails for buyer without purchasing location" do

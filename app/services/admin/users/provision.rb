@@ -10,8 +10,8 @@ module Admin
         keyword_init: true
       )
 
-      ROLES = %w[superadmin admin buyer client].freeze
-      ADMIN_CREATABLE_ROLES = %w[admin buyer client].freeze
+      ROLES = %w[superadmin admin buyer client compliance_officer].freeze
+      ADMIN_CREATABLE_ROLES = %w[admin buyer client compliance_officer].freeze
 
       def self.call(actor:, current_tenant:, attributes:)
         new(actor:, current_tenant:, attributes:).call

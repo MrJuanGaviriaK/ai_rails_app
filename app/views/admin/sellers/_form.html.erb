@@ -1,0 +1,66 @@
+<%= form_with model: [:admin, seller], local: true, class: "space-y-6" do |f| %>
+  <% if seller.errors.any? %>
+    <div class="rounded-xl border border-red-500/40 bg-red-950/20 p-4">
+      <p class="mb-1 text-sm font-semibold text-red-300"><%= t("admin.sellers.form.fix_errors") %></p>
+      <ul class="list-inside list-disc text-sm text-red-200">
+        <% seller.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <section class="rounded-xl border border-[#1e3563] bg-[#0a1628] p-5">
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div class="space-y-1.5">
+        <%= f.label :first_name, t("admin.sellers.form.first_name"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.text_field :first_name, class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white" %>
+      </div>
+      <div class="space-y-1.5">
+        <%= f.label :last_name, t("admin.sellers.form.last_name"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.text_field :last_name, class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white" %>
+      </div>
+      <div class="space-y-1.5">
+        <%= f.label :identification_type, t("admin.sellers.form.identification_type"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.select :identification_type, options_for_select(Seller::IDENTIFICATION_TYPES.map { |type| [t("admin.sellers.identification_types.#{type}"), type] }, seller.identification_type), {}, class: "ui-select" %>
+      </div>
+      <div class="space-y-1.5">
+        <%= f.label :identification_number, t("admin.sellers.form.identification_number"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.text_field :identification_number, class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white" %>
+      </div>
+      <div class="space-y-1.5">
+        <%= f.label :seller_type, t("admin.sellers.form.seller_type"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.select :seller_type, options_for_select(Seller::SELLER_TYPES.map { |type| [t("admin.sellers.seller_types.#{type}"), type] }, seller.seller_type), {}, class: "ui-select" %>
+      </div>
+      <div class="space-y-1.5">
+        <%= f.label :phone, t("admin.sellers.form.phone"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.telephone_field :phone, class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white" %>
+      </div>
+      <div class="space-y-1.5">
+        <%= f.label :email, t("admin.sellers.form.email"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.email_field :email, class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white" %>
+      </div>
+      <div class="space-y-1.5">
+        <%= f.label :department, t("admin.sellers.form.department"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.text_field :department, class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white" %>
+      </div>
+      <div class="space-y-1.5">
+        <%= f.label :city, t("admin.sellers.form.city"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.text_field :city, class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white" %>
+      </div>
+      <div class="space-y-1.5 sm:col-span-2">
+        <%= f.label :address, t("admin.sellers.form.address"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.text_field :address, class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white" %>
+      </div>
+      <div class="space-y-1.5 sm:col-span-2">
+        <%= f.label :identification_file, t("admin.sellers.form.identification_file"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.file_field :identification_file, required: true, accept: ".pdf,.png,.jpg,.jpeg", class: "block w-full text-sm text-gray-200" %>
+      </div>
+    </div>
+  </section>
+
+  <div class="flex items-center gap-2">
+    <%= f.submit t("admin.sellers.form.create"), class: "inline-flex h-11 items-center justify-center rounded-lg bg-indigo-600 px-5 text-sm font-semibold text-white transition hover:bg-indigo-500" %>
+    <%= link_to t("admin.sellers.form.back"), admin_sellers_path, class: "inline-flex h-11 items-center justify-center rounded-lg border border-[#34588f] bg-[#0a1628] px-5 text-sm font-medium text-gray-200 transition hover:bg-[#102447]" %>
+  </div>
+<% end %>

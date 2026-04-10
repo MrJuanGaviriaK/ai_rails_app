@@ -19,6 +19,10 @@
         <div class="hidden sm:flex items-center gap-1">
           <%= link_to t("layouts.navbar.dashboard"), dashboard_path,
                 class: "px-3 py-2 rounded-md text-sm font-semibold text-white bg-gray-800" %>
+          <% if current_tenant.present? && current_user.seller_workflow_access_for_tenant?(current_tenant) %>
+            <%= link_to t("layouts.navbar.sellers"), admin_sellers_path,
+                  class: "px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:bg-gray-800" %>
+          <% end %>
         </div>
       </div>
 

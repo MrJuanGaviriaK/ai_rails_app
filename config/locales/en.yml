@@ -9,6 +9,7 @@ en:
       users: "Users"
       integrations: "Integrations"
       e_signature_templates: "E-Signature Templates"
+      sellers: "Sellers"
       team: "Team"
       projects: "Projects"
       calendar: "Calendar"
@@ -78,6 +79,7 @@ en:
         admin: "Admin"
         buyer: "Buyer"
         client: "Client"
+        compliance_officer: "Compliance officer"
       new:
         kicker: "User provisioning"
         title: "Create user"
@@ -336,6 +338,139 @@ en:
         active: "Active template"
         save: "Save"
         back: "Back"
+    sellers:
+      authorization:
+        not_allowed: "You are not authorized to manage sellers."
+        buyer_required: "Only buyer users can create or sign seller consent."
+      flash:
+        created: "Seller created successfully."
+        fix_errors: "Please review the form errors."
+      errors:
+        identification_required: "Identification document is required."
+        template_missing: "Tenant is missing seller habeas data template configuration."
+        template_slug_mismatch: "Configured seller consent template does not match required slug."
+      statuses:
+        pending: "Pending"
+        in_review: "In review"
+        approved: "Approved"
+        rejected: "Rejected"
+      seller_types:
+        subsistence_miner: "Subsistence miner"
+        mining_title_holder: "Mining title holder"
+      identification_types:
+        cc: "Citizenship ID"
+        ce: "Foreigner ID"
+        nit: "Tax ID"
+        passport: "Passport"
+      index:
+        title: "Sellers"
+        subtitle: "Manage onboarding and compliance workflow for sellers."
+        new: "New seller"
+        search_placeholder: "Search by name or identification"
+        all_statuses: "All statuses"
+        all_seller_types: "All seller types"
+        apply: "Apply"
+        show: "View"
+        empty: "No sellers found"
+        columns:
+          seller: "Seller"
+          identification: "Identification"
+          type: "Type"
+          status: "Status"
+          actions: "Actions"
+      new:
+        title: "New seller"
+        subtitle: "Create a seller and upload identification to start consent signing."
+      form:
+        fix_errors: "Please fix the following errors:"
+        first_name: "First name"
+        last_name: "Last name"
+        identification_type: "Identification type"
+        identification_number: "Identification number"
+        seller_type: "Seller type"
+        phone: "Phone"
+        email: "Email"
+        department: "Department"
+        city: "City"
+        address: "Address"
+        identification_file: "Identification document"
+        create: "Create seller"
+        back: "Back"
+      show:
+        status: "Status"
+        back: "Back to sellers"
+        documents_title: "Associated documents"
+        consents_title: "Signature requests"
+        documents:
+          view: "View"
+          empty: "No documents uploaded yet."
+          columns:
+            kind: "Document type"
+            file: "File"
+            status: "Status"
+            uploaded_at: "Uploaded at"
+            actions: "Actions"
+        consents:
+          empty: "No signature requests associated yet."
+          columns:
+            id: "ID"
+            template: "Template"
+            status: "Status"
+            created_at: "Created"
+            sent_at: "Sent"
+      documents:
+        kinds:
+          identification: "Identification"
+          habeas_data_consent_signed: "Signed habeas data consent"
+          other: "Other"
+        statuses:
+          uploaded: "Uploaded"
+          verified: "Verified"
+          rejected: "Rejected"
+    seller_consents:
+      statuses:
+        draft: "Draft"
+        awaiting_signature: "Awaiting signature"
+        signed: "Signed"
+        failed: "Failed"
+      flash:
+        completed: "Consent completed and evidence stored."
+        already_signed: "Consent is already signed."
+      errors:
+        missing_request: "Consent request is missing provider request reference."
+        missing_client_id: "Dropbox Sign Client ID is missing in integration credentials."
+      start:
+        title: "Embedded signature"
+        subtitle: "Signing consent for %{seller}."
+        loading: "Preparing embedded signing..."
+        reopen: "Reopen signer"
+        back_to_seller: "Back to seller"
+        complete_manual: "Complete manually"
+        messages:
+          opening: "Opening embedded signing..."
+          opened: "Embedded signing opened."
+          finished: "Signature completed. Processing evidence..."
+          closed: "Signer closed."
+          failed: "Embedded signing failed to load. Please reopen."
+      show:
+        title: "Consent"
+        current_status: "Current status"
+        start: "Start embedded signing"
+        mark_completed: "Mark as completed"
+    seller_compliance:
+      authorization:
+        not_allowed: "You are not authorized to make compliance decisions."
+      flash:
+        approved: "Seller approved successfully."
+        rejected: "Seller rejected successfully."
+      errors:
+        invalid_status: "Seller must be in review before compliance decision."
+        rejection_reason_required: "Rejection reason is required."
+      show:
+        title: "Compliance decision"
+        approve: "Approve"
+        reject: "Reject"
+        rejection_reason: "Rejection reason"
     tenants:
       flash:
         created: "Tenant created successfully."

@@ -2,6 +2,9 @@ class User < ApplicationRecord
   rolify
 
   has_many :reviewed_tenants, class_name: "Tenant", foreign_key: :reviewed_by_id, inverse_of: :reviewed_by, dependent: :nullify
+  has_many :created_sellers, class_name: "Seller", foreign_key: :created_by_id, inverse_of: :created_by
+  has_many :reviewed_sellers, class_name: "Seller", foreign_key: :reviewed_by_id, inverse_of: :reviewed_by, dependent: :nullify
+  has_many :initiated_e_signature_requests, class_name: "ESignatureRequest", foreign_key: :initiated_by_id, inverse_of: :initiated_by, dependent: :nullify
   has_one :buyer_profile, dependent: :destroy
   has_one :purchasing_location, through: :buyer_profile
 
@@ -32,6 +35,22 @@ class User < ApplicationRecord
     return false unless tenant
 
     superadmin? || has_role?(:admin, tenant)
+  end
+
+  def buyer_for_tenant?(tenant)
+    return false unless tenant
+
+    superadmin? || has_role?(:buyer, tenant)
+  end
+
+  def compliance_officer_for_tenant?(tenant)
+    return false unless tenant
+
+    superadmin? || has_role?(:compliance_officer, tenant)
+  end
+
+  def seller_workflow_access_for_tenant?(tenant)
+    admin_for_tenant?(tenant) || buyer_for_tenant?(tenant) || compliance_officer_for_tenant?(tenant)
   end
 
   def accessible_tenants

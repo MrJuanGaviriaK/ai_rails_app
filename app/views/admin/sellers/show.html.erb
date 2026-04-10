@@ -1,0 +1,121 @@
+<div class="min-h-screen bg-[#080e1e] px-4 py-8 sm:px-8">
+  <div class="mx-auto max-w-5xl space-y-6">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-white sm:text-3xl"><%= @seller.full_name %></h1>
+        <p class="mt-1 text-sm text-gray-300"><%= t("admin.sellers.show.status") %>: <strong><%= t("admin.sellers.statuses.#{@seller.status}") %></strong></p>
+      </div>
+      <%= link_to t("admin.sellers.show.back"), admin_sellers_path, class: "rounded-md border border-[#34588f] bg-[#0a1628] px-4 py-2 text-sm font-semibold text-gray-200 transition hover:bg-[#102447]" %>
+    </div>
+
+    <section class="rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-5 text-sm text-gray-200">
+      <dl class="grid gap-x-6 gap-y-3 sm:grid-cols-2">
+        <div><dt class="text-gray-400"><%= t("admin.sellers.form.identification_type") %></dt><dd><%= t("admin.sellers.identification_types.#{@seller.identification_type}") %></dd></div>
+        <div><dt class="text-gray-400"><%= t("admin.sellers.form.identification_number") %></dt><dd><%= @seller.identification_number %></dd></div>
+        <div><dt class="text-gray-400"><%= t("admin.sellers.form.seller_type") %></dt><dd><%= t("admin.sellers.seller_types.#{@seller.seller_type}") %></dd></div>
+        <div><dt class="text-gray-400"><%= t("admin.sellers.form.phone") %></dt><dd><%= @seller.phone.presence || "-" %></dd></div>
+        <div><dt class="text-gray-400"><%= t("admin.sellers.form.email") %></dt><dd><%= @seller.email.presence || "-" %></dd></div>
+        <div><dt class="text-gray-400"><%= t("admin.sellers.form.city") %></dt><dd><%= @seller.city %></dd></div>
+        <div class="sm:col-span-2"><dt class="text-gray-400"><%= t("admin.sellers.form.address") %></dt><dd><%= @seller.address %></dd></div>
+      </dl>
+    </section>
+
+    <section class="rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-5">
+      <h2 class="text-base font-semibold text-white"><%= t("admin.sellers.show.documents_title") %></h2>
+
+      <div class="mt-4 overflow-hidden rounded-lg border border-[#1e3563]">
+        <table class="min-w-full divide-y divide-[#1e3563] text-sm">
+          <thead>
+            <tr class="text-left text-gray-300">
+              <th class="px-4 py-3 font-medium"><%= t("admin.sellers.show.documents.columns.kind") %></th>
+              <th class="px-4 py-3 font-medium"><%= t("admin.sellers.show.documents.columns.file") %></th>
+              <th class="px-4 py-3 font-medium"><%= t("admin.sellers.show.documents.columns.status") %></th>
+              <th class="px-4 py-3 font-medium"><%= t("admin.sellers.show.documents.columns.uploaded_at") %></th>
+              <th class="px-4 py-3 font-medium"><%= t("admin.sellers.show.documents.columns.actions") %></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#1e3563]">
+            <% @seller.seller_documents.order(created_at: :desc).each do |document| %>
+              <tr>
+                <td class="px-4 py-3 text-gray-200"><%= t("admin.sellers.documents.kinds.#{document.kind}") %></td>
+                <td class="px-4 py-3 text-gray-200"><%= document.file.filename.to_s %></td>
+                <td class="px-4 py-3 text-gray-200"><%= t("admin.sellers.documents.statuses.#{document.status}") %></td>
+                <td class="px-4 py-3 text-gray-200"><%= l(document.created_at, format: :short) %></td>
+                <td class="px-4 py-3">
+                  <%= link_to t("admin.sellers.show.documents.view"), url_for(document.file), target: "_blank", rel: "noopener", class: "text-indigo-300 hover:text-indigo-200" %>
+                </td>
+              </tr>
+            <% end %>
+
+            <% if @seller.seller_documents.empty? %>
+              <tr>
+                <td colspan="5" class="px-4 py-6 text-center text-gray-300"><%= t("admin.sellers.show.documents.empty") %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-5">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 class="text-base font-semibold text-white"><%= t("admin.sellers.show.consents_title") %></h2>
+
+        <% if @can_start_consent && @latest_consent.present? && !@latest_consent.signed? %>
+          <%= button_to t("admin.seller_consents.show.start"),
+                start_admin_seller_path(@seller),
+                method: :post,
+                form: { data: { turbo: false } },
+                class: "inline-flex h-10 items-center justify-center rounded-md bg-indigo-600 px-4 text-sm font-semibold text-white transition hover:bg-indigo-500" %>
+        <% end %>
+      </div>
+
+      <div class="mt-4 overflow-hidden rounded-lg border border-[#1e3563]">
+        <table class="min-w-full divide-y divide-[#1e3563] text-sm">
+          <thead>
+            <tr class="text-left text-gray-300">
+              <th class="px-4 py-3 font-medium"><%= t("admin.sellers.show.consents.columns.id") %></th>
+              <th class="px-4 py-3 font-medium"><%= t("admin.sellers.show.consents.columns.template") %></th>
+              <th class="px-4 py-3 font-medium"><%= t("admin.sellers.show.consents.columns.status") %></th>
+              <th class="px-4 py-3 font-medium"><%= t("admin.sellers.show.consents.columns.created_at") %></th>
+              <th class="px-4 py-3 font-medium"><%= t("admin.sellers.show.consents.columns.sent_at") %></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#1e3563]">
+            <% @seller.e_signature_requests.latest_first.each do |consent_request| %>
+              <tr>
+                <td class="px-4 py-3 text-gray-200">#<%= consent_request.id %></td>
+                <td class="px-4 py-3 text-gray-200"><%= consent_request.e_signature_template.title %></td>
+                <td class="px-4 py-3 text-gray-200"><%= t("admin.seller_consents.statuses.#{consent_request.status}", default: consent_request.status.humanize) %></td>
+                <td class="px-4 py-3 text-gray-200"><%= l(consent_request.created_at, format: :short) %></td>
+                <td class="px-4 py-3 text-gray-200"><%= consent_request.sent_at.present? ? l(consent_request.sent_at, format: :short) : "-" %></td>
+              </tr>
+            <% end %>
+
+            <% if @seller.e_signature_requests.empty? %>
+              <tr>
+                <td colspan="5" class="px-4 py-6 text-center text-gray-300"><%= t("admin.sellers.show.consents.empty") %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <% if @can_decide_compliance && @seller.in_review? %>
+      <section class="rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-5 space-y-3">
+        <h2 class="text-base font-semibold text-white"><%= t("admin.seller_compliance.show.title") %></h2>
+
+        <div class="flex flex-wrap gap-2">
+          <%= button_to t("admin.seller_compliance.show.approve"), approve_admin_seller_path(@seller), method: :post, class: "inline-flex h-10 items-center justify-center rounded-md bg-emerald-600 px-4 text-sm font-semibold text-white transition hover:bg-emerald-500" %>
+        </div>
+
+        <%= form_with url: reject_admin_seller_path(@seller), method: :post, local: true, class: "space-y-2" do |f| %>
+          <%= f.label :rejection_reason, t("admin.seller_compliance.show.rejection_reason"), class: "block text-sm font-medium text-gray-200" %>
+          <%= f.text_area :rejection_reason, rows: 3, required: true, class: "w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 py-2 text-sm text-white" %>
+          <%= f.submit t("admin.seller_compliance.show.reject"), class: "inline-flex h-10 items-center justify-center rounded-md bg-red-600 px-4 text-sm font-semibold text-white transition hover:bg-red-500" %>
+        <% end %>
+      </section>
+    <% end %>
+  </div>
+</div>
