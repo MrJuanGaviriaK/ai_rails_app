@@ -7,6 +7,8 @@ class Tenant < ApplicationRecord
   has_many :purchasing_locations, dependent: :restrict_with_error
   has_many :integrations, dependent: :destroy
   has_many :e_signature_templates, dependent: :destroy
+  has_many :e_signature_requests, dependent: :restrict_with_error
+  has_many :sellers, dependent: :restrict_with_error
 
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: { case_sensitive: false }
@@ -28,6 +30,13 @@ class Tenant < ApplicationRecord
 
   def soft_delete!
     update!(deleted_at: Time.current, status: "archived")
+  end
+
+  def seller_habeas_data_template_id
+    e_signature_templates
+      .active
+      .find_by(title: "seller_habeas_data_consent_v1")
+      &.id
   end
 
   private

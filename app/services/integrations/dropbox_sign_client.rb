@@ -85,6 +85,35 @@ module Integrations
       response.fetch("embedded")
     end
 
+    def create_embedded_signature_request_with_template(template_id:, signer_name:, signer_email_address:, signer_role:, custom_fields: [])
+      payload = {
+        client_id:,
+        template_ids: [ template_id ],
+        subject: "Seller consent signature",
+        message: "Please sign this consent.",
+        signers: [
+          {
+            role: signer_role,
+            name: signer_name,
+            email_address: signer_email_address
+          }
+        ],
+        custom_fields: custom_fields_payload(custom_fields),
+        test_mode: test_mode?
+      }
+
+      request(:post, "/signature_request/create_embedded_with_template", json_payload: payload)
+    end
+
+    def embedded_sign_url(signature_id:)
+      response = request(:post, "/embedded/sign_url/#{signature_id}")
+      response.fetch("embedded")
+    end
+
+    def download_signature_request_files(signature_request_id:)
+      request_binary(:get, "/signature_request/files/#{signature_request_id}?file_type=pdf")
+    end
+
     def test_mode?
       ActiveModel::Type::Boolean.new.cast(@integration.settings["test_mode"])
     end
@@ -134,6 +163,36 @@ module Integrations
       end
     end
 
+    def request_binary(method, path)
+      raise Error, "Dropbox Sign API key is missing" if @api_key.blank?
+
+      uri = URI.parse("#{@base_url}#{path}")
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = uri.scheme == "https"
+      http.read_timeout = 30
+
+      request = request_class(method).new(uri)
+      request.basic_auth(@api_key, "")
+      request["Accept"] = "application/pdf"
+
+      response = http.request(request)
+      return response.body if response.is_a?(Net::HTTPSuccess)
+
+      message = "Dropbox Sign API request failed"
+      begin
+        parsed = JSON.parse(response.body.presence || "{}")
+        message = parsed.dig("error", "error_msg") || parsed["error_msg"] || message
+      rescue JSON::ParserError
+        message = "Dropbox Sign API returned invalid response"
+      end
+
+      raise Error, message
+    rescue StandardError => e
+      raise Error, e.message if e.is_a?(Error)
+
+      raise Error, "Dropbox Sign request failed: #{e.message}"
+    end
+
     def signer_roles_payload(roles)
       Array(roles).filter_map.with_index do |role, index|
         role = role.to_h if role.respond_to?(:to_h)
@@ -169,6 +228,22 @@ module Integrations
       return "checkbox" if type == "checkbox"
 
       "text"
+    end
+
+    def custom_fields_payload(fields)
+      Array(fields).filter_map do |field|
+        field = field.to_h if field.respond_to?(:to_h)
+        next unless field.is_a?(Hash)
+
+        name = (field["name"] || field[:name]).to_s.strip
+        value = (field["value"] || field[:value]).to_s
+        next if name.blank?
+
+        {
+          name:,
+          value:
+        }
+      end
     end
   end
 end

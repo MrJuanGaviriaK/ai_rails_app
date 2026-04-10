@@ -1,0 +1,53 @@
+<div class="min-h-screen bg-[#080e1e] px-4 py-8 sm:px-8">
+  <div class="mx-auto max-w-7xl space-y-6">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-white sm:text-3xl"><%= t("admin.sellers.index.title") %></h1>
+        <p class="mt-1 text-sm text-gray-300"><%= t("admin.sellers.index.subtitle") %></p>
+      </div>
+
+      <% if current_user.buyer_for_tenant?(current_tenant) %>
+        <%= link_to t("admin.sellers.index.new"), new_admin_seller_path, class: "inline-flex h-10 items-center justify-center rounded-md bg-indigo-600 px-4 text-sm font-semibold text-white transition hover:bg-indigo-500" %>
+      <% end %>
+    </div>
+
+    <%= form_with url: admin_sellers_path, method: :get, local: true, class: "grid gap-3 rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-4 md:grid-cols-4" do |f| %>
+      <%= f.text_field :query, value: @query, placeholder: t("admin.sellers.index.search_placeholder"), class: "h-10 rounded-md border border-[#34588f] bg-[#081327] px-3 text-sm text-white placeholder:text-gray-400" %>
+      <%= f.select :status, options_for_select([[t("admin.sellers.index.all_statuses"), nil]] + Seller::STATUSES.map { |status| [t("admin.sellers.statuses.#{status}"), status] }, @status_filter), {}, class: "ui-select" %>
+      <%= f.select :seller_type, options_for_select([[t("admin.sellers.index.all_seller_types"), nil]] + Seller::SELLER_TYPES.map { |type| [t("admin.sellers.seller_types.#{type}"), type] }, @seller_type_filter), {}, class: "ui-select" %>
+      <%= f.submit t("admin.sellers.index.apply"), class: "inline-flex h-10 items-center justify-center rounded-md bg-indigo-600 px-4 text-sm font-semibold text-white transition hover:bg-indigo-500" %>
+    <% end %>
+
+    <div class="overflow-hidden rounded-xl border border-[#1e3563] bg-[#0d1f3e]">
+      <table class="min-w-full divide-y divide-[#1e3563] text-sm">
+        <thead>
+          <tr class="text-left text-gray-300">
+            <th class="px-4 py-3 font-medium"><%= t("admin.sellers.index.columns.seller") %></th>
+            <th class="px-4 py-3 font-medium"><%= t("admin.sellers.index.columns.identification") %></th>
+            <th class="px-4 py-3 font-medium"><%= t("admin.sellers.index.columns.type") %></th>
+            <th class="px-4 py-3 font-medium"><%= t("admin.sellers.index.columns.status") %></th>
+            <th class="px-4 py-3 font-medium"><%= t("admin.sellers.index.columns.actions") %></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#1e3563]">
+          <% @sellers.each do |seller| %>
+            <tr>
+              <td class="px-4 py-3 text-white"><%= seller.full_name %></td>
+              <td class="px-4 py-3 text-gray-200"><%= seller.identification_type.upcase %> <%= seller.identification_number %></td>
+              <td class="px-4 py-3 text-gray-200"><%= t("admin.sellers.seller_types.#{seller.seller_type}") %></td>
+              <td class="px-4 py-3 text-gray-200"><%= t("admin.sellers.statuses.#{seller.status}") %></td>
+              <td class="px-4 py-3">
+                <%= link_to t("admin.sellers.index.show"), admin_seller_path(seller), class: "text-indigo-300 hover:text-indigo-200" %>
+              </td>
+            </tr>
+          <% end %>
+          <% if @sellers.empty? %>
+            <tr>
+              <td colspan="5" class="px-4 py-8 text-center text-gray-300"><%= t("admin.sellers.index.empty") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

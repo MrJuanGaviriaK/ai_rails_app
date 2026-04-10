@@ -28,8 +28,8 @@ Rails.application.configure do
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store
 
-  # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  # Store uploaded files on local disk by default; optionally set ACTIVE_STORAGE_SERVICE=r2.
+  config.active_storage.service = ENV.fetch("ACTIVE_STORAGE_SERVICE", "local").to_sym
 
   # Use letter_opener to preview emails in the browser during development.
   config.action_mailer.delivery_method = :letter_opener
@@ -41,6 +41,10 @@ Rails.application.configure do
 
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+
+  # Allow ngrok callback domains in development (webhooks, OAuth redirects, etc.).
+  config.hosts << /.*\.ngrok-free\.dev/
+  config.hosts << /.*\.ngrok\.io/
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

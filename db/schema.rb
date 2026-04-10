@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_09_202246) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_10_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -51,6 +51,37 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_09_202246) do
     t.index ["created_by_id"], name: "index_buyer_profiles_on_created_by_id"
     t.index ["purchasing_location_id"], name: "index_buyer_profiles_on_purchasing_location_id"
     t.index ["user_id"], name: "index_buyer_profiles_on_user_id", unique: true
+  end
+
+  create_table "e_signature_requests", force: :cascade do |t|
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.bigint "e_signature_template_id", null: false
+    t.datetime "failed_at"
+    t.text "failure_reason"
+    t.bigint "initiated_by_id"
+    t.bigint "integration_id", null: false
+    t.string "provider", null: false
+    t.string "provider_signature_id"
+    t.string "provider_signature_request_id"
+    t.jsonb "raw_provider_payload", default: {}, null: false
+    t.bigint "requestable_id", null: false
+    t.string "requestable_type", default: "Seller", null: false
+    t.datetime "sent_at"
+    t.datetime "signed_at"
+    t.string "signed_ip"
+    t.string "status", default: "draft", null: false
+    t.bigint "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.index ["e_signature_template_id"], name: "index_e_signature_requests_on_e_signature_template_id"
+    t.index ["initiated_by_id"], name: "index_e_signature_requests_on_initiated_by_id"
+    t.index ["integration_id"], name: "index_e_signature_requests_on_integration_id"
+    t.index ["provider", "provider_signature_request_id"], name: "idx_e_signature_requests_provider_request"
+    t.index ["requestable_id"], name: "index_e_signature_requests_on_requestable_id"
+    t.index ["requestable_type", "requestable_id", "status"], name: "idx_e_signature_requests_requestable_status"
+    t.index ["tenant_id", "status"], name: "idx_e_signature_requests_tenant_status"
+    t.index ["tenant_id"], name: "index_e_signature_requests_on_tenant_id"
   end
 
   create_table "e_signature_templates", force: :cascade do |t|
@@ -117,6 +148,46 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_09_202246) do
     t.datetime "updated_at", null: false
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
     t.index ["resource_type", "resource_id"], name: "index_roles_on_resource"
+  end
+
+  create_table "seller_documents", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "kind", null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.bigint "seller_id", null: false
+    t.string "status", default: "uploaded", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "uploaded_by_id"
+    t.index ["seller_id", "kind"], name: "idx_seller_documents_seller_kind"
+    t.index ["seller_id"], name: "index_seller_documents_on_seller_id"
+    t.index ["uploaded_by_id"], name: "index_seller_documents_on_uploaded_by_id"
+  end
+
+  create_table "sellers", force: :cascade do |t|
+    t.string "address", null: false
+    t.string "city", null: false
+    t.datetime "created_at", null: false
+    t.bigint "created_by_id", null: false
+    t.string "department", null: false
+    t.string "email"
+    t.string "first_name", null: false
+    t.string "identification_number", null: false
+    t.string "identification_type", null: false
+    t.string "last_name", null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.string "phone"
+    t.text "rejection_reason"
+    t.datetime "reviewed_at"
+    t.bigint "reviewed_by_id"
+    t.string "seller_type", null: false
+    t.string "status", default: "pending", null: false
+    t.bigint "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_sellers_on_created_by_id"
+    t.index ["reviewed_by_id"], name: "index_sellers_on_reviewed_by_id"
+    t.index ["tenant_id", "identification_type", "identification_number"], name: "idx_sellers_tenant_identification_unique", unique: true
+    t.index ["tenant_id", "status"], name: "idx_sellers_tenant_status"
+    t.index ["tenant_id"], name: "index_sellers_on_tenant_id"
   end
 
   create_table "solid_queue_blocked_executions", force: :cascade do |t|
@@ -288,10 +359,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_09_202246) do
   add_foreign_key "buyer_profiles", "purchasing_locations", on_delete: :restrict
   add_foreign_key "buyer_profiles", "users", column: "created_by_id", on_delete: :nullify
   add_foreign_key "buyer_profiles", "users", on_delete: :cascade
+  add_foreign_key "e_signature_requests", "e_signature_templates"
+  add_foreign_key "e_signature_requests", "integrations"
+  add_foreign_key "e_signature_requests", "sellers", column: "requestable_id", on_delete: :cascade
+  add_foreign_key "e_signature_requests", "tenants"
+  add_foreign_key "e_signature_requests", "users", column: "initiated_by_id"
   add_foreign_key "e_signature_templates", "integrations"
   add_foreign_key "e_signature_templates", "tenants"
   add_foreign_key "integrations", "tenants"
   add_foreign_key "purchasing_locations", "tenants"
+  add_foreign_key "seller_documents", "sellers", on_delete: :cascade
+  add_foreign_key "seller_documents", "users", column: "uploaded_by_id"
+  add_foreign_key "sellers", "tenants"
+  add_foreign_key "sellers", "users", column: "created_by_id"
+  add_foreign_key "sellers", "users", column: "reviewed_by_id"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

@@ -6,6 +6,7 @@ class ESignatureTemplate < ApplicationRecord
   belongs_to :integration
   belongs_to :tenant
   has_one_attached :document
+  has_many :e_signature_requests, dependent: :restrict_with_error
 
   validates :title, presence: true
   validates :provider_template_id, presence: true, uniqueness: { scope: :integration_id }

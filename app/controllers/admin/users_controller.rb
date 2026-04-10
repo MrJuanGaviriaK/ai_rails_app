@@ -83,9 +83,9 @@ class Admin::UsersController < ApplicationController
 
   def set_form_options
     @role_options = if current_user.superadmin?
-      %w[superadmin admin buyer client]
+      %w[superadmin admin buyer client compliance_officer]
     else
-      %w[admin buyer client]
+      %w[admin buyer client compliance_officer]
     end
 
     @available_tenants = Tenant.active_context.order(:name)

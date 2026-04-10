@@ -24,6 +24,12 @@ Rails.application.routes.draw do
     resources :users, only: %i[index new create destroy] do
       patch :restore, on: :member
     end
+    resources :sellers, only: %i[index show new create] do
+      post :start, to: "seller_consents#start", on: :member
+      post :complete, to: "seller_consents#complete", on: :member
+      post :approve, to: "seller_compliance_decisions#approve", on: :member
+      post :reject, to: "seller_compliance_decisions#reject", on: :member
+    end
     post "tenant_context/switch", to: "tenant_contexts#switch", as: :switch_tenant_context
   end
 
@@ -37,6 +43,10 @@ Rails.application.routes.draw do
         post :sync, on: :collection
       end
     end
+  end
+
+  namespace :webhooks do
+    post :dropbox_sign, to: "dropbox_sign#receive"
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

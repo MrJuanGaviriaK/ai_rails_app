@@ -42,10 +42,17 @@ env:
     - SENDGRID_API_KEY
     - ACTION_MAILER_HOST
     - MAILER_FROM_ADDRESS
+    - R2_ACCOUNT_ID
+    - R2_ACCESS_KEY_ID
+    - R2_SECRET_ACCESS_KEY
+    - R2_BUCKET
+    - R2_REGION
+    - R2_ENDPOINT
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
     SOLID_QUEUE_IN_PUMA: true
+    ACTIVE_STORAGE_SERVICE: r2
 
     # Set number of processes dedicated to Solid Queue (default: 1)
     # JOB_CONCURRENCY: 3

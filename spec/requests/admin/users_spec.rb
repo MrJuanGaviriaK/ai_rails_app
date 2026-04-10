@@ -158,6 +158,31 @@ RSpec.describe "Admin::Users", type: :request do
       expect(response).to redirect_to(admin_users_path)
     end
 
+    it "allows tenant admin to create compliance_officer role" do
+      admin = create(:user)
+      admin.add_role(:admin, tenant)
+
+      sign_in_as(admin)
+
+      expect {
+        post admin_users_path, params: {
+          user: {
+            name: "Compliance Officer",
+            email: "compliance-created@example.com",
+            password: "password123",
+            password_confirmation: "password123",
+            role: "compliance_officer",
+            tenant_id: tenant.id
+          }
+        }
+      }.to change(User, :count).by(1)
+
+      created_user = User.find_by(email: "compliance-created@example.com")
+      expect(created_user).to be_present
+      expect(created_user.has_role?(:compliance_officer, tenant)).to be(true)
+      expect(response).to redirect_to(admin_users_path)
+    end
+
     it "prevents buyer assignment to purchasing location from another tenant" do
       superadmin = create(:user, :superadmin)
       other_tenant = create(:tenant)
