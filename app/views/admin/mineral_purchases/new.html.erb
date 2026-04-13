@@ -1,0 +1,8 @@
+<div class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-white sm:text-3xl"><%= t("admin.mineral_purchases.new.title") %></h1>
+    <p class="mt-1 text-sm text-gray-300"><%= t("admin.mineral_purchases.new.subtitle") %></p>
+  </div>
+
+  <%= render "form", mineral_purchase: @mineral_purchase, approved_sellers: @approved_sellers %>
+</div>

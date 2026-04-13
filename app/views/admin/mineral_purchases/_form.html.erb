@@ -1,0 +1,94 @@
+<%= form_with model: [:admin, mineral_purchase], local: true, class: "space-y-6 rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-6" do |f| %>
+  <% if mineral_purchase.errors.any? %>
+    <div class="rounded-lg border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-100">
+      <p class="mb-1 text-sm font-semibold text-red-300"><%= t("admin.mineral_purchases.form.fix_errors") %></p>
+      <ul class="list-disc space-y-1 pl-5">
+        <% mineral_purchase.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div class="sm:col-span-2">
+      <%= f.label :seller_id, t("admin.mineral_purchases.form.seller"), class: "block text-sm font-medium text-gray-200" %>
+      <%= f.select :seller_id,
+            options_for_select(approved_sellers.map { |seller| ["#{seller.full_name} (#{seller.identification_number})", seller.id] }, mineral_purchase.seller_id),
+            { include_blank: t("admin.mineral_purchases.form.select_seller") },
+            class: "ui-select" %>
+    </div>
+
+    <div>
+      <%= f.label :mineral_type, t("admin.mineral_purchases.form.mineral_type"), class: "block text-sm font-medium text-gray-200" %>
+      <%= f.select :mineral_type,
+            options_for_select([
+              [t("admin.mineral_purchases.mineral_types.oro"), "oro"],
+              [t("admin.mineral_purchases.mineral_types.plata"), "plata"],
+              [t("admin.mineral_purchases.mineral_types.platino"), "platino"]
+            ], mineral_purchase.mineral_type),
+            { include_blank: t("admin.mineral_purchases.form.select_mineral_type") },
+            class: "ui-select" %>
+    </div>
+
+    <div>
+      <%= f.label :fine_grams, t("admin.mineral_purchases.form.fine_grams"), class: "block text-sm font-medium text-gray-200" %>
+      <%= f.number_field :fine_grams, step: 0.01, min: 0.01, class: "mt-1 w-full rounded-md border border-[#34588f] bg-[#081327] px-3 py-2 text-sm text-white" %>
+    </div>
+
+    <div>
+      <%= f.label :total_price_cop, t("admin.mineral_purchases.form.total_price_cop"), class: "block text-sm font-medium text-gray-200" %>
+      <div data-controller="cop-currency-input" class="mt-1">
+        <input type="text"
+               data-cop-currency-input-target="display"
+               data-action="input->cop-currency-input#onInput"
+               inputmode="decimal"
+               autocomplete="off"
+               placeholder="$1'200.000"
+               class="w-full rounded-md border border-[#34588f] bg-[#081327] px-3 py-2 text-sm text-white placeholder:text-gray-400">
+        <%= f.hidden_field :total_price_cop, data: { cop_currency_input_target: "hidden" } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="rounded-lg border border-[#1e3563] bg-[#081327] p-4"
+       data-controller="mineral-purchase-camera"
+       data-mineral-purchase-camera-direct-upload-url-value="<%= admin_mineral_purchase_direct_uploads_path %>"
+       data-mineral-purchase-camera-i18n-value="<%= {
+         ready: t("admin.mineral_purchases.form.live_photo.messages.ready"),
+         cameraUnavailable: t("admin.mineral_purchases.form.live_photo.messages.camera_unavailable"),
+         capturing: t("admin.mineral_purchases.form.live_photo.messages.capturing"),
+         uploading: t("admin.mineral_purchases.form.live_photo.messages.uploading"),
+         uploaded: t("admin.mineral_purchases.form.live_photo.messages.uploaded"),
+         failed: t("admin.mineral_purchases.form.live_photo.messages.failed")
+       }.to_json %>">
+    <div class="mb-3">
+      <p class="text-sm font-medium text-gray-200"><%= t("admin.mineral_purchases.form.live_photo.label") %></p>
+      <p class="mt-1 text-xs text-gray-400"><%= t("admin.mineral_purchases.form.live_photo.hint") %></p>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <div>
+        <video data-mineral-purchase-camera-target="video" class="w-full rounded-md border border-[#1e3563]" autoplay playsinline muted></video>
+        <canvas data-mineral-purchase-camera-target="canvas" class="hidden"></canvas>
+      </div>
+      <div class="flex flex-col items-start gap-3">
+        <img data-mineral-purchase-camera-target="preview" class="hidden h-36 w-36 rounded-md border border-[#1e3563] object-cover" alt="Miner live photo preview">
+        <p data-mineral-purchase-camera-target="status" class="text-xs text-gray-300"><%= t("admin.mineral_purchases.form.live_photo.messages.ready") %></p>
+        <button data-mineral-purchase-camera-target="captureButton"
+                data-action="click->mineral-purchase-camera#captureAndUpload"
+                type="button"
+                class="inline-flex h-10 items-center justify-center rounded-md bg-indigo-600 px-4 text-sm font-semibold text-white transition hover:bg-indigo-500">
+          <%= t("admin.mineral_purchases.form.live_photo.capture") %>
+        </button>
+      </div>
+    </div>
+
+    <%= f.hidden_field :miner_live_photo_signed_id, data: { mineral_purchase_camera_target: "signedIdInput" } %>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <%= f.submit t("admin.mineral_purchases.form.create"), class: "inline-flex h-11 items-center justify-center rounded-lg bg-indigo-600 px-5 text-sm font-semibold text-white transition hover:bg-indigo-500" %>
+    <%= link_to t("admin.mineral_purchases.form.back"), admin_mineral_purchases_path, class: "inline-flex h-11 items-center justify-center rounded-lg border border-[#34588f] bg-[#0a1628] px-5 text-sm font-medium text-gray-200 transition hover:bg-[#102447]" %>
+  </div>
+<% end %>

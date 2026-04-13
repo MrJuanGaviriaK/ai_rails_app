@@ -43,6 +43,7 @@ es:
     messages:
       blank: "no puede estar en blanco"
       taken: "ya está en uso"
+      required: "debe existir"
 
   layouts:
     devise:
@@ -55,6 +56,7 @@ es:
       integrations: "Integraciones"
       e_signature_templates: "Plantillas de firma electrónica"
       sellers: "Vendedores"
+      mineral_purchases: "Compras de mineral"
       team: "Equipo"
       projects: "Proyectos"
       calendar: "Calendario"
@@ -472,6 +474,118 @@ es:
           uploaded: "Cargado"
           verified: "Verificado"
           rejected: "Rechazado"
+    mineral_purchases:
+      mineral_types:
+        oro: "Oro"
+        plata: "Plata"
+        platino: "Platino"
+      authorization:
+        not_allowed: "No tienes permisos para gestionar compras de mineral."
+        buyer_required: "Solo los usuarios buyer pueden crear compras de mineral."
+      flash:
+        created: "Compra de mineral creada correctamente. La solicitud de firma se inició de forma asíncrona."
+        fix_errors: "Por favor revisa los errores del formulario."
+        retry_started: "Se reinició la solicitud de firma correctamente."
+        completed: "Firma completada correctamente."
+        already_signed: "La solicitud de firma ya está firmada."
+      errors:
+        template_not_found: "El tenant no tiene configurada la plantilla de firma para compra de mineral."
+        template_inactive: "La plantilla de firma para compra de mineral está inactiva o la integración no está disponible."
+        template_ambiguous: "Se encontró más de una plantilla activa para compra de mineral."
+        retry_not_allowed: "Solo puedes reintentar la firma cuando la compra esté en estado de firma fallida."
+        retry_failed: "No fue posible reintentar la firma."
+        missing_client_id: "Falta el Client ID de Dropbox Sign en las credenciales de la integración."
+      statuses:
+        created: "Creada"
+        signature_pending: "Firma pendiente"
+        signature_failed: "Firma fallida"
+        completed: "Completada"
+        canceled: "Cancelada"
+      signature_statuses:
+        draft: "Borrador"
+        sent: "Enviada"
+        awaiting_signature: "Pendiente de firma"
+        signed: "Firmada"
+        failed: "Fallida"
+        declined: "Rechazada"
+        canceled: "Cancelada"
+        expired: "Expirada"
+      index:
+        title: "Compras de mineral"
+        subtitle: "Haz seguimiento a compras y progreso de firma del vendedor."
+        new: "Nueva compra"
+        show: "Ver"
+        empty: "No se encontraron compras de mineral"
+        columns:
+          id: "ID"
+          seller: "Vendedor"
+          mineral: "Mineral"
+          grams: "Gramos finos"
+          total: "Total COP"
+          status: "Estado"
+          actions: "Acciones"
+      new:
+        title: "Nueva compra de mineral"
+        subtitle: "Crea una compra para un vendedor aprobado y dispara la firma automáticamente."
+      form:
+        fix_errors: "Por favor corrige los siguientes errores:"
+        seller: "Vendedor aprobado"
+        select_seller: "Selecciona un vendedor aprobado"
+        mineral_type: "Tipo de mineral"
+        select_mineral_type: "Selecciona un tipo de mineral"
+        fine_grams: "Gramos finos"
+        total_price_cop: "Valor total (COP)"
+        live_photo:
+          label: "Fotografía en vivo del minero"
+          hint: "Toma una foto con la cámara y súbela antes de crear la compra."
+          capture: "Tomar foto y subir"
+          messages:
+            ready: "Cámara lista."
+            camera_unavailable: "No se pudo acceder a la cámara."
+            capturing: "Capturando foto..."
+            uploading: "Subiendo foto..."
+            uploaded: "Foto subida correctamente."
+            failed: "No fue posible capturar o subir la foto."
+        create: "Crear compra"
+        back: "Volver"
+      show:
+        title: "Compra #%{id}"
+        subtitle: "Revisa el estado de la compra y de la firma."
+        back: "Volver"
+        sign_now: "Firmar ahora"
+        retry_signature: "Reintentar solicitud de firma"
+        retry_signature_confirm: "¿Deseas borrar la solicitud fallida y crear una nueva?"
+        seller: "Vendedor"
+        buyer: "Buyer"
+        mineral_type: "Mineral"
+        fine_grams: "Gramos finos"
+        total_price_cop: "Valor total (COP)"
+        status: "Estado de la compra"
+        timeline: "Cronología (hora Colombia)"
+        created_at: "Compra creada en"
+        signature_sent_at: "Firma iniciada en"
+        signed_at: "Firma realizada en"
+        completed_at: "Compra completada en"
+        signature_status: "Estado de la solicitud de firma"
+        no_signature_request: "No se encontró solicitud de firma"
+        live_photo: "Foto en vivo del minero"
+        live_photo_missing: "No hay foto registrada"
+        signed_documents: "Documentos firmados"
+        signed_documents_empty: "Aún no hay documentos firmados"
+      signature:
+        start:
+          title: "Firma embebida"
+          subtitle: "Firmando compra #%{id}."
+          loading: "Preparando firma embebida..."
+          reopen: "Reabrir firma"
+          back_to_purchase: "Volver a compra"
+          complete_manual: "Completar manualmente"
+          messages:
+            opening: "Abriendo firma embebida..."
+            opened: "Firma embebida abierta."
+            finished: "Firma completada. Procesando..."
+            closed: "Firma cerrada."
+            failed: "No se pudo cargar el firmador de Dropbox Sign. Intenta de nuevo."
     seller_consents:
       statuses:
         draft: "Borrador"
@@ -746,6 +860,12 @@ es:
   activerecord:
     errors:
       models:
+        mineral_purchase:
+          attributes:
+            miner_live_photo:
+              invalid_content_type: "debe ser una imagen válida"
+            seller:
+              required: "debe seleccionarse"
         e_signature_template:
           attributes:
             document:

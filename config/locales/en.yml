@@ -10,6 +10,7 @@ en:
       integrations: "Integrations"
       e_signature_templates: "E-Signature Templates"
       sellers: "Sellers"
+      mineral_purchases: "Mineral purchases"
       team: "Team"
       projects: "Projects"
       calendar: "Calendar"
@@ -427,6 +428,118 @@ en:
           uploaded: "Uploaded"
           verified: "Verified"
           rejected: "Rejected"
+    mineral_purchases:
+      mineral_types:
+        oro: "Gold"
+        plata: "Silver"
+        platino: "Platinum"
+      authorization:
+        not_allowed: "You are not authorized to manage mineral purchases."
+        buyer_required: "Only buyer users can create mineral purchases."
+      flash:
+        created: "Mineral purchase created successfully. Signature request was started asynchronously."
+        fix_errors: "Please review the form errors."
+        retry_started: "Signature request retried successfully."
+        completed: "Signature completed successfully."
+        already_signed: "Signature request is already signed."
+      errors:
+        template_not_found: "Tenant is missing the mineral purchase signature template."
+        template_inactive: "The mineral purchase signature template is inactive or integration is unavailable."
+        template_ambiguous: "More than one active mineral purchase template was found."
+        retry_not_allowed: "You can only retry signature when purchase is in signature failed status."
+        retry_failed: "Could not retry signature request."
+        missing_client_id: "Dropbox Sign Client ID is missing in integration credentials."
+      statuses:
+        created: "Created"
+        signature_pending: "Signature pending"
+        signature_failed: "Signature failed"
+        completed: "Completed"
+        canceled: "Canceled"
+      signature_statuses:
+        draft: "Draft"
+        sent: "Sent"
+        awaiting_signature: "Awaiting signature"
+        signed: "Signed"
+        failed: "Failed"
+        declined: "Declined"
+        canceled: "Canceled"
+        expired: "Expired"
+      index:
+        title: "Mineral purchases"
+        subtitle: "Track purchases and seller signature progress."
+        new: "New purchase"
+        show: "View"
+        empty: "No mineral purchases found"
+        columns:
+          id: "ID"
+          seller: "Seller"
+          mineral: "Mineral"
+          grams: "Fine grams"
+          total: "Total COP"
+          status: "Status"
+          actions: "Actions"
+      new:
+        title: "New mineral purchase"
+        subtitle: "Create a purchase for an approved seller and trigger signature automatically."
+      form:
+        fix_errors: "Please fix the following errors:"
+        seller: "Approved seller"
+        select_seller: "Select an approved seller"
+        mineral_type: "Mineral type"
+        select_mineral_type: "Select a mineral type"
+        fine_grams: "Fine grams"
+        total_price_cop: "Total value (COP)"
+        live_photo:
+          label: "Miner live photo"
+          hint: "Capture a live photo with camera and upload it before creating purchase."
+          capture: "Capture and upload photo"
+          messages:
+            ready: "Camera ready."
+            camera_unavailable: "Could not access camera."
+            capturing: "Capturing photo..."
+            uploading: "Uploading photo..."
+            uploaded: "Photo uploaded successfully."
+            failed: "Could not capture or upload photo."
+        create: "Create purchase"
+        back: "Back"
+      show:
+        title: "Purchase #%{id}"
+        subtitle: "Review purchase and signature status."
+        back: "Back"
+        sign_now: "Sign now"
+        retry_signature: "Retry signature request"
+        retry_signature_confirm: "Do you want to delete the failed request and create a new one?"
+        seller: "Seller"
+        buyer: "Buyer"
+        mineral_type: "Mineral"
+        fine_grams: "Fine grams"
+        total_price_cop: "Total value (COP)"
+        status: "Purchase status"
+        timeline: "Timeline (Colombia time)"
+        created_at: "Purchase created at"
+        signature_sent_at: "Signature started at"
+        signed_at: "Signed at"
+        completed_at: "Purchase completed at"
+        signature_status: "Signature request status"
+        no_signature_request: "No signature request found"
+        live_photo: "Miner live photo"
+        live_photo_missing: "No photo registered"
+        signed_documents: "Signed documents"
+        signed_documents_empty: "No signed documents yet"
+      signature:
+        start:
+          title: "Embedded signature"
+          subtitle: "Signing purchase #%{id}."
+          loading: "Preparing embedded signing..."
+          reopen: "Reopen signer"
+          back_to_purchase: "Back to purchase"
+          complete_manual: "Complete manually"
+          messages:
+            opening: "Opening embedded signing..."
+            opened: "Embedded signing opened."
+            finished: "Signature completed. Processing..."
+            closed: "Signer closed."
+            failed: "Dropbox Sign signer failed to load. Please try again."
     seller_consents:
       statuses:
         draft: "Draft"
@@ -677,6 +790,12 @@ en:
   activerecord:
     errors:
       models:
+        mineral_purchase:
+          attributes:
+            miner_live_photo:
+              invalid_content_type: "must be a valid image"
+            seller:
+              required: "must be selected"
         e_signature_template:
           attributes:
             document:

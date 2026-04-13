@@ -37,6 +37,7 @@ class PurchasingLocation < ApplicationRecord
   belongs_to :tenant
   has_many :buyer_profiles, dependent: :restrict_with_error
   has_many :buyers, through: :buyer_profiles, source: :user
+  has_many :mineral_purchases, dependent: :nullify
 
   validates :name, :department, :city, :address, presence: true
   validates :department, inclusion: { in: COLOMBIAN_DEPARTMENTS }

@@ -9,6 +9,7 @@ class Tenant < ApplicationRecord
   has_many :e_signature_templates, dependent: :destroy
   has_many :e_signature_requests, dependent: :restrict_with_error
   has_many :sellers, dependent: :restrict_with_error
+  has_many :mineral_purchases, dependent: :restrict_with_error
 
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: { case_sensitive: false }
