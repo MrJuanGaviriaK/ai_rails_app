@@ -16,6 +16,12 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :tenants, except: :show
     resources :purchasing_locations
+    resources :mineral_purchases, only: %i[index show new create] do
+      post :retry_signature, on: :member
+      get :start_signature, on: :member
+      post :complete_signature, on: :member
+    end
+    post "mineral_purchase_direct_uploads", to: "mineral_purchase_direct_uploads#create"
     resources :integrations, only: :index
     resources :e_signature_templates, except: :show do
       get :builder, on: :member

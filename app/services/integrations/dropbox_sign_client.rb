@@ -105,6 +105,25 @@ module Integrations
       request(:post, "/signature_request/create_embedded_with_template", json_payload: payload)
     end
 
+    def create_signature_request_with_template(template_id:, signer_name:, signer_email_address:, signer_role:, custom_fields: [])
+      payload = {
+        template_ids: [ template_id ],
+        subject: "Mineral purchase signature",
+        message: "Please sign this document.",
+        signers: [
+          {
+            role: signer_role,
+            name: signer_name,
+            email_address: signer_email_address
+          }
+        ],
+        custom_fields: custom_fields_payload(custom_fields),
+        test_mode: test_mode?
+      }
+
+      request(:post, "/signature_request/send_with_template", json_payload: payload)
+    end
+
     def embedded_sign_url(signature_id:)
       response = request(:post, "/embedded/sign_url/#{signature_id}")
       response.fetch("embedded")

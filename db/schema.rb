@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_10_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_12_231000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -77,9 +77,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_100000) do
     t.index ["e_signature_template_id"], name: "index_e_signature_requests_on_e_signature_template_id"
     t.index ["initiated_by_id"], name: "index_e_signature_requests_on_initiated_by_id"
     t.index ["integration_id"], name: "index_e_signature_requests_on_integration_id"
-    t.index ["provider", "provider_signature_request_id"], name: "idx_e_signature_requests_provider_request"
+    t.index ["provider", "provider_signature_request_id"], name: "idx_e_signature_requests_provider_request", unique: true, where: "(provider_signature_request_id IS NOT NULL)"
     t.index ["requestable_id"], name: "index_e_signature_requests_on_requestable_id"
     t.index ["requestable_type", "requestable_id", "status"], name: "idx_e_signature_requests_requestable_status"
+    t.index ["requestable_type", "requestable_id"], name: "idx_e_signature_requests_mineral_purchase_unique", unique: true, where: "((requestable_type)::text = 'MineralPurchase'::text)"
     t.index ["tenant_id", "status"], name: "idx_e_signature_requests_tenant_status"
     t.index ["tenant_id"], name: "index_e_signature_requests_on_tenant_id"
   end
@@ -121,6 +122,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_100000) do
     t.index ["status"], name: "index_integrations_on_status"
     t.index ["tenant_id", "provider"], name: "index_integrations_on_tenant_id_and_provider"
     t.index ["tenant_id"], name: "index_integrations_on_tenant_id"
+  end
+
+  create_table "mineral_purchases", force: :cascade do |t|
+    t.bigint "buyer_id", null: false
+    t.datetime "canceled_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.decimal "fine_grams", precision: 12, scale: 2, null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.string "mineral_type", null: false
+    t.bigint "purchasing_location_id"
+    t.bigint "seller_id", null: false
+    t.string "status", default: "created", null: false
+    t.bigint "tenant_id", null: false
+    t.decimal "total_price_cop", precision: 14, scale: 2, null: false
+    t.datetime "updated_at", null: false
+    t.index ["buyer_id"], name: "index_mineral_purchases_on_buyer_id"
+    t.index ["purchasing_location_id"], name: "index_mineral_purchases_on_purchasing_location_id"
+    t.index ["seller_id"], name: "index_mineral_purchases_on_seller_id"
+    t.index ["tenant_id", "buyer_id"], name: "idx_mineral_purchases_tenant_buyer"
+    t.index ["tenant_id", "seller_id"], name: "idx_mineral_purchases_tenant_seller"
+    t.index ["tenant_id", "status"], name: "idx_mineral_purchases_tenant_status"
+    t.index ["tenant_id"], name: "index_mineral_purchases_on_tenant_id"
+    t.check_constraint "fine_grams > 0::numeric", name: "chk_mineral_purchases_fine_grams_positive"
+    t.check_constraint "total_price_cop > 0::numeric", name: "chk_mineral_purchases_total_price_positive"
   end
 
   create_table "purchasing_locations", force: :cascade do |t|
@@ -361,12 +387,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_100000) do
   add_foreign_key "buyer_profiles", "users", on_delete: :cascade
   add_foreign_key "e_signature_requests", "e_signature_templates"
   add_foreign_key "e_signature_requests", "integrations"
-  add_foreign_key "e_signature_requests", "sellers", column: "requestable_id", on_delete: :cascade
   add_foreign_key "e_signature_requests", "tenants"
   add_foreign_key "e_signature_requests", "users", column: "initiated_by_id"
   add_foreign_key "e_signature_templates", "integrations"
   add_foreign_key "e_signature_templates", "tenants"
   add_foreign_key "integrations", "tenants"
+  add_foreign_key "mineral_purchases", "purchasing_locations", on_delete: :nullify
+  add_foreign_key "mineral_purchases", "sellers"
+  add_foreign_key "mineral_purchases", "tenants"
+  add_foreign_key "mineral_purchases", "users", column: "buyer_id"
   add_foreign_key "purchasing_locations", "tenants"
   add_foreign_key "seller_documents", "sellers", on_delete: :cascade
   add_foreign_key "seller_documents", "users", column: "uploaded_by_id"

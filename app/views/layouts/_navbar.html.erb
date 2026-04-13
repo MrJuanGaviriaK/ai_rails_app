@@ -23,6 +23,10 @@
             <%= link_to t("layouts.navbar.sellers"), admin_sellers_path,
                   class: "px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:bg-gray-800" %>
           <% end %>
+          <% if current_tenant.present? && (current_user.buyer_for_tenant?(current_tenant) || current_user.admin_for_tenant?(current_tenant)) %>
+            <%= link_to t("layouts.navbar.mineral_purchases"), admin_mineral_purchases_path,
+                  class: "px-3 py-2 rounded-md text-sm font-semibold text-gray-200 hover:bg-gray-800" %>
+          <% end %>
         </div>
       </div>
 

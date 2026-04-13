@@ -1,0 +1,117 @@
+<div class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-white sm:text-3xl"><%= t("admin.mineral_purchases.show.title", id: @mineral_purchase.id) %></h1>
+      <p class="mt-1 text-sm text-gray-300"><%= t("admin.mineral_purchases.show.subtitle") %></p>
+    </div>
+    <%= link_to t("admin.mineral_purchases.show.back"), admin_mineral_purchases_path, class: "rounded-md border border-[#34588f] bg-[#0a1628] px-4 py-2 text-sm font-semibold text-gray-200 transition hover:bg-[#102447]" %>
+  </div>
+
+  <section class="rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-6 text-sm text-gray-200">
+    <dl class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <dt class="text-gray-400"><%= t("admin.mineral_purchases.show.seller") %></dt>
+        <dd><%= @mineral_purchase.seller.full_name %></dd>
+      </div>
+      <div>
+        <dt class="text-gray-400"><%= t("admin.mineral_purchases.show.buyer") %></dt>
+        <dd><%= @mineral_purchase.buyer.name %></dd>
+      </div>
+      <div>
+        <dt class="text-gray-400"><%= t("admin.mineral_purchases.show.mineral_type") %></dt>
+        <dd><%= @mineral_purchase.mineral_type %></dd>
+      </div>
+      <div>
+        <dt class="text-gray-400"><%= t("admin.mineral_purchases.show.fine_grams") %></dt>
+        <dd><%= number_with_precision(@mineral_purchase.fine_grams, precision: 2) %></dd>
+      </div>
+      <div>
+        <dt class="text-gray-400"><%= t("admin.mineral_purchases.show.total_price_cop") %></dt>
+        <dd><%= number_to_currency(@mineral_purchase.total_price_cop, unit: "$", precision: 2, delimiter: ".", separator: ",") %></dd>
+      </div>
+      <div>
+        <dt class="text-gray-400"><%= t("admin.mineral_purchases.show.status") %></dt>
+        <dd><%= t("admin.mineral_purchases.statuses.#{@mineral_purchase.status}") %></dd>
+      </div>
+      <div class="sm:col-span-2">
+        <dt class="text-gray-400"><%= t("admin.mineral_purchases.show.signature_status") %></dt>
+        <dd>
+          <% if @mineral_purchase.e_signature_request.present? %>
+            <%= t("admin.mineral_purchases.signature_statuses.#{@mineral_purchase.e_signature_request.status}") %>
+          <% else %>
+            <%= t("admin.mineral_purchases.show.no_signature_request") %>
+          <% end %>
+        </dd>
+      </div>
+      <div class="sm:col-span-2">
+        <dt class="text-gray-400"><%= t("admin.mineral_purchases.show.timeline") %></dt>
+        <dd class="mt-2 grid gap-3 sm:grid-cols-2">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-gray-400"><%= t("admin.mineral_purchases.show.created_at") %></p>
+            <p><%= format_in_colombia_time(@mineral_purchase.created_at) %></p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-gray-400"><%= t("admin.mineral_purchases.show.signature_sent_at") %></p>
+            <p><%= format_in_colombia_time(@mineral_purchase.e_signature_request&.sent_at) %></p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-gray-400"><%= t("admin.mineral_purchases.show.signed_at") %></p>
+            <p><%= format_in_colombia_time(@mineral_purchase.e_signature_request&.signed_at) %></p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-gray-400"><%= t("admin.mineral_purchases.show.completed_at") %></p>
+            <p><%= format_in_colombia_time(@mineral_purchase.completed_at) %></p>
+          </div>
+        </dd>
+      </div>
+      <div class="sm:col-span-2">
+        <dt class="text-gray-400"><%= t("admin.mineral_purchases.show.live_photo") %></dt>
+        <dd class="mt-2">
+          <% if @mineral_purchase.miner_live_photo.attached? %>
+            <%= image_tag @mineral_purchase.miner_live_photo, class: "h-40 w-40 rounded-md border border-[#1e3563] object-cover", alt: t("admin.mineral_purchases.show.live_photo") %>
+          <% else %>
+            <span class="text-gray-400"><%= t("admin.mineral_purchases.show.live_photo_missing") %></span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="sm:col-span-2">
+        <dt class="text-gray-400"><%= t("admin.mineral_purchases.show.signed_documents") %></dt>
+        <dd class="mt-2">
+          <% if @mineral_purchase.signed_documents.attached? %>
+            <ul class="space-y-2">
+              <% @mineral_purchase.signed_documents.each do |document| %>
+                <li>
+                  <%= link_to document.filename.to_s,
+                        url_for(document),
+                        target: "_blank",
+                        rel: "noopener",
+                        class: "text-indigo-300 hover:text-indigo-200" %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <span class="text-gray-400"><%= t("admin.mineral_purchases.show.signed_documents_empty") %></span>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+
+    <% if (current_user.buyer_for_tenant?(@tenant) || current_user.admin_for_tenant?(@tenant)) %>
+      <div class="mt-6 flex flex-wrap gap-3 border-t border-[#1e3563] pt-4">
+        <% if @mineral_purchase.e_signature_request.present? && !@mineral_purchase.e_signature_request.signed? && !@mineral_purchase.signature_failed? %>
+          <%= link_to t("admin.mineral_purchases.show.sign_now"),
+                start_signature_admin_mineral_purchase_path(@mineral_purchase),
+                class: "inline-flex h-10 items-center justify-center rounded-md bg-indigo-600 px-4 text-sm font-semibold text-white transition hover:bg-indigo-500" %>
+        <% end %>
+
+        <% if @mineral_purchase.signature_failed? %>
+        <%= button_to t("admin.mineral_purchases.show.retry_signature"),
+              retry_signature_admin_mineral_purchase_path(@mineral_purchase),
+              method: :post,
+              data: { turbo_confirm: t("admin.mineral_purchases.show.retry_signature_confirm") },
+              class: "inline-flex h-10 items-center justify-center rounded-md bg-amber-600 px-4 text-sm font-semibold text-white transition hover:bg-amber-500" %>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+</div>

@@ -9,6 +9,7 @@ class Seller < ApplicationRecord
 
   has_many :seller_documents, dependent: :destroy
   has_many :e_signature_requests, as: :requestable, dependent: :destroy
+  has_many :mineral_purchases, dependent: :restrict_with_error
 
   validates :first_name, :last_name, :identification_type, :identification_number,
     :seller_type, :department, :city, :address, :status, presence: true

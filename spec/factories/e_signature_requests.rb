@@ -4,7 +4,13 @@ FactoryBot.define do
     tenant { requestable.tenant }
     integration { create(:integration, tenant:) }
     e_signature_template { create(:e_signature_template, tenant:, integration:) }
-    initiated_by { requestable.created_by }
+    initiated_by do
+      if requestable.respond_to?(:created_by)
+        requestable.created_by
+      elsif requestable.respond_to?(:buyer)
+        requestable.buyer
+      end
+    end
     provider { "dropbox_sign" }
     status { "draft" }
     raw_provider_payload { {} }
