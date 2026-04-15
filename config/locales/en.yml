@@ -6,6 +6,7 @@ en:
       dashboard: "Dashboard"
       tenants: "Tenants"
       purchasing_locations: "Purchasing locations"
+      daily_prices: "Daily prices"
       users: "Users"
       integrations: "Integrations"
       e_signature_templates: "E-Signature Templates"
@@ -446,6 +447,7 @@ en:
         template_not_found: "Tenant is missing the mineral purchase signature template."
         template_inactive: "The mineral purchase signature template is inactive or integration is unavailable."
         template_ambiguous: "More than one active mineral purchase template was found."
+        daily_price_not_approved: "There is no approved daily price for this mineral on the applicable date. Contact the administrator."
         retry_not_allowed: "You can only retry signature when purchase is in signature failed status."
         retry_failed: "Could not retry signature request."
         missing_client_id: "Dropbox Sign Client ID is missing in integration credentials."
@@ -540,6 +542,61 @@ en:
             finished: "Signature completed. Processing..."
             closed: "Signer closed."
             failed: "Dropbox Sign signer failed to load. Please try again."
+    daily_prices:
+      authorization:
+        not_allowed: "You are not authorized to manage daily prices."
+      flash:
+        created: "Daily price created successfully."
+        updated: "Daily price updated successfully."
+      errors:
+        approved_conflict: "An approved daily price already exists for this mineral and date."
+      states:
+        pending: "Pending"
+        approved: "Approved"
+        rejected: "Rejected"
+      index:
+        title: "Daily prices"
+        subtitle: "Manage approved purchase prices by mineral and date."
+        new: "New price"
+        edit: "Edit"
+        apply: "Apply"
+        reset: "Reset"
+        empty_title: "No daily prices found"
+        empty_description: "Create a price or adjust filters to see results."
+        filters:
+          mineral_placeholder: "Mineral (e.g., gold)"
+          all_states: "All states"
+        columns:
+          price_date: "Date"
+          mineral_type: "Mineral"
+          unit_price_cop: "Unit price"
+          state: "State"
+          review: "Review"
+          actions: "Actions"
+      new:
+        kicker: "Daily prices"
+        title: "Create daily price"
+        description: "Register the authorized purchase price for one mineral and business date."
+      edit:
+        kicker: "Daily prices"
+        title: "Edit daily price"
+        description: "Update unit price, notes, and review state."
+      form:
+        fix_errors: "Please fix the following errors:"
+        basic_information: "Basic information"
+        review: "Review"
+        mineral_type: "Mineral type"
+        mineral_type_placeholder: "gold"
+        price_date: "Date"
+        unit_price_cop: "Unit price (COP)"
+        notes: "Notes"
+        state: "State"
+        rejection_reason: "Rejection reason"
+        created_by: "Created by"
+        reviewed_by: "Reviewed by"
+        create: "Create price"
+        update: "Update price"
+        back: "Back"
     seller_consents:
       statuses:
         draft: "Draft"
@@ -800,6 +857,10 @@ en:
           attributes:
             document:
               invalid_content_type: "must be a PDF file"
+        daily_price:
+          attributes:
+            state:
+              invalid_transition: "cannot transition from %{from} to %{to}"
         changed_prefix: "We are contacting you to notify you that your email address has been changed to"
         changed_suffix: "If you did not make this change, please contact us immediately."
       password_change:

@@ -1,4 +1,11 @@
-<%= form_with model: [:admin, mineral_purchase], local: true, class: "space-y-6 rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-6" do |f| %>
+<%= form_with model: [:admin, mineral_purchase],
+      local: true,
+      class: "space-y-6 rounded-xl border border-[#1e3563] bg-[#0d1f3e] p-6",
+      data: {
+        controller: "mineral-purchase-daily-price",
+        mineral_purchase_daily_price_url_value: daily_price_availability_admin_mineral_purchases_path,
+        mineral_purchase_daily_price_error_message_value: t("admin.mineral_purchases.errors.daily_price_not_approved")
+      } do |f| %>
   <% if mineral_purchase.errors.any? %>
     <div class="rounded-lg border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-100">
       <p class="mb-1 text-sm font-semibold text-red-300"><%= t("admin.mineral_purchases.form.fix_errors") %></p>
@@ -22,31 +29,45 @@
     <div>
       <%= f.label :mineral_type, t("admin.mineral_purchases.form.mineral_type"), class: "block text-sm font-medium text-gray-200" %>
       <%= f.select :mineral_type,
-            options_for_select([
-              [t("admin.mineral_purchases.mineral_types.oro"), "oro"],
-              [t("admin.mineral_purchases.mineral_types.plata"), "plata"],
-              [t("admin.mineral_purchases.mineral_types.platino"), "platino"]
-            ], mineral_purchase.mineral_type),
+            options_for_select(DailyPrice::MINERAL_TYPES.map { |mineral_type| [mineral_type.humanize, mineral_type] }, mineral_purchase.mineral_type),
             { include_blank: t("admin.mineral_purchases.form.select_mineral_type") },
-            class: "ui-select" %>
+            class: "ui-select",
+            data: {
+              action: "change->mineral-purchase-daily-price#onMineralTypeChange",
+              mineral_purchase_daily_price_target: "mineralType"
+            } %>
+
+      <div class="mt-2 hidden rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-100"
+           role="alert"
+           data-mineral-purchase-daily-price-target="alert">
+        <p data-mineral-purchase-daily-price-target="alertMessage"></p>
+      </div>
     </div>
 
     <div>
       <%= f.label :fine_grams, t("admin.mineral_purchases.form.fine_grams"), class: "block text-sm font-medium text-gray-200" %>
-      <%= f.number_field :fine_grams, step: 0.01, min: 0.01, class: "mt-1 w-full rounded-md border border-[#34588f] bg-[#081327] px-3 py-2 text-sm text-white" %>
+      <%= f.number_field :fine_grams,
+            step: 0.01,
+            min: 0.01,
+            class: "mt-1 w-full rounded-md border border-[#34588f] bg-[#081327] px-3 py-2 text-sm text-white",
+            data: {
+              action: "input->mineral-purchase-daily-price#onFineGramsChange change->mineral-purchase-daily-price#onFineGramsChange",
+              mineral_purchase_daily_price_target: "fineGrams"
+            } %>
     </div>
 
     <div>
       <%= f.label :total_price_cop, t("admin.mineral_purchases.form.total_price_cop"), class: "block text-sm font-medium text-gray-200" %>
-      <div data-controller="cop-currency-input" class="mt-1">
+      <div class="mt-1">
         <input type="text"
-               data-cop-currency-input-target="display"
-               data-action="input->cop-currency-input#onInput"
+               value=""
+               readonly
                inputmode="decimal"
                autocomplete="off"
-               placeholder="$1'200.000"
-               class="w-full rounded-md border border-[#34588f] bg-[#081327] px-3 py-2 text-sm text-white placeholder:text-gray-400">
-        <%= f.hidden_field :total_price_cop, data: { cop_currency_input_target: "hidden" } %>
+               placeholder="$0,00"
+               class="w-full cursor-not-allowed rounded-md border border-[#34588f] bg-[#081327] px-3 py-2 text-sm text-white placeholder:text-gray-400"
+               data-mineral-purchase-daily-price-target="totalDisplay">
+        <%= f.hidden_field :total_price_cop, data: { mineral_purchase_daily_price_target: "totalHidden" } %>
       </div>
     </div>
   </div>
@@ -88,7 +109,9 @@
   </div>
 
   <div class="flex items-center gap-3">
-    <%= f.submit t("admin.mineral_purchases.form.create"), class: "inline-flex h-11 items-center justify-center rounded-lg bg-indigo-600 px-5 text-sm font-semibold text-white transition hover:bg-indigo-500" %>
+    <%= f.submit t("admin.mineral_purchases.form.create"),
+          class: "inline-flex h-11 items-center justify-center rounded-lg bg-indigo-600 px-5 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50",
+          data: { mineral_purchase_daily_price_target: "submitButton" } %>
     <%= link_to t("admin.mineral_purchases.form.back"), admin_mineral_purchases_path, class: "inline-flex h-11 items-center justify-center rounded-lg border border-[#34588f] bg-[#0a1628] px-5 text-sm font-medium text-gray-200 transition hover:bg-[#102447]" %>
   </div>
 <% end %>

@@ -2,7 +2,7 @@ module Admin
   class MineralPurchasesController < ApplicationController
     before_action :set_tenant
     before_action :require_mineral_purchase_access!
-    before_action :require_buyer_access!, only: %i[new create]
+    before_action :require_buyer_access!, only: %i[new create daily_price_availability]
     before_action :set_mineral_purchase, only: %i[show retry_signature start_signature complete_signature]
 
     def index
@@ -78,10 +78,33 @@ module Admin
       end
     end
 
+    def daily_price_availability
+      mineral_type = params[:mineral_type].to_s
+      return render json: { error: t("errors.messages.blank") }, status: :unprocessable_entity if mineral_type.blank?
+
+      applicable_date = DailyPrices::Resolver.applicable_date_for(tenant: @tenant)
+      result = DailyPrices::Resolver.call(tenant: @tenant, mineral_type:, on_date: applicable_date)
+
+      if result.success?
+        render json: {
+          available: true,
+          applicable_date: applicable_date,
+          unit_price_cop: result.daily_price.unit_price_cop.to_s("F")
+        }
+      else
+        render json: {
+          available: false,
+          applicable_date: applicable_date,
+          unit_price_cop: nil,
+          message: t("admin.mineral_purchases.errors.daily_price_not_approved")
+        }, status: :ok
+      end
+    end
+
     private
 
     def mineral_purchase_params
-      params.require(:mineral_purchase).permit(:seller_id, :mineral_type, :fine_grams, :total_price_cop, :purchasing_location_id, :miner_live_photo_signed_id)
+      params.require(:mineral_purchase).permit(:seller_id, :mineral_type, :fine_grams, :purchasing_location_id, :miner_live_photo_signed_id)
     end
 
     def set_tenant

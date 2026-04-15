@@ -45,28 +45,115 @@ RSpec.describe "Admin::MineralPurchases", type: :request do
     end
   end
 
+  describe "GET /admin/mineral_purchases/new" do
+    it "renders daily price availability stimulus wiring" do
+      buyer = create(:user)
+      buyer.add_role(:buyer, tenant)
+      sign_in_as(buyer)
+
+      get new_admin_mineral_purchase_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("data-controller=\"mineral-purchase-daily-price\"")
+      expect(response.body).to include("data-mineral-purchase-daily-price-url-value=\"#{daily_price_availability_admin_mineral_purchases_path}\"")
+      expect(response.body).to include("data-mineral-purchase-daily-price-target=\"submitButton\"")
+      expect(response.body).to include("data-mineral-purchase-daily-price-target=\"totalDisplay\"")
+      expect(response.body).to include("readonly")
+    end
+  end
+
+  describe "GET /admin/mineral_purchases/daily_price_availability" do
+    let(:buyer) { create(:user) }
+
+    before do
+      buyer.add_role(:buyer, tenant)
+      sign_in_as(buyer)
+    end
+
+    it "returns available true when approved daily price exists" do
+      applicable_date = DailyPrices::Resolver.applicable_date_for(tenant:)
+      create(:daily_price, :approved, tenant:, mineral_type: "oro", unit_price_cop: 345_678.91, price_date: applicable_date)
+
+      get daily_price_availability_admin_mineral_purchases_path, params: { mineral_type: "oro" }
+
+      expect(response).to have_http_status(:ok)
+      payload = JSON.parse(response.body)
+      expect(payload).to include(
+        "available" => true,
+        "applicable_date" => applicable_date.iso8601,
+        "unit_price_cop" => "345678.91"
+      )
+      expect(payload).not_to have_key("message")
+    end
+
+    it "returns available false with localized message when approved daily price is missing" do
+      get daily_price_availability_admin_mineral_purchases_path, params: { mineral_type: "oro" }
+
+      expect(response).to have_http_status(:ok)
+      payload = JSON.parse(response.body)
+      expect(payload).to include(
+        "available" => false,
+        "unit_price_cop" => nil,
+        "message" => I18n.t("admin.mineral_purchases.errors.daily_price_not_approved")
+      )
+    end
+
+    it "returns unprocessable entity when mineral_type param is missing" do
+      get daily_price_availability_admin_mineral_purchases_path
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      payload = JSON.parse(response.body)
+      expect(payload).to include("error" => I18n.t("errors.messages.blank"))
+    end
+
+    it "uses DailyPrices::Resolver to resolve availability" do
+      applicable_date = Date.new(2026, 4, 15)
+      resolver_result = DailyPrices::Resolver::Result.new(success?: false, daily_price: nil, error: :daily_price_not_approved)
+
+      allow(DailyPrices::Resolver).to receive(:applicable_date_for).with(tenant:).and_return(applicable_date)
+      expect(DailyPrices::Resolver).to receive(:call).with(tenant:, mineral_type: "oro", on_date: applicable_date).and_return(resolver_result)
+
+      get daily_price_availability_admin_mineral_purchases_path, params: { mineral_type: "oro" }
+
+      expect(response).to have_http_status(:ok)
+      payload = JSON.parse(response.body)
+      expect(payload["available"]).to be(false)
+    end
+  end
+
   describe "POST /admin/mineral_purchases" do
     it "creates purchase for approved seller" do
       buyer = create(:user)
       buyer.add_role(:buyer, tenant)
       sign_in_as(buyer)
       seller = create(:seller, tenant:, status: "approved")
+      approved_daily_price = create(
+        :daily_price,
+        :approved,
+        tenant:,
+        mineral_type: "oro",
+        unit_price_cop: 321_000.88,
+        price_date: DailyPrices::Resolver.applicable_date_for(tenant:)
+      )
 
       expect do
         post admin_mineral_purchases_path, params: {
           mineral_purchase: {
             seller_id: seller.id,
-            mineral_type: "gold",
+            mineral_type: "oro",
             fine_grams: "8.50",
-            total_price_cop: "100000.75",
+            total_price_cop: "99.99",
             miner_live_photo_signed_id: create_test_image_blob_signed_id
           }
         }
       end.to change(MineralPurchase, :count).by(1).and change(ESignatureRequest, :count).by(1)
 
-      expect(response).to redirect_to(admin_mineral_purchase_path(MineralPurchase.last))
-      expect(MineralPurchase.last.status).to eq("created")
-      expect(MineralPurchase.last.e_signature_request.status).to eq("draft")
+      purchase = MineralPurchase.last
+      expect(response).to redirect_to(admin_mineral_purchase_path(purchase))
+      expect(purchase.status).to eq("created")
+      expect(purchase.e_signature_request.status).to eq("draft")
+      expect(purchase.daily_price_id).to eq(approved_daily_price.id)
+      expect(purchase.total_price_cop.to_s("F")).to eq("2728507.48")
     end
 
     it "rejects non-approved sellers" do
@@ -74,11 +161,12 @@ RSpec.describe "Admin::MineralPurchases", type: :request do
       buyer.add_role(:buyer, tenant)
       sign_in_as(buyer)
       seller = create(:seller, tenant:, status: "pending")
+      create(:daily_price, :approved, tenant:, mineral_type: "oro", price_date: DailyPrices::Resolver.applicable_date_for(tenant:))
 
       post admin_mineral_purchases_path, params: {
         mineral_purchase: {
             seller_id: seller.id,
-            mineral_type: "gold",
+            mineral_type: "oro",
             fine_grams: "8.50",
             total_price_cop: "100000.75",
             miner_live_photo_signed_id: create_test_image_blob_signed_id
@@ -92,6 +180,7 @@ RSpec.describe "Admin::MineralPurchases", type: :request do
       buyer = create(:user)
       buyer.add_role(:buyer, tenant)
       sign_in_as(buyer)
+      create(:daily_price, :approved, tenant:, mineral_type: "oro", price_date: DailyPrices::Resolver.applicable_date_for(tenant:))
 
       post admin_mineral_purchases_path, params: {
         mineral_purchase: {
@@ -105,6 +194,26 @@ RSpec.describe "Admin::MineralPurchases", type: :request do
 
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.body).not_to include("Translation missing")
+    end
+
+    it "blocks creation when approved daily price does not exist" do
+      buyer = create(:user)
+      buyer.add_role(:buyer, tenant)
+      sign_in_as(buyer)
+      seller = create(:seller, tenant:, status: "approved")
+
+      post admin_mineral_purchases_path, params: {
+        mineral_purchase: {
+          seller_id: seller.id,
+          mineral_type: "oro",
+          fine_grams: "8.50",
+          total_price_cop: "100000.75",
+          miner_live_photo_signed_id: create_test_image_blob_signed_id
+        }
+      }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.body).to include(I18n.t("admin.mineral_purchases.errors.daily_price_not_approved"))
     end
   end
 

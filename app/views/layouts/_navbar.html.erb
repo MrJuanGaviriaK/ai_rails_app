@@ -64,6 +64,12 @@
                     class: "flex items-center rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors",
                     role: "menuitem" %>
 
+              <% if current_tenant.present? %>
+                <%= link_to t("layouts.navbar.daily_prices"), admin_daily_prices_path,
+                      class: "flex items-center rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors",
+                      role: "menuitem" %>
+              <% end %>
+
               <%= link_to t("layouts.navbar.users"), admin_users_path,
                     class: "flex items-center rounded-md px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 hover:text-white transition-colors",
                     role: "menuitem" %>

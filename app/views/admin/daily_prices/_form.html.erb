@@ -1,0 +1,87 @@
+<%= form_with model: [:admin, daily_price], local: true, class: "space-y-6" do |f| %>
+  <% if daily_price.errors.any? %>
+    <div class="rounded-xl border border-red-500/40 bg-red-950/20 p-4">
+      <p class="mb-1 text-sm font-semibold text-red-300"><%= t("admin.daily_prices.form.fix_errors") %></p>
+      <ul class="list-inside list-disc text-sm text-red-200">
+        <% daily_price.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <section class="rounded-xl border border-[#1e3563] bg-[#0a1628] p-5">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300"><%= t("admin.daily_prices.form.basic_information") %></h2>
+
+    <div class="mt-4 grid gap-4 sm:grid-cols-3">
+      <div class="space-y-1.5">
+        <%= f.label :mineral_type, t("admin.daily_prices.form.mineral_type"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.select :mineral_type,
+              options_for_select(DailyPrice::MINERAL_TYPES.map { |mineral_type| [mineral_type.humanize, mineral_type] }, daily_price.mineral_type),
+              {},
+              class: "ui-select" %>
+      </div>
+
+      <div class="space-y-1.5">
+        <%= f.label :price_date, t("admin.daily_prices.form.price_date"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.date_field :price_date, class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+      </div>
+
+      <div class="space-y-1.5">
+        <%= f.label :unit_price_cop, t("admin.daily_prices.form.unit_price_cop"), class: "block text-sm font-medium text-gray-200" %>
+        <div data-controller="cop-currency-input" class="mt-1">
+          <input type="text"
+                 data-cop-currency-input-target="display"
+                 data-action="input->cop-currency-input#onInput"
+                 inputmode="decimal"
+                 autocomplete="off"
+                 placeholder="$1'200.000"
+                 class="h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400">
+          <%= f.hidden_field :unit_price_cop, data: { cop_currency_input_target: "hidden" } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 space-y-1.5">
+      <%= f.label :notes, t("admin.daily_prices.form.notes"), class: "block text-sm font-medium text-gray-200" %>
+      <%= f.text_area :notes, rows: 3, class: "w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 py-2.5 text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+    </div>
+  </section>
+
+  <section class="rounded-xl border border-[#1e3563] bg-[#0a1628] p-5">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-indigo-300"><%= t("admin.daily_prices.form.review") %></h2>
+
+    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      <div class="space-y-1.5">
+        <%= f.label :state, t("admin.daily_prices.form.state"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.select :state,
+              options_for_select(DailyPrice::STATES.map { |state| [t("admin.daily_prices.states.#{state}"), state] }, daily_price.state),
+              {},
+              class: "ui-select" %>
+      </div>
+
+      <div class="space-y-1.5">
+        <%= f.label :rejection_reason, t("admin.daily_prices.form.rejection_reason"), class: "block text-sm font-medium text-gray-200" %>
+        <%= f.text_field :rejection_reason, class: "h-11 w-full rounded-lg border border-[#1e3563] bg-[#0f1525] px-3 text-sm text-white placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400" %>
+      </div>
+    </div>
+
+    <% if daily_price.persisted? %>
+      <dl class="mt-4 grid gap-3 rounded-lg border border-[#1e3563] bg-[#0f1525] p-3 text-sm sm:grid-cols-2">
+        <div>
+          <dt class="text-xs uppercase tracking-wide text-gray-400"><%= t("admin.daily_prices.form.created_by") %></dt>
+          <dd class="mt-1 text-gray-100"><%= daily_price.created_by&.name %></dd>
+        </div>
+        <div>
+          <dt class="text-xs uppercase tracking-wide text-gray-400"><%= t("admin.daily_prices.form.reviewed_by") %></dt>
+          <dd class="mt-1 text-gray-100"><%= daily_price.reviewed_by&.name || "-" %></dd>
+        </div>
+      </dl>
+    <% end %>
+  </section>
+
+  <div class="flex flex-col gap-2 border-t border-[#1e3563] pt-4 sm:flex-row sm:items-center">
+    <%= f.submit(daily_price.persisted? ? t("admin.daily_prices.form.update") : t("admin.daily_prices.form.create"), class: "inline-flex h-11 items-center justify-center rounded-lg bg-indigo-600 px-5 text-sm font-semibold text-white transition hover:bg-indigo-500") %>
+    <%= link_to t("admin.daily_prices.form.back"), admin_daily_prices_path, class: "inline-flex h-11 items-center justify-center rounded-lg border border-[#34588f] bg-[#0a1628] px-5 text-sm font-medium text-gray-200 transition hover:bg-[#102447]" %>
+  </div>
+<% end %>

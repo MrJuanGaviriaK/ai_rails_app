@@ -25,11 +25,14 @@ module MineralPurchases
     def call
       validate_permissions!
       validate_miner_live_photo_presence!
+      validate_daily_price!
+      assign_total_price_from_daily_price!
       template_result = resolve_template
 
       return failure_result if mineral_purchase.errors.any?
 
       ActiveRecord::Base.transaction do
+        mineral_purchase.daily_price = resolved_daily_price
         mineral_purchase.save!
         attach_miner_live_photo!
         mineral_purchase.create_e_signature_request!(
@@ -54,7 +57,27 @@ module MineralPurchases
     attr_reader :actor, :tenant, :attributes, :mineral_purchase
 
     def assignable_attributes
-      attributes.slice(:seller_id, :mineral_type, :fine_grams, :total_price_cop, :purchasing_location_id)
+      attributes.slice(:seller_id, :mineral_type, :fine_grams, :purchasing_location_id)
+    end
+
+    def assign_total_price_from_daily_price!
+      return if resolved_daily_price.blank?
+
+      fine_grams_decimal = decimal_or_nil(mineral_purchase.fine_grams)
+      return if fine_grams_decimal.blank?
+
+      unit_price_decimal = decimal_or_nil(resolved_daily_price.unit_price_cop)
+      return if unit_price_decimal.blank?
+
+      mineral_purchase.total_price_cop = (unit_price_decimal * fine_grams_decimal).round(2, :half_up)
+    end
+
+    def decimal_or_nil(value)
+      return nil if value.blank?
+
+      BigDecimal(value.to_s)
+    rescue ArgumentError
+      nil
     end
 
     def validate_miner_live_photo_presence!
@@ -67,6 +90,23 @@ module MineralPurchases
       return if actor&.buyer_for_tenant?(tenant)
 
       mineral_purchase.errors.add(:base, I18n.t("admin.mineral_purchases.authorization.buyer_required"))
+    end
+
+    def validate_daily_price!
+      applicable_date = DailyPrices::Resolver.applicable_date_for(tenant:)
+      result = DailyPrices::Resolver.call(tenant:, mineral_type: mineral_purchase.mineral_type, on_date: applicable_date)
+      return @resolved_daily_price = result.daily_price if result.success?
+
+      Rails.logger.info(
+        event: "mineral_purchase.daily_price_missing",
+        tenant_id: tenant.id,
+        user_id: actor&.id,
+        mineral_type: mineral_purchase.mineral_type,
+        applicable_date: applicable_date,
+        service: self.class.name
+      )
+
+      mineral_purchase.errors.add(:base, I18n.t("admin.mineral_purchases.errors.daily_price_not_approved"))
     end
 
     def resolve_template
@@ -93,6 +133,10 @@ module MineralPurchases
 
     def miner_live_photo_signed_id
       @miner_live_photo_signed_id
+    end
+
+    def resolved_daily_price
+      @resolved_daily_price
     end
 
     def success_result
