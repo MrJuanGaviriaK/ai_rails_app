@@ -4,6 +4,8 @@ class User < ApplicationRecord
   has_many :reviewed_tenants, class_name: "Tenant", foreign_key: :reviewed_by_id, inverse_of: :reviewed_by, dependent: :nullify
   has_many :created_sellers, class_name: "Seller", foreign_key: :created_by_id, inverse_of: :created_by
   has_many :reviewed_sellers, class_name: "Seller", foreign_key: :reviewed_by_id, inverse_of: :reviewed_by, dependent: :nullify
+  has_many :created_daily_prices, class_name: "DailyPrice", foreign_key: :created_by_id, inverse_of: :created_by, dependent: :restrict_with_error
+  has_many :reviewed_daily_prices, class_name: "DailyPrice", foreign_key: :reviewed_by_id, inverse_of: :reviewed_by, dependent: :nullify
   has_many :initiated_e_signature_requests, class_name: "ESignatureRequest", foreign_key: :initiated_by_id, inverse_of: :initiated_by, dependent: :nullify
   has_many :mineral_purchases, foreign_key: :buyer_id, inverse_of: :buyer, dependent: :restrict_with_error
   has_one :buyer_profile, dependent: :destroy

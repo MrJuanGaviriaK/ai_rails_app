@@ -16,7 +16,9 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :tenants, except: :show
     resources :purchasing_locations
+    resources :daily_prices, only: %i[index new create edit update]
     resources :mineral_purchases, only: %i[index show new create] do
+      get :daily_price_availability, on: :collection
       post :retry_signature, on: :member
       get :start_signature, on: :member
       post :complete_signature, on: :member

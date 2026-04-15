@@ -5,6 +5,7 @@ class MineralPurchase < ApplicationRecord
   belongs_to :buyer, class_name: "User"
   belongs_to :seller
   belongs_to :purchasing_location, optional: true
+  belongs_to :daily_price, optional: true
 
   has_one :e_signature_request, as: :requestable, dependent: :destroy
   has_one_attached :miner_live_photo

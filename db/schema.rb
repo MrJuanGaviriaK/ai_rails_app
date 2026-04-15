@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_12_231000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_15_201821) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -51,6 +51,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_231000) do
     t.index ["created_by_id"], name: "index_buyer_profiles_on_created_by_id"
     t.index ["purchasing_location_id"], name: "index_buyer_profiles_on_purchasing_location_id"
     t.index ["user_id"], name: "index_buyer_profiles_on_user_id", unique: true
+  end
+
+  create_table "daily_prices", force: :cascade do |t|
+    t.datetime "approved_at"
+    t.datetime "created_at", null: false
+    t.bigint "created_by_id", null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.string "mineral_type", null: false
+    t.text "notes"
+    t.date "price_date", null: false
+    t.datetime "rejected_at"
+    t.text "rejection_reason"
+    t.bigint "reviewed_by_id"
+    t.string "state", default: "pending", null: false
+    t.bigint "tenant_id", null: false
+    t.decimal "unit_price_cop", precision: 14, scale: 2, null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_daily_prices_on_created_by_id"
+    t.index ["reviewed_by_id"], name: "index_daily_prices_on_reviewed_by_id"
+    t.index ["tenant_id", "mineral_type", "price_date", "state"], name: "idx_daily_prices_resolver_lookup"
+    t.index ["tenant_id", "mineral_type", "price_date"], name: "idx_daily_prices_unique_approved_per_day", unique: true, where: "((state)::text = 'approved'::text)"
+    t.index ["tenant_id", "price_date"], name: "idx_daily_prices_tenant_price_date_desc", order: { price_date: :desc }
+    t.index ["tenant_id", "state"], name: "idx_daily_prices_tenant_state"
+    t.index ["tenant_id"], name: "index_daily_prices_on_tenant_id"
+    t.check_constraint "state::text <> 'approved'::text OR approved_at IS NOT NULL", name: "chk_daily_prices_approved_at_required"
+    t.check_constraint "state::text <> 'rejected'::text OR rejected_at IS NOT NULL", name: "chk_daily_prices_rejected_at_required"
+    t.check_constraint "state::text = ANY (ARRAY['pending'::character varying, 'approved'::character varying, 'rejected'::character varying]::text[])", name: "chk_daily_prices_state_valid"
+    t.check_constraint "unit_price_cop > 0::numeric", name: "chk_daily_prices_unit_price_positive"
   end
 
   create_table "e_signature_requests", force: :cascade do |t|
@@ -129,6 +157,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_231000) do
     t.datetime "canceled_at"
     t.datetime "completed_at"
     t.datetime "created_at", null: false
+    t.bigint "daily_price_id"
     t.decimal "fine_grams", precision: 12, scale: 2, null: false
     t.jsonb "metadata", default: {}, null: false
     t.string "mineral_type", null: false
@@ -139,6 +168,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_231000) do
     t.decimal "total_price_cop", precision: 14, scale: 2, null: false
     t.datetime "updated_at", null: false
     t.index ["buyer_id"], name: "index_mineral_purchases_on_buyer_id"
+    t.index ["daily_price_id"], name: "index_mineral_purchases_on_daily_price_id"
     t.index ["purchasing_location_id"], name: "index_mineral_purchases_on_purchasing_location_id"
     t.index ["seller_id"], name: "index_mineral_purchases_on_seller_id"
     t.index ["tenant_id", "buyer_id"], name: "idx_mineral_purchases_tenant_buyer"
@@ -385,6 +415,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_231000) do
   add_foreign_key "buyer_profiles", "purchasing_locations", on_delete: :restrict
   add_foreign_key "buyer_profiles", "users", column: "created_by_id", on_delete: :nullify
   add_foreign_key "buyer_profiles", "users", on_delete: :cascade
+  add_foreign_key "daily_prices", "tenants"
+  add_foreign_key "daily_prices", "users", column: "created_by_id"
+  add_foreign_key "daily_prices", "users", column: "reviewed_by_id"
   add_foreign_key "e_signature_requests", "e_signature_templates"
   add_foreign_key "e_signature_requests", "integrations"
   add_foreign_key "e_signature_requests", "tenants"
@@ -392,6 +425,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_231000) do
   add_foreign_key "e_signature_templates", "integrations"
   add_foreign_key "e_signature_templates", "tenants"
   add_foreign_key "integrations", "tenants"
+  add_foreign_key "mineral_purchases", "daily_prices", on_delete: :nullify
   add_foreign_key "mineral_purchases", "purchasing_locations", on_delete: :nullify
   add_foreign_key "mineral_purchases", "sellers"
   add_foreign_key "mineral_purchases", "tenants"

@@ -52,6 +52,7 @@ es:
       dashboard: "Panel"
       tenants: "Tenants"
       purchasing_locations: "Puntos de compra"
+      daily_prices: "Precios diarios"
       users: "Usuarios"
       integrations: "Integraciones"
       e_signature_templates: "Plantillas de firma electrónica"
@@ -492,6 +493,7 @@ es:
         template_not_found: "El tenant no tiene configurada la plantilla de firma para compra de mineral."
         template_inactive: "La plantilla de firma para compra de mineral está inactiva o la integración no está disponible."
         template_ambiguous: "Se encontró más de una plantilla activa para compra de mineral."
+        daily_price_not_approved: "No hay un precio diario aprobado para este mineral en la fecha aplicable. Contacta al administrador."
         retry_not_allowed: "Solo puedes reintentar la firma cuando la compra esté en estado de firma fallida."
         retry_failed: "No fue posible reintentar la firma."
         missing_client_id: "Falta el Client ID de Dropbox Sign en las credenciales de la integración."
@@ -586,6 +588,61 @@ es:
             finished: "Firma completada. Procesando..."
             closed: "Firma cerrada."
             failed: "No se pudo cargar el firmador de Dropbox Sign. Intenta de nuevo."
+    daily_prices:
+      authorization:
+        not_allowed: "No tienes permisos para gestionar precios diarios."
+      flash:
+        created: "Precio diario creado correctamente."
+        updated: "Precio diario actualizado correctamente."
+      errors:
+        approved_conflict: "Ya existe un precio aprobado para este mineral en la fecha seleccionada."
+      states:
+        pending: "Pendiente"
+        approved: "Aprobado"
+        rejected: "Rechazado"
+      index:
+        title: "Precios diarios"
+        subtitle: "Configura los precios diarios aprobados por mineral y fecha."
+        new: "Nuevo precio"
+        edit: "Editar"
+        apply: "Aplicar"
+        reset: "Limpiar"
+        empty_title: "No se encontraron precios diarios"
+        empty_description: "Crea un precio o ajusta los filtros para ver resultados."
+        filters:
+          mineral_placeholder: "Mineral (ej. oro)"
+          all_states: "Todos los estados"
+        columns:
+          price_date: "Fecha"
+          mineral_type: "Mineral"
+          unit_price_cop: "Precio unitario"
+          state: "Estado"
+          review: "Revisión"
+          actions: "Acciones"
+      new:
+        kicker: "Precios diarios"
+        title: "Crear precio diario"
+        description: "Registra el precio de compra autorizado para un mineral y una fecha específica."
+      edit:
+        kicker: "Precios diarios"
+        title: "Editar precio diario"
+        description: "Actualiza precio, notas y estado de aprobación."
+      form:
+        fix_errors: "Por favor corrige los siguientes errores:"
+        basic_information: "Información básica"
+        review: "Revisión"
+        mineral_type: "Tipo de mineral"
+        mineral_type_placeholder: "oro"
+        price_date: "Fecha"
+        unit_price_cop: "Precio unitario (COP)"
+        notes: "Notas"
+        state: "Estado"
+        rejection_reason: "Motivo de rechazo"
+        created_by: "Creado por"
+        reviewed_by: "Revisado por"
+        create: "Crear precio"
+        update: "Actualizar precio"
+        back: "Volver"
     seller_consents:
       statuses:
         draft: "Borrador"
@@ -870,3 +927,7 @@ es:
           attributes:
             document:
               invalid_content_type: "debe ser un archivo PDF"
+        daily_price:
+          attributes:
+            state:
+              invalid_transition: "no permite transición de %{from} a %{to}"
